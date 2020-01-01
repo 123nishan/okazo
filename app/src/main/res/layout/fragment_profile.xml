@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.ProfileFragment">
+
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_margin="15dp"
+    android:layout_height="match_parent">
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/latitude"
+        android:textSize="25dp"
+        android:inputType="textCapSentences"
+        tools:ignore="Autofill"
+
+        android:hint="latitude"
+         />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/longitude"
+        android:hint="@string/Longitude"
+        android:layout_below="@id/latitude"
+        android:gravity="top|start"
+        android:inputType="textCapSentences"
+        tools:ignore="Autofill"
+        android:layout_marginTop="15dp"
+        />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:hint="name"
+            android:layout_below="@id/longitude"
+            android:gravity="top|start"
+            android:layout_marginTop="15dp"
+            android:inputType="textCapSentences"
+            tools:ignore="Autofill"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:text="Submit"
+            android:id="@+id/form_submit"
+            android:textColor="@color/colorPrimaryDark"></Button>
+
+</RelativeLayout>
+
+</FrameLayout>

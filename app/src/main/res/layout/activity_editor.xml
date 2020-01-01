@@ -8,24 +8,24 @@
     android:layout_width="match_parent"
     android:layout_margin="15dp"
     android:layout_height="match_parent">
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/titel"
-        android:textSize="25dp"
-        android:inputType="textCapSentences"
+<!--    <EditText-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/titel"-->
+<!--        android:textSize="25dp"-->
+<!--        android:inputType="textCapSentences"-->
 
-        android:hint="@string/to_do"
-        tools:ignore="Autofill" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/note"
-        android:hint="@string/enter_note"
-        android:layout_below="@id/titel"
-        android:gravity="top|start"
-        android:layout_marginTop="15dp"
-        />
+<!--        android:hint="@string/to_do"-->
+<!--        tools:ignore="Autofill" />-->
+<!--    <EditText-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/note"-->
+<!--        android:hint="@string/enter_note"-->
+<!--        android:layout_below="@id/titel"-->
+<!--        android:gravity="top|start"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        />-->
 
 </RelativeLayout>
 </androidx.core.widget.NestedScrollView>
