@@ -14,14 +14,24 @@ public interface ApiInterface {
 
 
     @FormUrlEncoded
+    @POST("register.php")
+    Call<APIResponse> registerUser(
+            @Field("name") String name,
+            @Field("email") String email,
+            @Field("password") String password,
+            @Field("phone") String phone
+    );
+
+
+    @GET("notes.php")
+    Call<List<Note>> getLocation();
+
+
+    @FormUrlEncoded
     @POST("save.php")
     Call<Note> saveNote(
             @Field("latitude") Double latitude,
             @Field("longitude") Double longitude,
             @Field("name") String name
     );
-
-    @GET("notes.php")
-     Call<List<Note>> getLocation();
-
 }

@@ -13,6 +13,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -44,6 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.util.Log.d;
 import static com.example.okazo.util.constants.ERROR_DIALOG_REQUEST;
 import static com.example.okazo.util.constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
@@ -55,6 +57,7 @@ TextView textView;
 BottomNavigationView bottomNavigationView;
 private boolean mLocationPermissionGranted=false;
 SwipeRefreshLayout  swipeRefreshLayout;
+String sharedPreferencesConstant="hello";
 private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
@@ -71,6 +74,13 @@ private FusedLocationProviderClient mFusedLocationClient;
 //            navigationView.setCheckedItem(R.id.nav_message);
 
         }
+        SharedPreferences sharedPreferences=getApplicationContext().getSharedPreferences(sharedPreferencesConstant,MODE_PRIVATE);
+        SharedPreferences.Editor shared_editor = sharedPreferences.edit();
+        shared_editor.putString("Check","HELLO_NISHAN");
+        shared_editor.commit();
+        String temp;
+        temp=sharedPreferences.getString("Check","");
+        Toast.makeText(this, "test "+temp, Toast.LENGTH_SHORT).show();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -85,6 +95,9 @@ private FusedLocationProviderClient mFusedLocationClient;
                         return true;
                     case R.id.nav_shop:
                         Toast.makeText(MainActivity.this, "Shop", Toast.LENGTH_SHORT).show();
+                        Intent intent=new Intent(getApplicationContext(),RegisterActivity.class);
+                        startActivity(intent);
+
                         return true;
                     case R.id.nav_profile:
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new ProfileFragment()).commit();
@@ -98,7 +111,7 @@ private FusedLocationProviderClient mFusedLocationClient;
 //        floatingActionButton.setOnClickListener(View ->
 //                startActivity(new Intent(this,EditorActivity.class))
 //                );
-        getData();
+        //getData();
 
 
     }
@@ -227,35 +240,31 @@ private FusedLocationProviderClient mFusedLocationClient;
         }
 
     }
-    private void getData(){
-
-        Retrofit retrofit= ApiClient.getApiClient();
-
-        ApiInterface apiInterface=retrofit.create(ApiInterface.class);
-        Call<List<Note>> call=apiInterface.getNotes();
-        d("entered method","1");
-        call.enqueue(new Callback<List<Note>>() {
-            @Override
-            public void onResponse(Call<List<Note>> call, Response<List<Note>> response) {
-                for(Note note : response.body()){
-                     Log.d("response",note.getName());
-                     Log.d("response",note.getDate());
-                     Log.d("response",note.getLatitude().toString());
-                }
-
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Note>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                d("failed",t.getMessage());
-                d("response",t.toString());
-            }
-        });
-    }
+//    private void getData(){
+//
+//        Retrofit retrofit= ApiClient.getApiClient();
+//
+//        ApiInterface apiInterface=retrofit.create(ApiInterface.class);
+//        Call<List<Note>> call=apiInterface.getLocation();
+//        d("entered method","1");
+//        call.enqueue(new Callback<List<Note>>() {
+//            @Override
+//            public void onResponse(Call<List<Note>> call, Response<List<Note>> response) {
+//                for(Note note : response.body()){
+//                     Log.d("response",note.getName());
+//                     Log.d("response",note.getDate());
+//                     Log.d("response",note.getLatitude().toString());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Note>> call, Throwable t) {
+//                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+//                d("failed",t.getMessage());
+//                d("response",t.toString());
+//            }
+//        });
+//    }
 
     @Override
     protected void onResume() {
