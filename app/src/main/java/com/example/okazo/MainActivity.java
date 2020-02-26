@@ -87,7 +87,9 @@ private FusedLocationProviderClient mFusedLocationClient;
                 Fragment fragment;
                 switch (menuItem.getItemId()){
                     case R.id.nav_home:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
+                        Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+                        startActivity(intent);
+                       // getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
                         return true;
                     case R.id.nav_event:
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new EventFragment()).commit();
@@ -95,8 +97,8 @@ private FusedLocationProviderClient mFusedLocationClient;
                         return true;
                     case R.id.nav_shop:
                         Toast.makeText(MainActivity.this, "Shop", Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(getApplicationContext(),RegisterActivity.class);
-                        startActivity(intent);
+                        Intent intent1=new Intent(getApplicationContext(),RegisterActivity.class);
+                        startActivity(intent1);
 
                         return true;
                     case R.id.nav_profile:

@@ -16,10 +16,18 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("register.php")
     Call<APIResponse> registerUser(
-            @Field("name") String name,
             @Field("email") String email,
             @Field("password") String password,
+            @Field("name") String name,
             @Field("phone") String phone
+
+
+    );
+    @FormUrlEncoded
+    @POST("login.php")
+    Call<APIResponse> loginUser(
+            @Field("email") String email,
+            @Field("password") String password
     );
 
 

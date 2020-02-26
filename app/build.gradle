@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     buildToolsVersion "29.0.2"
+
     defaultConfig {
         applicationId "com.example.okazo"
         minSdkVersion 23
@@ -11,16 +12,19 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
     }
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+
 }
 
 dependencies {
@@ -40,7 +44,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.sdsmdg.harjot:vectormaster:1.1.3'
-
+    implementation 'com.pranavpandey.android:dynamic-toasts:3.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
