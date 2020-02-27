@@ -59,7 +59,7 @@ private boolean mLocationPermissionGranted=false;
 SwipeRefreshLayout  swipeRefreshLayout;
 String sharedPreferencesConstant="hello";
 private FusedLocationProviderClient mFusedLocationClient;
-
+String userEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,13 +74,14 @@ private FusedLocationProviderClient mFusedLocationClient;
 //            navigationView.setCheckedItem(R.id.nav_message);
 
         }
+        userEmail=getIntent().getExtras().getString("email");
         SharedPreferences sharedPreferences=getApplicationContext().getSharedPreferences(sharedPreferencesConstant,MODE_PRIVATE);
         SharedPreferences.Editor shared_editor = sharedPreferences.edit();
-        shared_editor.putString("Check","HELLO_NISHAN");
+        shared_editor.putString("user_email",userEmail);
         shared_editor.commit();
         String temp;
-        temp=sharedPreferences.getString("Check","");
-        Toast.makeText(this, "test "+temp, Toast.LENGTH_SHORT).show();
+        temp=sharedPreferences.getString("user_email","");
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -96,9 +97,9 @@ private FusedLocationProviderClient mFusedLocationClient;
 
                         return true;
                     case R.id.nav_shop:
-                        Toast.makeText(MainActivity.this, "Shop", Toast.LENGTH_SHORT).show();
-                        Intent intent1=new Intent(getApplicationContext(),RegisterActivity.class);
-                        startActivity(intent1);
+                        Toast.makeText(MainActivity.this, "No thing added", Toast.LENGTH_SHORT).show();
+//                        Intent intent1=new Intent(getApplicationContext(),RegisterActivity.class);
+//                        startActivity(intent1);
 
                         return true;
                     case R.id.nav_profile:

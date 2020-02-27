@@ -50,17 +50,18 @@ public class RegisterActivity extends AppCompatActivity {
                 Random random=new Random();
                 if(email.matches(emailPattern)){
                     editTextEmail.setError(null);
-                    if(name!=null){
-                        editTextName.setError(null);
-                        if(password!=null){
-                            editTextPassword.setError(null);
-                            if(phone!=null){
-                                editTextMobile.setError(null);
-                                constants constant=new constants();
-                                int num=random.nextInt(900000)+100000;
+                    if(name!=null && !name.isEmpty()){
 
+                        editTextName.setError(null);
+                        if(password!=null && !password.isEmpty()){
+                            editTextPassword.setError(null);
+                            if(phone!=null && !phone.isEmpty()){
+                                editTextMobile.setError(null);
+
+                                int num=random.nextInt(900000)+100000;
+                                String identifier="first";
                                 JavaMailAPI javaMailAPI=new JavaMailAPI(RegisterActivity.this,"nishan.nishan.timalsena@gmail.com",
-                                        "Verification Code","OTP is:"+num);
+                                        "Verification Code","OTP is:",num+"",password,phone,name,email,identifier);
                                 javaMailAPI.execute();
                             }else {
                                 editTextMobile.setError("Enter mobile number");
@@ -70,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
 
                     }else {
+
                         editTextName.setError("Enter Name");
                     }
 

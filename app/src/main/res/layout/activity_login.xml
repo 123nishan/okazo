@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".LoginActivity">
+    <ProgressBar
+        android:id="@+id/login_progress_bar"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:max="100"
+        android:indeterminate="true"
+       android:background="#000"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
     <ImageView
         android:layout_width="150dp"
         android:layout_margin="15dp"
@@ -46,5 +55,20 @@
         android:layout_gravity="center"
         android:drawableLeft="@drawable/ic_enter"
         android:text="LOGIN"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Not yet registered?"
+        />
+    <TextView
+        android:id="@+id/login_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="#f5431d"
+        android:textStyle="bold"
+        android:text="Click here to register"
+        />
 
 </LinearLayout>

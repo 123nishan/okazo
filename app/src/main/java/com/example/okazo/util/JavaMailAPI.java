@@ -2,10 +2,12 @@ package com.example.okazo.util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.okazo.OtpActivity;
 import com.sdsmdg.harjot.vectormaster.utilities.Utils;
 
 import java.io.IOException;
@@ -31,22 +33,37 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void> {
     private String mEmail;
     private String mSubject;
     private String mMessage;
+    private String mOtp;
+    private String mPassword;
+    private String mPhone;
+    private String mName;
+    private String identifier;
+    private String userEmail;
     private Multipart _multipart = new MimeMultipart();
     private ProgressDialog mProgressDialog;
 
     //Constructor
-    public JavaMailAPI(Context mContext, String mEmail, String mSubject, String mMessage) {
+    public JavaMailAPI(Context mContext, String mEmail, String mSubject,
+                       String mMessage,String mOtp,String mPassword,
+                       String mPhone,String mName,String userEmail,
+                       String identifier) {
         this.mContext =  mContext;
         this.mEmail = mEmail;
         this.mSubject = mSubject;
         this.mMessage = mMessage;
+        this.mOtp=mOtp;
+        this.mPassword=mPassword;
+        this.mName=mName;
+        this.mPhone=mPhone;
+        this.userEmail=userEmail;
+        this.identifier=identifier;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         //Show progress dialog while sending email
-        mProgressDialog = ProgressDialog.show(mContext,"Sending message", "Please wait...",false,false);
+        mProgressDialog = ProgressDialog.show(mContext,"Sending Verification Code", "Please wait...",false,false);
     }
 
     @Override
@@ -56,7 +73,27 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void> {
         mProgressDialog.dismiss();
 
         //Show success toast
-        Toast.makeText(mContext,"Message Sent",Toast.LENGTH_SHORT).show();
+        if(identifier.equals("first")) {
+            Intent intent = new Intent(mContext, OtpActivity.class);
+            intent.putExtra("otp", mOtp);
+            intent.putExtra("email", userEmail);
+            intent.putExtra("password", mPassword);
+            intent.putExtra("phone", mPhone);
+            intent.putExtra("name", mName);
+            mContext.startActivity(intent);
+
+            Toast.makeText(mContext, "Verification Code sent", Toast.LENGTH_SHORT).show();
+        }else {
+            Intent intent = new Intent(mContext, OtpActivity.class);
+            intent.putExtra("otp", mOtp);
+            intent.putExtra("email", userEmail);
+            intent.putExtra("password", mPassword);
+            intent.putExtra("phone", mPhone);
+            intent.putExtra("name", mName);
+            mContext.startActivity(intent);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            Toast.makeText(mContext, "Resent Code", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -101,7 +138,7 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void> {
             is.close();
             String str = new String(buffer);
             str=str.replace("$$USERNAME$$", mEmail);
-            str=str.replace("$$EMAIL$$", mMessage);
+            str=str.replace("$$EMAIL$$", mMessage+" "+mOtp);
             messageBodyPart.setContent(str,"text/html; charset=utf-8");
             _multipart.addBodyPart(messageBodyPart);
             mm.setContent(_multipart);
