@@ -3,6 +3,7 @@ package com.example.okazo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,24 +29,36 @@ public class LoginActivity extends AppCompatActivity {
     Button buttonLogin;
     TextView textViewRegister;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-    TextInputEditText inputEditTextEmail,inputEditTextPassword;
-    String email,password;
+    TextInputEditText inputEditTextEmail, inputEditTextPassword;
+    String email, password;
     ApiInterface apiInterface;
     ProgressBar progressBar;
+    String sharedPreferencesConstant = "hello";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(sharedPreferencesConstant, MODE_PRIVATE);
+
+        if (sharedPreferences.getString("user_email", "") != null && !sharedPreferences.getString("user_email", "").isEmpty()) {
+            Toast.makeText(this, "email: "+sharedPreferences.getString("user_email", ""), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("email", sharedPreferences.getString("user_email", ""));
+            startActivity(intent);
+        } else {
+
         setContentView(R.layout.activity_login);
-        buttonLogin=findViewById(R.id.login_submit);
-        inputEditTextEmail=findViewById(R.id.login_email);
-        inputEditTextPassword=findViewById(R.id.login_password);
-        textViewRegister=findViewById(R.id.login_register);
-        progressBar=findViewById(R.id.login_progress_bar);
+        buttonLogin = findViewById(R.id.login_submit);
+        inputEditTextEmail = findViewById(R.id.login_email);
+        inputEditTextPassword = findViewById(R.id.login_password);
+        textViewRegister = findViewById(R.id.login_register);
+        progressBar = findViewById(R.id.login_progress_bar);
         progressBar.setVisibility(View.INVISIBLE);
+
         textViewRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getApplicationContext(),RegisterActivity.class);
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                 startActivity(intent);
             }
         });
@@ -55,30 +68,30 @@ public class LoginActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 progressBar.setBackgroundColor(Color.BLACK);
                 progressBar.setProgress(10);
-                email=inputEditTextEmail.getText().toString().trim();
-                password=inputEditTextPassword.getText().toString().trim();
+                email = inputEditTextEmail.getText().toString().trim();
+                password = inputEditTextPassword.getText().toString().trim();
 
-                if (email.matches(emailPattern)){
-                        inputEditTextEmail.setError(null);
-                    if(password.isEmpty()){
+                if (email.matches(emailPattern)) {
+                    inputEditTextEmail.setError(null);
+                    if (password.isEmpty()) {
                         inputEditTextPassword.setError("Error");
-                    }else {
+                    } else {
                         progressBar.setProgress(40);
                         inputEditTextPassword.setError(null);
-                        apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
-                        apiInterface.loginUser(email,password)
+                        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+                        apiInterface.loginUser(email, password)
                                 .enqueue(new Callback<APIResponse>() {
                                     @Override
                                     public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                        APIResponse result=response.body();
-                                        if(result.getError()){
-                                            DynamicToast.makeError(getApplicationContext(),result.getErrorMsg()).show();
+                                        APIResponse result = response.body();
+                                        if (result.getError()) {
+                                            DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
                                             progressBar.setVisibility(View.INVISIBLE);
-                                        }else {
+                                        } else {
                                             progressBar.setProgress(100);
-                                            Toast.makeText(LoginActivity.this, "email:"+email, Toast.LENGTH_SHORT).show();
-                                            Intent intent1=new Intent(getApplicationContext(),MainActivity.class);
-                                            intent1.putExtra("email",email);
+                                            Toast.makeText(LoginActivity.this, "email:" + email, Toast.LENGTH_SHORT).show();
+                                            Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
+                                            intent1.putExtra("email", email);
                                             startActivity(intent1);
 
 
@@ -87,13 +100,13 @@ public class LoginActivity extends AppCompatActivity {
 
                                     @Override
                                     public void onFailure(Call<APIResponse> call, Throwable t) {
-                                        DynamicToast.makeSuccess(getApplicationContext(),"Error 500").show();
+                                        DynamicToast.makeSuccess(getApplicationContext(), "Error 500").show();
                                     }
                                 });
 
 
                     }
-                }else{
+                } else {
                     inputEditTextEmail.setError("Invalid Email");
                 }
 
@@ -101,6 +114,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+}
 
     @Override
     public void onBackPressed() {

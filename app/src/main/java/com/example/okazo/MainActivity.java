@@ -29,6 +29,7 @@ import com.example.okazo.Fragment.EventFragment;
 import com.example.okazo.Fragment.HomeFragment;
 import com.example.okazo.Fragment.ProfileFragment;
 import com.example.okazo.Model.Note;
+import com.example.okazo.util.constants;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -57,7 +58,7 @@ TextView textView;
 BottomNavigationView bottomNavigationView;
 private boolean mLocationPermissionGranted=false;
 SwipeRefreshLayout  swipeRefreshLayout;
-String sharedPreferencesConstant="hello";
+
 private FusedLocationProviderClient mFusedLocationClient;
 String userEmail;
     @Override
@@ -75,7 +76,7 @@ String userEmail;
 
         }
         userEmail=getIntent().getExtras().getString("email");
-        SharedPreferences sharedPreferences=getApplicationContext().getSharedPreferences(sharedPreferencesConstant,MODE_PRIVATE);
+        SharedPreferences sharedPreferences=getApplicationContext().getSharedPreferences(constants.KEY_SHARED_PREFERENCE,MODE_PRIVATE);
         SharedPreferences.Editor shared_editor = sharedPreferences.edit();
         shared_editor.putString("user_email",userEmail);
         shared_editor.commit();

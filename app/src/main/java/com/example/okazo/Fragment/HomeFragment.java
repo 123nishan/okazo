@@ -16,6 +16,7 @@ import android.widget.Button;
 
 import com.example.okazo.LoginActivity;
 import com.example.okazo.R;
+import com.example.okazo.util.constants;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -39,9 +40,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DynamicToast.makeWarning(getActivity(),"Logging Out").show();
-                SharedPreferences pref = getActivity().getSharedPreferences("BuyyaPref", MODE_PRIVATE);
+                SharedPreferences pref = getActivity().getSharedPreferences(constants.KEY_SHARED_PREFERENCE, MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
-                editor.clear();
+                editor.putString("user_email","");
                 editor.commit();
 
                 Intent intent=new Intent(getActivity(), LoginActivity.class);

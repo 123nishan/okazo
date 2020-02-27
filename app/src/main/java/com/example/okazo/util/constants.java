@@ -7,7 +7,8 @@ public class constants {
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     //This is your from email
     public static final String EMAIL = "nishan.nishan.timalsena@gmail.com";
-
+    //shared preference  constant
+    public static final String KEY_SHARED_PREFERENCE="hello";
     //This is your from email password
     public static final String PASSWORD = "baikuntha";
 }
