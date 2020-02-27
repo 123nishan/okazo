@@ -16,6 +16,10 @@ public class User {
     @Expose
     private String phone;
 
+    @SerializedName("otp")
+    @Expose
+    private String otp;
+
     @SerializedName("created_at")
     @Expose
     private String createdAt;
@@ -27,6 +31,9 @@ public class User {
     public User() {
     }
 
+    public String getOtp() {
+        return otp;
+    }
 
     public String getName() {
         return name;

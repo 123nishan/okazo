@@ -87,9 +87,9 @@ private FusedLocationProviderClient mFusedLocationClient;
                 Fragment fragment;
                 switch (menuItem.getItemId()){
                     case R.id.nav_home:
-                        Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
-                        startActivity(intent);
-                       // getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
+//                        Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+//                        startActivity(intent);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
                         return true;
                     case R.id.nav_event:
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new EventFragment()).commit();
