@@ -13,7 +13,11 @@ import android.widget.Toast;
 import com.example.okazo.Api.APIResponse;
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
-import com.example.okazo.util.GMailSender;
+
+import com.example.okazo.util.JavaMailAPI;
+
+
+import com.example.okazo.util.constants;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.Random;
@@ -25,6 +29,7 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
     EditText editTextEmail,editTextPassword,editTextMobile,editTextName;
     Button btnRegister;
+    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     ApiInterface apiInterface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
         editTextPassword=findViewById(R.id.register_password);
         editTextEmail=findViewById(R.id.register_email);
         btnRegister=findViewById(R.id.register_button);
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+          btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String phone=editTextMobile.getText().toString();
@@ -43,23 +48,41 @@ public class RegisterActivity extends AppCompatActivity {
                 String password=editTextPassword.getText().toString();
                 String email=editTextEmail.getText().toString();
                 Random random=new Random();
-                int num=random.nextInt(900000)+100000;
-               //DynamicToast.makeSuccess(getApplicationContext(),num+"").show();
+                if(email.matches(emailPattern)){
+                    editTextEmail.setError(null);
+                    if(name!=null){
+                        editTextName.setError(null);
+                        if(password!=null){
+                            editTextPassword.setError(null);
+                            if(phone!=null){
+                                editTextMobile.setError(null);
+                                constants constant=new constants();
+                                int num=random.nextInt(900000)+100000;
 
-                      try{
-                          DynamicToast.makeSuccess(getApplicationContext(),"entered").show();
-                          GMailSender  sender=new GMailSender("nishan_98@hotmail.com","#Nishan123");
-                          sender.sendMail("Email Sender App",
-                                  num+"",
-                                  "nishan_98@hotmail.com",
-                                  email);
-                          Log.d("mylogSent", "Error: " + "sent");
-                      } catch (Exception e) {
-                          Log.d("mylogError", "Error: " + e.getMessage());
+                                JavaMailAPI javaMailAPI=new JavaMailAPI(RegisterActivity.this,"nishan.nishan.timalsena@gmail.com",
+                                        "Verification Code","OTP is:"+num);
+                                javaMailAPI.execute();
+                            }else {
+                                editTextMobile.setError("Enter mobile number");
+                            }
+                        }else {
+                            editTextPassword.setError("Enter password");
+                        }
 
-                      }
-                  }
-              });
+                    }else {
+                        editTextName.setError("Enter Name");
+                    }
+
+                }else {
+                    editTextEmail.setError("Incorrect Email format");
+                }
+
+
+
+                    }
+
+
+        });
 
 
 
@@ -84,7 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
 //
 //                    }
 //                });
-;            }
+                }
 
 
 }

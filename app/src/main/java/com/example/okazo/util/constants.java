@@ -5,4 +5,9 @@ public class constants {
     public static final int PERMISSION_REQUEST_ENABLE_GPS=9002;
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION=9003;
     public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    //This is your from email
+    public static final String EMAIL = "nishan.nishan.timalsena@gmail.com";
+
+    //This is your from email password
+    public static final String PASSWORD = "baikuntha";
 }
