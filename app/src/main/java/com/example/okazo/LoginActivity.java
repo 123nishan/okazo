@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                                             progressBar.setProgress(100);
                                             Toast.makeText(LoginActivity.this, "email:" + email, Toast.LENGTH_SHORT).show();
                                             Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);
+                                            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                             intent1.putExtra("email", email);
                                             startActivity(intent1);
 

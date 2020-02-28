@@ -125,7 +125,7 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void> {
             //Setting sender address
             mm.setFrom(new InternetAddress(constants.EMAIL));
             //Adding receiver
-            mm.addRecipient(Message.RecipientType.TO, new InternetAddress(mEmail));
+            mm.addRecipient(Message.RecipientType.TO, new InternetAddress(userEmail));
             //Adding subject
             mm.setSubject(mSubject);
             //Adding message

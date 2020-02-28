@@ -38,6 +38,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.luseen.spacenavigation.SpaceItem;
+import com.luseen.spacenavigation.SpaceNavigationView;
+import com.luseen.spacenavigation.SpaceOnClickListener;
 
 import java.util.List;
 
@@ -55,7 +58,8 @@ import static com.example.okazo.util.constants.PERMISSION_REQUEST_ENABLE_GPS;
 public class MainActivity extends AppCompatActivity  {
 private FloatingActionButton floatingActionButton;
 TextView textView;
-BottomNavigationView bottomNavigationView;
+//BottomNavigationView bottomNavigationView;
+    SpaceNavigationView bottomNavigationView;
 private boolean mLocationPermissionGranted=false;
 SwipeRefreshLayout  swipeRefreshLayout;
 
@@ -80,36 +84,60 @@ String userEmail;
         SharedPreferences.Editor shared_editor = sharedPreferences.edit();
         shared_editor.putString("user_email",userEmail);
         shared_editor.commit();
-        String temp;
-        temp=sharedPreferences.getString("user_email","");
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.initWithSaveInstanceState(savedInstanceState);
+        bottomNavigationView.addSpaceItem(new SpaceItem("HOME", R.drawable.ic_home));
+        bottomNavigationView.addSpaceItem(new SpaceItem("SEARCH", R.drawable.ic_place));
+
+        bottomNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment fragment;
-                switch (menuItem.getItemId()){
-                    case R.id.nav_home:
-//                        Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
-//                        startActivity(intent);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
-                        return true;
-                    case R.id.nav_event:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new EventFragment()).commit();
+            public void onCentreButtonClick() {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new ProfileFragment()).commit();
 
-                        return true;
-                    case R.id.nav_shop:
-                        Toast.makeText(MainActivity.this, "No thing added", Toast.LENGTH_SHORT).show();
-//                        Intent intent1=new Intent(getApplicationContext(),RegisterActivity.class);
-//                        startActivity(intent1);
+            }
 
-                        return true;
-                    case R.id.nav_profile:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new ProfileFragment()).commit();
-                        return true;
+            @Override
+            public void onItemClick(int itemIndex, String itemName) {
+                if(itemName.equals("HOME")){
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
+                }else {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new EventFragment()).commit();
                 }
-                return false;
+
+            }
+
+            @Override
+            public void onItemReselected(int itemIndex, String itemName) {
+                
             }
         });
+
+//        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+//
+//                switch (menuItem.getItemId()){
+//                    case R.id.nav_home:
+//
+//                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
+//                        return true;
+//                    case R.id.nav_event:
+//                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new EventFragment()).commit();
+//
+//                        return true;
+//                    case R.id.nav_shop:
+//                        Toast.makeText(MainActivity.this, "No thing added", Toast.LENGTH_SHORT).show();
+////                        Intent intent1=new Intent(getApplicationContext(),RegisterActivity.class);
+////                        startActivity(intent1);
+//
+//                        return true;
+//                    case R.id.nav_profile:
+//                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new ProfileFragment()).commit();
+//                        return true;
+//                }
+//                return false;
+//            }
+//        });
 //        floatingActionButton=findViewById(R.id.add);
 //
 //        floatingActionButton.setOnClickListener(View ->
@@ -280,4 +308,10 @@ String userEmail;
                 getLocationPermission();
             }
         }    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
 }

@@ -113,25 +113,25 @@ private void initGoogleMap(Bundle savedInstanceState,View v){
         }
 
 
-        call.enqueue(new Callback<List<Note>>() {
-            @Override
-            public void onResponse(Call<List<Note>> call, Response<List<Note>> response) {
-                for(Note note : response.body()){
-                   double lat=note.getLatitude();
-                   double longi=note.getLongitude();
-                   String name=note.getName();
-                    LatLng latLng=new LatLng(lat,longi);
-                    String date=note.getDate();
-                    googleMap.addMarker(new MarkerOptions().position(latLng).title(name+"\n"+date));
-                }
-            }
-            @Override
-            public void onFailure(Call<List<Note>> call, Throwable t) {
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                d("failed",t.getMessage());
-                d("response",t.toString());
-            }
-        });
+//        call.enqueue(new Callback<List<Note>>() {
+//            @Override
+//            public void onResponse(Call<List<Note>> call, Response<List<Note>> response) {
+//                for(Note note : response.body()){
+//                   double lat=note.getLatitude();
+//                   double longi=note.getLongitude();
+//                   String name=note.getName();
+//                    LatLng latLng=new LatLng(lat,longi);
+//                    String date=note.getDate();
+//                    googleMap.addMarker(new MarkerOptions().position(latLng).title(name+"\n"+date));
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<List<Note>> call, Throwable t) {
+//                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+//                d("failed",t.getMessage());
+//                d("response",t.toString());
+//            }
+//        });
         googleMap.setMyLocationEnabled(true);
     }
 

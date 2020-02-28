@@ -15,7 +15,7 @@
             android:id="@+id/frame_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottm_nav"
+
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         <!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
         <!--        android:id="@+id/swipe_refresh"-->
@@ -31,19 +31,33 @@
         <!--    android:text="Here:"-->
         <!--    android:textSize="16dp"-->
         <!--    ></TextView>-->
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
+        <com.luseen.spacenavigation.SpaceNavigationView
             android:id="@+id/bottm_nav"
-            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-            android:background="@color/colorPrimaryDark"
-            app:menu="@menu/bottom_nav_menu"
-            app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"
-            ></com.google.android.material.bottomnavigation.BottomNavigationView>
+
+            app:active_item_color="@color/green"
+            app:centre_button_color="@color/colorPrimary"
+            app:inactive_item_color="#F00"
+            app:space_background_color="@color/white"
+            app:centre_button_icon="@drawable/ic_home"
+            app:space_item_icon_size="@dimen/space_item_icon_default_size"
+            app:space_item_icon_only_size="@dimen/space_item_icon_only_size"
+            app:space_item_text_size="@dimen/space_item_text_default_size"/>
+<!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:id="@+id/bottm_nav"-->
+<!--            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="bottom"-->
+<!--            android:background="@color/colorPrimaryDark"-->
+<!--            app:menu="@menu/bottom_nav_menu"-->
+<!--            app:itemIconTint="@color/white"-->
+<!--            app:itemTextColor="@color/white"-->
+<!--            ></com.google.android.material.bottomnavigation.BottomNavigationView>-->
     </RelativeLayout>
 
 
