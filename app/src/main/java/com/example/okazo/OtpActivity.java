@@ -48,7 +48,7 @@ public class OtpActivity extends AppCompatActivity {
         String name=getIntent().getExtras().getString("name");
         String phone=getIntent().getExtras().getString("phone");
         progressBar=findViewById(R.id.otp_progress_bar);
-        new CountDownTimer(30000,1000){
+        new CountDownTimer(60000,1000){
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -80,6 +80,7 @@ public class OtpActivity extends AppCompatActivity {
 
                     progressBar.setVisibility(View.VISIBLE);
                     if (editTextOtp.getText().toString().equals(otp)) {
+                        Log.d("codeCheck",otp);
                         Toast.makeText(getApplicationContext(), "otp: " + otp, Toast.LENGTH_SHORT).show();
                         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
                         apiInterface.registerUser(email, password, name, phone)
@@ -103,7 +104,10 @@ public class OtpActivity extends AppCompatActivity {
                                 });
 
 
-                }
+                }else {
+                        Log.d("codeCheck",otp);
+                        Toast.makeText(OtpActivity.this, "Code didnt match", Toast.LENGTH_SHORT).show();
+                    }
             }
         });
     }

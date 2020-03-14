@@ -42,4 +42,13 @@ public interface ApiInterface {
             @Field("longitude") Double longitude,
             @Field("name") String name
     );
+    @FormUrlEncoded
+    @POST("otp.php")
+    Call<APIResponse> otp(
+            @Field("email") String email,
+            @Field("code") String code,
+            @Field("status") String status,
+            @Field("time") String time
+
+    );
 }

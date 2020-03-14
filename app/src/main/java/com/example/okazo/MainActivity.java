@@ -108,7 +108,7 @@ String userEmail;
 
             @Override
             public void onItemReselected(int itemIndex, String itemName) {
-                
+
             }
         });
 

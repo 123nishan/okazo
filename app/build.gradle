@@ -48,6 +48,7 @@ dependencies {
     implementation files('libs/activation.jar')
     implementation files('libs/additionnal.jar')
     implementation files('libs/mail.jar')
+    // for bottom nav
     implementation 'com.github.armcha:SpaceNavigationView:1.6.0'
 }
 

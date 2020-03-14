@@ -2,6 +2,7 @@ package com.example.okazo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,8 @@ import com.example.okazo.util.JavaMailAPI;
 import com.example.okazo.util.constants;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -60,9 +63,33 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 int num=random.nextInt(900000)+100000;
                                 String identifier="first";
+                                apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+                                String status="Not Verified";
+                                Date date=new Date();
+                                Timestamp timestamp=new Timestamp(date.getTime());
                                 JavaMailAPI javaMailAPI=new JavaMailAPI(RegisterActivity.this,"nishan.nishan.timalsena@gmail.com",
                                         "Verification Code","OTP is:",num+"",password,phone,name,email,identifier);
                                 javaMailAPI.execute();
+                                apiInterface.otp(email,String.valueOf(num),status,timestamp.toString()).enqueue(new Callback<APIResponse>() {
+                                    @Override
+                                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                        APIResponse result = response.body();
+                                        if(result.getError()){
+                                            DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
+                                        }else {
+
+                                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                    }
+                                });
+
+
                             }else {
                                 editTextMobile.setError("Enter mobile number");
                             }
