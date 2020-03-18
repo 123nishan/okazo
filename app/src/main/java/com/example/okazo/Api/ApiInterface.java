@@ -2,6 +2,7 @@ package com.example.okazo.Api;
 
 import com.example.okazo.Model.Note;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,8 +48,14 @@ public interface ApiInterface {
     Call<APIResponse> otp(
             @Field("email") String email,
             @Field("code") String code,
-            @Field("status") String status,
-            @Field("time") String time
+            @Field("verified") String verified,
+            @Field("time") Timestamp time
 
+    );
+    @FormUrlEncoded
+    @POST("otpVerification.php")
+    Call<APIResponse>  otpVerification(
+        @Field("email") String email,
+        @Field("verified") String verified
     );
 }

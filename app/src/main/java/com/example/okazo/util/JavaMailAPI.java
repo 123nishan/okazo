@@ -75,21 +75,21 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void> {
         //Show success toast
         if(identifier.equals("first")) {
             Intent intent = new Intent(mContext, OtpActivity.class);
-            intent.putExtra("otp", mOtp);
+            //intent.putExtra("otp", mOtp);
             intent.putExtra("email", userEmail);
-            intent.putExtra("password", mPassword);
-            intent.putExtra("phone", mPhone);
-            intent.putExtra("name", mName);
+           // intent.putExtra("password", mPassword);
+            //ntent.putExtra("phone", mPhone);
+            //intent.putExtra("name", mName);
             mContext.startActivity(intent);
 
             Toast.makeText(mContext, "Verification Code sent", Toast.LENGTH_SHORT).show();
         }else {
             Intent intent = new Intent(mContext, OtpActivity.class);
-            intent.putExtra("otp", mOtp);
+            //intent.putExtra("otp", mOtp);
             intent.putExtra("email", userEmail);
-            intent.putExtra("password", mPassword);
-            intent.putExtra("phone", mPhone);
-            intent.putExtra("name", mName);
+//            intent.putExtra("password", mPassword);
+//            intent.putExtra("phone", mPhone);
+//            intent.putExtra("name", mName);
             mContext.startActivity(intent);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             Toast.makeText(mContext, "Resent Code", Toast.LENGTH_SHORT).show();

@@ -41,12 +41,12 @@ public class OtpActivity extends AppCompatActivity {
         buttonVerify=findViewById(R.id.otp_verify);
         textViewOtpTimer=findViewById(R.id.otp_timer);
         textViewOtpResend=findViewById(R.id.otp_resend);
-        String otp=getIntent().getExtras().getString("otp");
+//        String otp=getIntent().getExtras().getString("otp");
         String email=getIntent().getExtras().getString("email");
-
-        String password=getIntent().getExtras().getString("password");
-        String name=getIntent().getExtras().getString("name");
-        String phone=getIntent().getExtras().getString("phone");
+//
+//        String password=getIntent().getExtras().getString("password");
+//        String name=getIntent().getExtras().getString("name");
+//        String phone=getIntent().getExtras().getString("phone");
         progressBar=findViewById(R.id.otp_progress_bar);
         new CountDownTimer(60000,1000){
 
@@ -69,8 +69,9 @@ public class OtpActivity extends AppCompatActivity {
                 Random random=new Random();
                 int num=random.nextInt(900000)+100000;
                 String identifier="resend";
+
                 JavaMailAPI javaMailAPI=new JavaMailAPI(OtpActivity.this,"nishan.nishan.timalsena@gmail.com",
-                        "Verification Code","OTP is:",num+"",password,phone,name,email,identifier);
+                        "Verification Code","OTP is:",num+"","","","name",email,identifier);
                 javaMailAPI.execute();
             }
         });
@@ -79,35 +80,80 @@ public class OtpActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                     progressBar.setVisibility(View.VISIBLE);
-                    if (editTextOtp.getText().toString().equals(otp)) {
-                        Log.d("codeCheck",otp);
-                        Toast.makeText(getApplicationContext(), "otp: " + otp, Toast.LENGTH_SHORT).show();
-                        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-                        apiInterface.registerUser(email, password, name, phone)
-                                .enqueue(new Callback<APIResponse>() {
-                                    @Override
-                                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                        APIResponse result = response.body();
-                                        if (result.getError()) {
-                                            DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
-                                        } else {
-                                            DynamicToast.makeSuccess(getApplicationContext(), "User registerted").show();
-                                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                            startActivity(intent);
-                                        }
+                apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+
+
+                        String verified="non-verified";
+
+                        apiInterface.otpVerification(email,verified).enqueue(new Callback<APIResponse>() {
+                            @Override
+                            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                APIResponse result = response.body();
+                                if (result.getError()) {
+                                    DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
+                                } else {
+                                    String code = result.getUser().getCode();
+
+                                   if (editTextOtp.getText().toString().equals(code)) {
+                                         String verified="verified";
+                                         apiInterface.otpVerification(email,verified).enqueue(new Callback<APIResponse>() {
+                                             @Override
+                                             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                                 APIResponse result=response.body();
+                                                 if(result.getError()){
+                                                     DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
+                                                     Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+                                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                                    startActivity(intent);
+                                                 }else {
+
+                                                     DynamicToast.makeSuccess(getApplicationContext(), "Verified!!").show();
+                                                     Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+                                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                                     startActivity(intent);
+                                                 }
+                                             }
+
+                                             @Override
+                                             public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                             }
+                                         });
+                                    } else {
+
+                                        Toast.makeText(OtpActivity.this, "Code didnt match", Toast.LENGTH_SHORT).show();
                                     }
+                                }
 
-                                    @Override
-                                    public void onFailure(Call<APIResponse> call, Throwable t) {
-
-                                    }
-                                });
+                            }
+                                @Override
+                                public void onFailure (Call < APIResponse > call, Throwable t){
 
 
-                }else {
-                        Log.d("codeCheck",otp);
-                        Toast.makeText(OtpActivity.this, "Code didnt match", Toast.LENGTH_SHORT).show();
-                    }
+                            }
+                        });
+//                        apiInterface.registerUser(email, password, name, phone)
+//                                .enqueue(new Callback<APIResponse>() {
+//                                    @Override
+//                                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+//                                        APIResponse result = response.body();
+//                                        if (result.getError()) {
+//                                            DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
+//                                        } else {
+//                                            DynamicToast.makeSuccess(getApplicationContext(), "User registerted").show();
+//                                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                                            startActivity(intent);
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailure(Call<APIResponse> call, Throwable t) {
+//
+//                                    }
+//                                });
+
+
+
             }
         });
     }
@@ -116,7 +162,7 @@ public class OtpActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         DynamicToast.makeError(getApplicationContext(),"Verification Failed").show();
-        Intent intent=new Intent(getApplicationContext(),RegisterActivity.class);
+        Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }

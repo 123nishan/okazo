@@ -14,6 +14,7 @@ public class APIResponse {
     @SerializedName("user")
     @Expose
     private User user;
+
     @SerializedName("error_msg")
     @Expose
     private String errorMsg;

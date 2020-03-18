@@ -64,28 +64,43 @@ public class RegisterActivity extends AppCompatActivity {
                                 int num=random.nextInt(900000)+100000;
                                 String identifier="first";
                                 apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-                                String status="Not Verified";
+                                String verified="non-verified";
                                 Date date=new Date();
                                 Timestamp timestamp=new Timestamp(date.getTime());
-                                JavaMailAPI javaMailAPI=new JavaMailAPI(RegisterActivity.this,"nishan.nishan.timalsena@gmail.com",
-                                        "Verification Code","OTP is:",num+"",password,phone,name,email,identifier);
-                                javaMailAPI.execute();
-                                apiInterface.otp(email,String.valueOf(num),status,timestamp.toString()).enqueue(new Callback<APIResponse>() {
+                                Toast.makeText(RegisterActivity.this, "time"+verified, Toast.LENGTH_SHORT).show();
+
+                                apiInterface.otp(email,String.valueOf(num),verified,timestamp).enqueue(new Callback<APIResponse>() {
                                     @Override
                                     public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                                         APIResponse result = response.body();
                                         if(result.getError()){
                                             DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
                                         }else {
+                                            apiInterface.registerUser(email,password,name,phone).enqueue(new Callback<APIResponse>() {
+                                                @Override
+                                                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                                    APIResponse apiResponse=response.body();
+                                                    if(apiResponse.getError()){
+                                                        DynamicToast.makeError(getApplicationContext(), apiResponse.getErrorMsg()).show();
+                                                    }else {
+                                                        JavaMailAPI javaMailAPI=new JavaMailAPI(RegisterActivity.this,"nishan.nishan.timalsena@gmail.com",
+                                                                "Verification Code","OTP is:",num+"",password,phone,name,email,identifier);
+                                                        javaMailAPI.execute();
+                                                    }
+                                                }
 
-                                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                            startActivity(intent);
+                                                @Override
+                                                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                                }
+                                            });
+
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(Call<APIResponse> call, Throwable t) {
-
+                                        DynamicToast.makeWarning(getApplicationContext(),"something went wrong").show();
                                     }
                                 });
 
