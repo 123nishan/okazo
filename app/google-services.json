@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "934675485827",
+    "firebase_url": "https://okazo-b0f7e.firebaseio.com",
+    "project_id": "okazo-b0f7e",
+    "storage_bucket": "okazo-b0f7e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934675485827:android:f579b91fdee4580a1af7b6",
+        "android_client_info": {
+          "package_name": "com.example.okazo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "934675485827-m0s42vm1i17k6o4441862ft42a7oet72.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.okazo",
+            "certificate_hash": "ed63aa42cd490cbfa0388e59d91a9abe3bf7a2be"
+          }
+        },
+        {
+          "client_id": "934675485827-i4bsuvjbo3rjh3oeq010aiobaa5uomoi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3uAEYLcP8cstKSrwyv_c4OQJ6RBG1DSI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "934675485827-i4bsuvjbo3rjh3oeq010aiobaa5uomoi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
