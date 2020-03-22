@@ -19,6 +19,7 @@ import com.example.okazo.util.JavaMailAPI;
 
 
 import com.example.okazo.util.constants;
+import com.google.android.material.textfield.TextInputEditText;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.sql.Timestamp;
@@ -30,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText editTextEmail,editTextPassword,editTextMobile,editTextName;
+    TextInputEditText editTextEmail,editTextPassword,editTextMobile,editTextName;
     Button btnRegister;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     ApiInterface apiInterface;
@@ -38,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        editTextMobile=findViewById(R.id.register_phone);
+
         editTextName=findViewById(R.id.register_name);
         editTextPassword=findViewById(R.id.register_password);
         editTextEmail=findViewById(R.id.register_email);

@@ -1,107 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/ic_login"
+    android:orientation="vertical"
     tools:context=".LoginActivity">
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <ImageView
             android:layout_width="150dp"
 
             android:layout_height="150dp"
-            android:layout_marginTop="30dp"
             android:layout_gravity="center"
-            android:background="@drawable/ic_enter"/>
+            android:layout_marginTop="60dp"
+            android:background="@drawable/ic_enter" />
+
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="300dp"
-            android:layout_gravity="center_horizontal"
-
-
             android:id="@+id/login_email_layout"
+            android:layout_width="300dp"
+            android:layout_marginTop="20dp"
+
             android:layout_height="wrap_content"
-            >
+            android:layout_gravity="center_horizontal">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/login_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
 
-                android:layout_marginTop="20dp"
-                android:hint="Email"
-                />
+
+                android:hint="Email" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="300dp"
-            android:layout_margin="15dp"
-            android:layout_gravity="center_horizontal"
             android:id="@+id/login_password_layout"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            >
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="15dp">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/login_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
-                />
+                android:hint="Password" />
         </com.google.android.material.textfield.TextInputLayout>
-        <Button
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Forget Password?"
+            android:gravity="center_horizontal"
+            />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/login_submit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_enter"
-            android:text="LOGIN"/>
-<!--        <pl.droidsonroids.gif.GifTextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorPrimary"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="50dp"
+            android:text="Login" />
+        <!--        <pl.droidsonroids.gif.GifTextView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
 
 
-
-<!--            ></pl.droidsonroids.gif.GifTextView>-->
+        <!--            ></pl.droidsonroids.gif.GifTextView>-->
 
     </LinearLayout>
+
     <LinearLayout
-        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <ProgressBar
-        android:id="@+id/login_progress_bar"
-        android:layout_margin="10dp"
-        android:layout_width="match_parent"
-        android:max="100"
-        android:indeterminate="true"
-       android:background="#000"
-        android:layout_height="wrap_content"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/login_progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="#000"
+            android:indeterminate="true"
+            android:max="100" />
 
 
 
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Not yet registered?"
-        />
-    <TextView
-        android:id="@+id/login_register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="#f5431d"
-        android:textStyle="bold"
-        android:text="Click here to register"
-        />
     </LinearLayout>
 
+   <androidx.appcompat.widget.AppCompatImageButton
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/login_register"
+       android:background="@drawable/ic_up_arrow"
+       android:layout_alignParentBottom="true"
+       android:layout_marginLeft="40dp"
+       android:layout_marginBottom="75dp"
+       />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Regiter here"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_alignParentBottom="true"/>
 
-</LinearLayout>
+
+</RelativeLayout>

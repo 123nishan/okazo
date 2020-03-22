@@ -1,6 +1,7 @@
 package com.example.okazo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -22,6 +23,7 @@ import com.example.okazo.Api.APIResponse;
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.util.JavaMailAPI;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
@@ -37,8 +39,8 @@ import retrofit2.Response;
 
 
 public class LoginActivity extends AppCompatActivity {
-    Button buttonLogin;
-    TextView textViewRegister;
+    MaterialButton buttonLogin;
+    AppCompatImageButton registerButton;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     TextInputEditText inputEditTextEmail, inputEditTextPassword;
     String email, password;
@@ -64,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin = findViewById(R.id.login_submit);
         inputEditTextEmail = findViewById(R.id.login_email);
         inputEditTextPassword = findViewById(R.id.login_password);
-        textViewRegister = findViewById(R.id.login_register);
+        registerButton = findViewById(R.id.login_register);
         progressBar = findViewById(R.id.login_progress_bar);
         progressBar.setVisibility(View.INVISIBLE);
         buttonLogin.setVisibility(View.GONE);
@@ -85,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(inputEditTextEmail.getText().toString().matches(emailPattern)){
 
 
-                       
+
 
 
 
@@ -120,7 +122,9 @@ public class LoginActivity extends AppCompatActivity {
           inputEditTextEmail.addTextChangedListener(new TextWatcher() {
               @Override
               public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                if(s.toString().matches(emailPattern)){
+                    inputEditTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
+                }
               }
 
               @Override
@@ -146,7 +150,9 @@ public class LoginActivity extends AppCompatActivity {
           inputEditTextPassword.addTextChangedListener(new TextWatcher() {
               @Override
               public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                if(s.toString().length()>5){
+                    inputEditTextPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
+                }
               }
 
               @Override
@@ -168,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
 
               }
           });
-        textViewRegister.setOnClickListener(new View.OnClickListener() {
+            registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
