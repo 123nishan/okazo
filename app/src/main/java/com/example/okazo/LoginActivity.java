@@ -1,12 +1,16 @@
 package com.example.okazo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -21,10 +25,12 @@ import com.example.okazo.util.JavaMailAPI;
 import com.google.android.material.textfield.TextInputEditText;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Random;
 
+import pl.droidsonroids.gif.GifDrawable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
     String email, password;
     ApiInterface apiInterface;
     ProgressBar progressBar;
+    Boolean emailStatus=false;
+    Boolean passwordStatus=false;
     String sharedPreferencesConstant = "hello";
 
     @Override
@@ -59,7 +67,107 @@ public class LoginActivity extends AppCompatActivity {
         textViewRegister = findViewById(R.id.login_register);
         progressBar = findViewById(R.id.login_progress_bar);
         progressBar.setVisibility(View.INVISIBLE);
+        buttonLogin.setVisibility(View.GONE);
+            GifDrawable gifChecking = null;
 
+            try {
+                gifChecking = new GifDrawable( getResources(), R.drawable.loading_textview );
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            GifDrawable finalGiffChecking = gifChecking;
+            inputEditTextEmail.setOnFocusChangeListener((v, hasFocus) -> {
+                if(hasFocus){
+                   inputEditTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, finalGiffChecking,null);
+
+                }else {
+                    if(inputEditTextEmail.getText().toString().matches(emailPattern)){
+
+
+                       
+
+
+
+                    }else {
+                        inputEditTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
+                    }
+                }
+
+            });
+          inputEditTextPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+              @Override
+              public void onFocusChange(View v, boolean hasFocus) {
+                  if(hasFocus){
+                      inputEditTextPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, finalGiffChecking,null);
+                      if(inputEditTextPassword.getText().toString().length()>5){
+
+                      }
+                  }
+                  else {
+                      if(inputEditTextPassword.getText().toString().length()>5){
+
+
+
+
+                      }else {
+                          inputEditTextPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
+                      }
+                  }
+              }
+          });
+
+          inputEditTextEmail.addTextChangedListener(new TextWatcher() {
+              @Override
+              public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+              }
+
+              @Override
+              public void onTextChanged(CharSequence s, int start, int before, int count) {
+                  if(s.toString().matches(emailPattern)){
+                      emailStatus=true;
+                      inputEditTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
+                  }else {
+                      emailStatus=false;
+                      buttonLogin.setVisibility(View.GONE);
+                  }
+
+                    if(emailStatus && passwordStatus){
+                        buttonLogin.setVisibility(View.VISIBLE);
+                    }
+              }
+
+              @Override
+              public void afterTextChanged(Editable s) {
+
+              }
+          });
+          inputEditTextPassword.addTextChangedListener(new TextWatcher() {
+              @Override
+              public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+              }
+
+              @Override
+              public void onTextChanged(CharSequence s, int start, int before, int count) {
+                 if(s.toString().length()>5){
+                     passwordStatus=true;
+                     inputEditTextPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
+                 }else {
+                     passwordStatus=false;
+                     buttonLogin.setVisibility(View.GONE);
+                 }
+                  if(emailStatus && passwordStatus){
+                      buttonLogin.setVisibility(View.VISIBLE);
+                  }
+              }
+
+              @Override
+              public void afterTextChanged(Editable s) {
+
+              }
+          });
         textViewRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,6 +264,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 }
+
 
     @Override
     public void onBackPressed() {
