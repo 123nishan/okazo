@@ -38,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name"
+            android:drawableRight="@drawable/ic_name"
             android:id="@+id/register_name"/>
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -50,6 +51,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_mail"
             android:id="@+id/register_email"
             android:hint="Email"/>
 
@@ -64,14 +66,29 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableRight="@drawable/ic_lock"
             android:id="@+id/register_password"
             android:hint="Password"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/register_number_layout"
+        android:layout_below="@+id/register_password_layout"
+        android:layout_marginLeft="50dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/register_phone"
+            android:drawableRight="@drawable/ic_phone"
+            android:hint="Phone"/>
     </com.google.android.material.textfield.TextInputLayout>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/register_button"
-        android:layout_below="@+id/register_password_layout"
+        android:layout_below="@+id/register_number_layout"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="150dp"
         android:background="@color/cardview_dark_background"
@@ -82,15 +99,5 @@
 
 
 </RelativeLayout>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:visibility="gone"
-    android:orientation="vertical">
 
-
-
-
-
-</LinearLayout>
 </RelativeLayout>
