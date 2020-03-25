@@ -1,9 +1,12 @@
 package com.example.okazo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,10 +25,12 @@ import com.example.okazo.util.constants;
 import com.google.android.material.textfield.TextInputEditText;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Random;
 
+import pl.droidsonroids.gif.GifDrawable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnRegister;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     ApiInterface apiInterface;
+    Boolean emailStatus=false,passwordStatus=false,nameStatus=false,mobileStatus=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +50,190 @@ public class RegisterActivity extends AppCompatActivity {
         editTextPassword=findViewById(R.id.register_password);
         editTextEmail=findViewById(R.id.register_email);
         btnRegister=findViewById(R.id.register_button);
-          btnRegister.setOnClickListener(new View.OnClickListener() {
+        btnRegister.setVisibility(View.GONE);
+        GifDrawable gifChecking = null;
+        try {
+            gifChecking = new GifDrawable( getResources(), R.drawable.loading_textview );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        GifDrawable finalGiffChecking = gifChecking;
+        editTextEmail.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus){
+                editTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, finalGiffChecking,null);
+
+            }else {
+                if(editTextEmail.getText().toString().matches(emailPattern)){
+                }else {
+                    editTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
+                }
+            }
+
+        });
+        editTextPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editTextPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, finalGiffChecking,null);
+                    if(editTextPassword.getText().toString().length()>5){
+
+                    }
+                }
+                else {
+                    if(editTextPassword.getText().toString().length()>5){
+
+
+
+
+                    }else {
+                        editTextPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
+                    }
+                }
+            }
+        });
+        editTextMobile.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, finalGiffChecking,null);
+
+                }
+                else {
+                    if(editTextMobile.getText().toString().length()==10){
+                    }else {
+                        editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
+                    }
+                }
+            }
+        });
+        editTextMobile.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, finalGiffChecking,null);
+
+                }
+                else {
+                    if(editTextMobile.getText().toString().length()>5){
+                    }else {
+                        editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
+                    }
+                }
+            }
+        });
+
+        editTextEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(s.toString().matches(emailPattern)){
+                    editTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().matches(emailPattern)){
+                    emailStatus=true;
+                    editTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
+                }else {
+                    emailStatus=false;
+                    btnRegister.setVisibility(View.GONE);
+                }
+
+                if(emailStatus && passwordStatus && nameStatus && mobileStatus){
+                    btnRegister.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        editTextPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(s.toString().length()>5){
+                    editTextPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().length()>5){
+                    passwordStatus=true;
+                    editTextPassword.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
+                }else {
+                    passwordStatus=false;
+                    btnRegister.setVisibility(View.GONE);
+                }
+                if(emailStatus && passwordStatus && nameStatus && mobileStatus){
+                    btnRegister.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        editTextMobile.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(s.toString().length()==10){
+                    editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().length()==10){
+                    mobileStatus=true;
+                    editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
+                }else {
+                    mobileStatus=false;
+                    btnRegister.setVisibility(View.GONE);
+                }
+                if(emailStatus && passwordStatus && nameStatus && mobileStatus){
+                    btnRegister.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        editTextName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(s.toString().length()>5 &&Character.isLetter(Integer.parseInt(String.valueOf(s))) ){
+                    editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().length()>5 && Character.isLetter(Integer.parseInt(String.valueOf(s)))){
+                    nameStatus=true;
+                    editTextName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
+                }else {
+                    nameStatus=false;
+                    btnRegister.setVisibility(View.GONE);
+                }
+                if(emailStatus && passwordStatus && nameStatus && mobileStatus){
+                    btnRegister.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String phone=editTextMobile.getText().toString();
