@@ -106,17 +106,17 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
-        editTextMobile.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editTextName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
-                    editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, finalGiffChecking,null);
+                    editTextName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, finalGiffChecking,null);
 
                 }
                 else {
-                    if(editTextMobile.getText().toString().length()>5){
+                    if(editTextName.getText().toString().length()>5){
                     }else {
-                        editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
+                        editTextName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
                     }
                 }
             }
@@ -209,14 +209,15 @@ public class RegisterActivity extends AppCompatActivity {
         editTextName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(s.toString().length()>5 &&Character.isLetter(Integer.parseInt(String.valueOf(s))) ){
+                if(count>5 ){
                     editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
                 }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().length()>5 && Character.isLetter(Integer.parseInt(String.valueOf(s)))){
+                Toast.makeText(RegisterActivity.this, "asd"+" "+s, Toast.LENGTH_SHORT).show();
+                if(count >5){
                     nameStatus=true;
                     editTextName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
                 }else {

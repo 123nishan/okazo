@@ -4,6 +4,7 @@ package com.example.okazo.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -44,6 +45,7 @@ public class ProfileFragment extends Fragment {
 
         View v=inflater.inflate(R.layout.fragment_profile, container, false);
         editTextLatitude=v.findViewById(R.id.latitude);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         editTextLongitude=v.findViewById(R.id.longitude);
         editTextName=v.findViewById(R.id.name);
         submit=v.findViewById(R.id.form_submit);
