@@ -11,6 +11,7 @@ public class APIResponse {
     @SerializedName("uid")
     @Expose
     private String uid;
+
     @SerializedName("user")
     @Expose
     private User user;
@@ -25,6 +26,7 @@ public class APIResponse {
     public Boolean getError() {
         return error;
     }
+
 
     public void setError(Boolean error) {
         this.error = error;

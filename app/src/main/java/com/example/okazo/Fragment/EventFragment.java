@@ -57,7 +57,7 @@ public class EventFragment extends Fragment implements OnMapReadyCallback {
         Retrofit retrofit= ApiClient.getApiClient();
 
         apiInterface=retrofit.create(ApiInterface.class);
-        call=apiInterface.getLocation();
+//        call=apiInterface.getLocation();
         return v;
     }
 private void initGoogleMap(Bundle savedInstanceState,View v){

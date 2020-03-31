@@ -1,8 +1,10 @@
 package com.example.okazo.Api;
 
+import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Note;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,8 +34,8 @@ public interface ApiInterface {
     );
 
 
-    @GET("notes.php")
-    Call<List<Note>> getLocation();
+    @GET("eventDetail/eventType.php")
+    Call<ArrayList<EventDetail>> getEventType();
 
 
     @FormUrlEncoded
