@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.okazo.GeoFenceActivity;
 import com.example.okazo.LoginActivity;
 import com.example.okazo.R;
 import com.example.okazo.eventDetail;
@@ -89,7 +90,8 @@ public class HomeFragment extends Fragment {
         imageButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent=new Intent(getActivity().getApplicationContext(), eventDetail.class);
+           // Intent intent=new Intent(getActivity().getApplicationContext(), eventDetail.class);
+          Intent intent=new Intent(getActivity().getApplicationContext(), GeoFenceActivity.class);
             startActivity(intent);
             }
         });

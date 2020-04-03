@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.okazo.Api.ApiClient;
@@ -32,13 +33,21 @@ AppCompatSpinner eventTypeSpinner;
     private ArrayList<EventDetail> selectedEventType=new ArrayList<EventDetail>();
     private HashSet<String> set=new HashSet<>();
     private EventTypeAdapter adapter;
-
+    private Button buttonNext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
         eventTypeSpinner=findViewById(R.id.event_detail_event_type_spinner);
        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+       buttonNext=findViewById(R.id.event_detail_first_button);
+
+       buttonNext.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+
+           }
+       });
       apiInterface.getEventType().enqueue(new Callback<ArrayList<EventDetail>>() {
           @Override
           public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
@@ -89,19 +98,23 @@ AppCompatSpinner eventTypeSpinner;
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(position>0) {
-            String item = parent.getItemAtPosition(position).toString();
+            if (selectedEventType.size() >= 5) {
+                Toast.makeText(this, "you cant select more than 4", Toast.LENGTH_SHORT).show();
+            } else {
+                String item = parent.getItemAtPosition(position).toString();
 
-            EventDetail eventDetail=new EventDetail(item);
+                EventDetail eventDetail = new EventDetail(item);
 
-                if(!set.contains(item)){
+                if (!set.contains(item)) {
                     set.add(item);
 
                     selectedEventType.add(eventDetail);
-                    Toast.makeText(this, "asdasd"+item, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "asdasd" + item, Toast.LENGTH_SHORT).show();
 
                     adapter.notifyDataSetChanged();
                 }
             }
+        }
 
         }
 

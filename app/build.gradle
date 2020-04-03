@@ -51,6 +51,10 @@ dependencies {
     // for bottom nav
     implementation 'com.github.armcha:SpaceNavigationView:1.6.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
+
+    implementation 'com.firebase:geofire-android:3.0.0'
+    implementation 'com.google.firebase:firebase-database:19.2.1'
+    implementation 'com.karumi:dexter:5.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

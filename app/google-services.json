@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "934675485827-dddm57s7kn6n7v9a3hu978nt5ue2u8g9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.okazo",
+            "certificate_hash": "462f74317ed82a5ce016844da07e6bb07970eef9"
+          }
+        },
+        {
           "client_id": "934675485827-m0s42vm1i17k6o4441862ft42a7oet72.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

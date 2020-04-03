@@ -68,6 +68,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/event_detail_event_type_spinner"/>
 
-
+<Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:text="Next"
+    android:id="@+id/event_detail_first_button"
+    android:layout_below="@+id/event_detail_recycler_view"/>
 
 </RelativeLayout>
