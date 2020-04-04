@@ -1,6 +1,7 @@
 package com.example.okazo.Api;
 
 import com.example.okazo.Model.EventDetail;
+import com.example.okazo.Model.Geofence;
 import com.example.okazo.Model.Note;
 
 import java.sql.Timestamp;
@@ -37,6 +38,8 @@ public interface ApiInterface {
     @GET("eventDetail/eventType.php")
     Call<ArrayList<EventDetail>> getEventType();
 
+    @GET("geofence/activate_geofence.php")
+    Call<ArrayList<Geofence>> getGeofenceStatus();
 
     @FormUrlEncoded
     @POST("save.php")

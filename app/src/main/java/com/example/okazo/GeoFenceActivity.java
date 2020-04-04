@@ -27,6 +27,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.okazo.Api.ApiClient;
+import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.util.GeofenceBroadcastReceiver;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -66,6 +68,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static android.util.Log.d;
 import static com.example.okazo.util.constants.ERROR_DIALOG_REQUEST;
 import static com.example.okazo.util.constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
@@ -83,39 +89,65 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
     private List<LatLng> area;
     private  PendingIntent geofencePendingIntent;
     private GeofencingClient geofencingClient;
+    private ApiInterface apiInterface;
     ArrayList<Geofence> geofenceslist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo_fence);
-        geofencingClient=LocationServices.getGeofencingClient(this);
-        String key=""+27.680438+"-"+85.335270;
-        geofencePendingIntent=null;
-        geofenceslist=new ArrayList<>();
-        Geofence geofence=getGeofence(27.680438,85.335270,key);
-        geofenceslist.add(new Geofence.Builder()
-        .setRequestId(""+27.680438+"-"+85.335270)
-        .setCircularRegion(
-                27.680438,85.335270,50
-        )
-                .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_DWELL)
-                        .setLoiteringDelay(10000)
-                .build()
-        );
-       //TODO permission check for android 10 or greater OF ACCESS_BACKGROUND_LOCATION
-        geofencingClient.addGeofences(getGeofencingRequest(geofenceslist),getGeofencePendingIntent())
-                .addOnSuccessListener(this, new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                    Log.d("hello","geoAdded");
-                    }
-                }).addOnFailureListener(this, new OnFailureListener() {
+        apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
+        apiInterface.getGeofenceStatus().enqueue(new Callback<ArrayList<com.example.okazo.Model.Geofence>>() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(GeoFenceActivity.this, "Failed to add GEO FENCE"+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<ArrayList<com.example.okazo.Model.Geofence>> call, Response<ArrayList<com.example.okazo.Model.Geofence>> response) {
+                ArrayList<com.example.okazo.Model.Geofence> geofences=response.body();
+                for ( com.example.okazo.Model.Geofence status:geofences
+                     ) {
+                    if(status.getStatus()==0){
+                        Toast.makeText(GeoFenceActivity.this, "GEO OFF", Toast.LENGTH_SHORT).show();
+                    }else
+                    {
+                       // Toast.makeText(GeoFenceActivity.this, "GGEO ON", Toast.LENGTH_SHORT).show();
+                        geofencingClient=LocationServices.getGeofencingClient(GeoFenceActivity.this);
+                        String key=""+27.680438+"-"+85.335270;
+                        geofencePendingIntent=null;
+                        geofenceslist=new ArrayList<>();
+                        //Geofence geofence=getGeofence(27.680438,85.335270,key);
+                        geofenceslist.add(new Geofence.Builder()
+                                .setRequestId(""+27.680438+"-"+85.335270)
+                                .setCircularRegion(
+                                        27.680438,85.335270,100
+                                )
+                                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_DWELL)
+                                //.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
+                                .setLoiteringDelay(10000)
+                                .build()
+                        );
+                        geofencingClient.addGeofences(getGeofencingRequest(geofenceslist),getGeofencePendingIntent())
+                                .addOnSuccessListener(GeoFenceActivity.this, new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("hello","geoAdded");
+                                    }
+                                }).addOnFailureListener(GeoFenceActivity.this, new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(GeoFenceActivity.this, "Failed to add GEO FENCE"+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        //TODO permission check for android 10 or greater OF ACCESS_BACKGROUND_LOCATION
+                        //addGeofence(geofencingClient,geofenceslist);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<com.example.okazo.Model.Geofence>> call, Throwable t) {
+
             }
         });
+
         if(isServicesOK()) {
 
 //            if(mLocationPermissionGranted){
@@ -159,6 +191,21 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
 
 
     }
+    private void addGeofence(GeofencingClient geofencingClient, ArrayList<Geofence> geofenceslist){
+        geofencingClient.addGeofences(getGeofencingRequest(geofenceslist),getGeofencePendingIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("hello","geoAdded");
+                    }
+                }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(GeoFenceActivity.this, "Failed to add GEO FENCE"+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private Geofence getGeofence(double lat, double lang, String key) {
         return new Geofence.Builder()
