@@ -64,82 +64,82 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 //        }
     }
 
-    private void sendNotification(String geofenceTransitionDetails) {
-        Log.d("broadcasterror1", String.valueOf(geofenceTransitionDetails));
-        String CHANNEL_ID = "Zoftino";
-        NotificationManager notificationManager= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-            NotificationChannel notificationChannel=new NotificationChannel(CHANNEL_ID,"My Notification",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            notificationChannel.setDescription("chaneel Description");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setVibrationPattern(new long[]{0,1000,500,1000});
-            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-
-
-        }
-
-        NotificationCompat.Builder builder=new NotificationCompat.Builder(context,CHANNEL_ID);
-        builder.setContentTitle("Hello")
-                .setContentText("locationDetails")
-                .setAutoCancel(false)
-                .setSmallIcon(R.mipmap.ic_launcher);
-
-        Notification notification=builder.build();
-        notificationManager.notify(new Random().nextInt(),notification);
-
-
-
-    }
-
-    private String getGeofenceTransitionDetails(GeofenceBroadcastReceiver geofenceBroadcastReceiver, int geofenceTransition, List<Geofence> triggeringGeofences) {
-        ArrayList<String> locationNames=new ArrayList<>();
-        for (Geofence geofence:triggeringGeofences){
-            locationNames.add(getLocationName(geofence.getRequestId()));
-        }
-        String triggeringGeofencesString= TextUtils.join(",",locationNames);
-        return triggeringGeofencesString;
-    }
-
-    private String getLocationName(String key) {
-        String[] strs = key.split("-");
-
-        String locationName = null;
-        if (strs != null && strs.length == 2) {
-            double lat = Double.parseDouble(strs[0]);
-            double lng = Double.parseDouble(strs[1]);
-
-            locationName = getLocationNameGeocoder(lat, lng);
-        }
-        if (locationName != null) {
-            return locationName;
-        } else {
-            return key;
-        }
-    }
-    private String getLocationNameGeocoder(double lat, double lng) {
-        Geocoder geocoder = new Geocoder(context,Locale.getDefault());
-        List<Address> addresses = null;
-
-        try {
-            addresses = geocoder.getFromLocation(lat, lng, 1);
-        } catch (Exception ioException) {
-            Log.e("", "Error in getting location name for the location");
-        }
-
-        if (addresses == null || addresses.size() == 0) {
-            Log.d("", "no location name");
-            return null;
-        } else {
-            Address address = addresses.get(0);
-            ArrayList<String> addressInfo = new ArrayList<>();
-            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                addressInfo.add(address.getAddressLine(i));
-            }
-
-            return TextUtils.join(System.getProperty("line.separator"), addressInfo);
-        }
-    }
+//    private void sendNotification(String geofenceTransitionDetails) {
+//        Log.d("broadcasterror1", String.valueOf(geofenceTransitionDetails));
+//        String CHANNEL_ID = "Zoftino";
+//        NotificationManager notificationManager= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+//            NotificationChannel notificationChannel=new NotificationChannel(CHANNEL_ID,"My Notification",
+//                    NotificationManager.IMPORTANCE_DEFAULT);
+//            notificationChannel.setDescription("chaneel Description");
+//            notificationChannel.enableLights(true);
+//            notificationChannel.setLightColor(Color.RED);
+//            notificationChannel.setVibrationPattern(new long[]{0,1000,500,1000});
+//            notificationChannel.enableVibration(true);
+//            notificationManager.createNotificationChannel(notificationChannel);
+//
+//
+//        }
+//
+//        NotificationCompat.Builder builder=new NotificationCompat.Builder(context,CHANNEL_ID);
+//        builder.setContentTitle("Hello")
+//                .setContentText("locationDetails")
+//                .setAutoCancel(false)
+//                .setSmallIcon(R.mipmap.ic_launcher);
+//
+//        Notification notification=builder.build();
+//        notificationManager.notify(new Random().nextInt(),notification);
+//
+//
+//
+//    }
+//
+//    private String getGeofenceTransitionDetails(GeofenceBroadcastReceiver geofenceBroadcastReceiver, int geofenceTransition, List<Geofence> triggeringGeofences) {
+//        ArrayList<String> locationNames=new ArrayList<>();
+//        for (Geofence geofence:triggeringGeofences){
+//            locationNames.add(getLocationName(geofence.getRequestId()));
+//        }
+//        String triggeringGeofencesString= TextUtils.join(",",locationNames);
+//        return triggeringGeofencesString;
+//    }
+//
+//    private String getLocationName(String key) {
+//        String[] strs = key.split("-");
+//
+//        String locationName = null;
+//        if (strs != null && strs.length == 2) {
+//            double lat = Double.parseDouble(strs[0]);
+//            double lng = Double.parseDouble(strs[1]);
+//
+//            locationName = getLocationNameGeocoder(lat, lng);
+//        }
+//        if (locationName != null) {
+//            return locationName;
+//        } else {
+//            return key;
+//        }
+//    }
+//    private String getLocationNameGeocoder(double lat, double lng) {
+//        Geocoder geocoder = new Geocoder(context,Locale.getDefault());
+//        List<Address> addresses = null;
+//
+//        try {
+//            addresses = geocoder.getFromLocation(lat, lng, 1);
+//        } catch (Exception ioException) {
+//            Log.e("", "Error in getting location name for the location");
+//        }
+//
+//        if (addresses == null || addresses.size() == 0) {
+//            Log.d("", "no location name");
+//            return null;
+//        } else {
+//            Address address = addresses.get(0);
+//            ArrayList<String> addressInfo = new ArrayList<>();
+//            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+//                addressInfo.add(address.getAddressLine(i));
+//            }
+//
+//            return TextUtils.join(System.getProperty("line.separator"), addressInfo);
+//        }
+//    }
 }
