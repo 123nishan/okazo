@@ -39,28 +39,29 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("hello","working");
-        this.context=context;
-        //GeofenceTransitionsJobIntentService.enqueueWork(context, intent);
-        GeofencingEvent geofencingEvent=GeofencingEvent.fromIntent(intent);
-        if(geofencingEvent.hasError()){
-           return;
-        }
-        //get trnasition type
-        int geofenceTransition=geofencingEvent.getGeofenceTransition();
-        //test that the reported transition was of interest
-        if(geofenceTransition== Geofence.GEOFENCE_TRANSITION_ENTER||geofenceTransition==Geofence.GEOFENCE_TRANSITION_EXIT){
-            //get the geofences that were triggered. a single event can trigger 
-            //multiple geofences.
-            List<Geofence> triggeringGeofences=geofencingEvent.getTriggeringGeofences();
-            //get the transition detals as a string
-            String geofenceTransitionDetails=getGeofenceTransitionDetails(this,geofenceTransition,triggeringGeofences);
-            //send notification and log the transition details
-            sendNotification(geofenceTransitionDetails);
-
-        }else {
-            //log the error
-            Log.d("broadcasterror1", String.valueOf(geofenceTransition));
-        }
+        GeofenceTransitionsJobIntentService.enqueueWork(context,intent);
+//        this.context=context;
+//        //GeofenceTransitionsJobIntentService.enqueueWork(context, intent);
+//        GeofencingEvent geofencingEvent=GeofencingEvent.fromIntent(intent);
+//        if(geofencingEvent.hasError()){
+//           return;
+//        }
+//        //get trnasition type
+//        int geofenceTransition=geofencingEvent.getGeofenceTransition();
+//        //test that the reported transition was of interest
+//        if(geofenceTransition== Geofence.GEOFENCE_TRANSITION_ENTER||geofenceTransition==Geofence.GEOFENCE_TRANSITION_EXIT){
+//            //get the geofences that were triggered. a single event can trigger
+//            //multiple geofences.
+//            List<Geofence> triggeringGeofences=geofencingEvent.getTriggeringGeofences();
+//            //get the transition detals as a string
+//            String geofenceTransitionDetails=getGeofenceTransitionDetails(this,geofenceTransition,triggeringGeofences);
+//            //send notification and log the transition details
+//            sendNotification(geofenceTransitionDetails);
+//
+//        }else {
+//            //log the error
+//            Log.d("broadcasterror1", String.valueOf(geofenceTransition));
+//        }
     }
 
     private void sendNotification(String geofenceTransitionDetails) {

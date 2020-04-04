@@ -96,7 +96,7 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
         geofenceslist.add(new Geofence.Builder()
         .setRequestId(""+27.680438+"-"+85.335270)
         .setCircularRegion(
-                27.680438,85.335270,10
+                27.680438,85.335270,50
         )
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_DWELL)
@@ -113,7 +113,7 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
                 }).addOnFailureListener(this, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(GeoFenceActivity.this, "Failed to add GEO FENCE", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GeoFenceActivity.this, "Failed to add GEO FENCE"+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
         if(isServicesOK()) {
@@ -184,7 +184,7 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
             return geofencePendingIntent;
         }
 
-        Intent intent=new Intent(this, GeofenceBroadcastReceiver.class);
+        Intent intent=new Intent(GeoFenceActivity.this, GeofenceBroadcastReceiver.class);
         geofencePendingIntent= PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
         return geofencePendingIntent;
 
