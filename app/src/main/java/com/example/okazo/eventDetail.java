@@ -7,12 +7,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,6 +48,7 @@ AppCompatSpinner eventTypeSpinner;
     private EventTypeAdapter adapter;
     private Button buttonNext;
     RecyclerView recyclerView;
+    private TextView spinnerError;
     private Boolean dateStatus=false,timeStatus=false,spinnerStatus=false,titleStatus=false;
     private TextInputEditText inputEditTextEventName,inputEditTextEventDate,inputEditTextEventTime;
     private int mYear, mMonth, mDay, mHour, mMinute;
@@ -59,6 +62,7 @@ AppCompatSpinner eventTypeSpinner;
         inputEditTextEventDate=findViewById(R.id.event_detail_event_date);
         inputEditTextEventTime=findViewById(R.id.event_detail_event_time);
         inputEditTextEventName=findViewById(R.id.event_name);
+        spinnerError=(TextView)eventTypeSpinner.getSelectedView();
         buttonNext.setVisibility(View.GONE);
 
         inputEditTextEventDate.setOnTouchListener(new View.OnTouchListener() {
@@ -200,11 +204,18 @@ AppCompatSpinner eventTypeSpinner;
                  set.remove(eventDetails.get(position).getEventType());
 
                   selectedEventType.remove(position);
-                 
+
                   if(recyclerView.getChildCount()==1){
                       spinnerStatus=false;
 
+
+                      spinnerError=(TextView)eventTypeSpinner.getSelectedView();
+                      spinnerError.setTextColor(Color.RED);
+
                       buttonNext.setVisibility(View.GONE);
+
+                    //
+
                   }else {
                       spinnerStatus=true;
                       if(dateStatus && timeStatus && spinnerStatus && titleStatus){
@@ -225,10 +236,13 @@ AppCompatSpinner eventTypeSpinner;
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
         if(position>0) {
+
             if (selectedEventType.size() >= 5) {
                 Toast.makeText(this, "you cant select more than 4", Toast.LENGTH_SHORT).show();
             } else {
+
                 String item = parent.getItemAtPosition(position).toString();
                 spinnerStatus=true;
                 EventDetail eventDetail = new EventDetail(item);
@@ -243,8 +257,10 @@ AppCompatSpinner eventTypeSpinner;
 
 
                     adapter.notifyDataSetChanged();
+
                     //
                 }
+                eventTypeSpinner.setSelection(0);
             }
         }
 
