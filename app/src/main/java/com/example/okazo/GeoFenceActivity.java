@@ -100,6 +100,7 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
             @Override
             public void onResponse(Call<ArrayList<com.example.okazo.Model.Geofence>> call, Response<ArrayList<com.example.okazo.Model.Geofence>> response) {
                 ArrayList<com.example.okazo.Model.Geofence> geofences=response.body();
+
                 for ( com.example.okazo.Model.Geofence status:geofences
                      ) {
                     if(status.getStatus()==0){

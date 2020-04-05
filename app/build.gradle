@@ -55,6 +55,8 @@ dependencies {
     implementation 'com.firebase:geofire-android:3.0.0'
     implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation 'com.karumi:dexter:5.0.0'
+
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

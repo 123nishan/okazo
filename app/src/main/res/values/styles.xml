@@ -21,5 +21,8 @@
     <style name= "RobotoButtonStyle" parent= "android:Widget.Holo.Button" >
         <item name= "android:fontFamily" > sans-serif-light </item>
     </style>
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
 
 </resources>

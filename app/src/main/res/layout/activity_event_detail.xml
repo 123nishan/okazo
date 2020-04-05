@@ -25,6 +25,7 @@
     </LinearLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
+
         android:layout_below="@+id/event_detail_pointer"
         android:layout_height="wrap_content"
         android:id="@+id/event_name_layout">
@@ -34,34 +35,43 @@
             android:id="@+id/event_name"
             android:hint="Event Title"/>
     </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/event_detail_event_Creator_name_layout"
-        android:layout_below="@+id/event_name_layout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Your Name"
-            android:id="@+id/event_detail_event_Creator_name"/>
-    </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
+
+        android:layout_below="@+id/event_name_layout"
         android:layout_height="wrap_content"
-        android:id="@+id/event_detail_event_Creator_number_layout"
-        android:layout_below="@+id/event_detail_event_Creator_name_layout">
+        android:id="@+id/event_detail_event_date_layout">
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Contact Number"
-            android:id="@+id/event_detail_event_Creator_number"/>
+            android:drawableRight="@drawable/ic_calendar"
+            android:id="@+id/event_detail_event_date"
+            android:hint="Event Date"/>
     </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+
+        android:layout_below="@+id/event_detail_event_date_layout"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_detail_event_time_layout">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableRight="@drawable/ic_clock"
+
+            android:id="@+id/event_detail_event_time"
+            android:hint="Event Time"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.appcompat.widget.AppCompatSpinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/event_detail_event_type_spinner"
-        android:layout_below="@+id/event_detail_event_Creator_number_layout"/>
+        android:layout_below="@+id/event_detail_event_time_layout"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/event_detail_recycler_view"

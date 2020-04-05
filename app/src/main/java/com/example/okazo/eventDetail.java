@@ -2,24 +2,35 @@ package com.example.okazo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Model.EventDetail;
+import com.example.okazo.util.DateTimePicker;
 import com.example.okazo.util.EventTypeAdapter;
+import com.google.android.material.textfield.TextInputEditText;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 
 import retrofit2.Call;
@@ -34,6 +45,9 @@ AppCompatSpinner eventTypeSpinner;
     private HashSet<String> set=new HashSet<>();
     private EventTypeAdapter adapter;
     private Button buttonNext;
+    private Boolean dateStatus=false,timeStatus=false,spinnerStatus=false;
+    private TextInputEditText inputEditTextEventName,inputEditTextEventDate,inputEditTextEventTime;
+    private int mYear, mMonth, mDay, mHour, mMinute;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,11 +55,107 @@ AppCompatSpinner eventTypeSpinner;
         eventTypeSpinner=findViewById(R.id.event_detail_event_type_spinner);
        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
        buttonNext=findViewById(R.id.event_detail_first_button);
+        inputEditTextEventDate=findViewById(R.id.event_detail_event_date);
+        inputEditTextEventTime=findViewById(R.id.event_detail_event_time);
+        buttonNext.setVisibility(View.GONE);
+        inputEditTextEventDate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(MotionEvent.ACTION_UP==event.getAction()){
+                    DateTimePicker dateTimePicker=new DateTimePicker();
+                    dateTimePicker.showDatePickerDialog(eventDetail.this,inputEditTextEventDate,"date");
+                }
 
+                return false;
+            }
+        });
+        inputEditTextEventTime.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(MotionEvent.ACTION_UP==event.getAction()){
+                    DateTimePicker dateTimePicker=new DateTimePicker();
+                    dateTimePicker.showDatePickerDialog(eventDetail.this,inputEditTextEventTime,"time");
+                }
+                return false;
+            }
+        });
+
+        inputEditTextEventDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(count>=10){
+                    inputEditTextEventDate.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
+                    dateStatus=true;
+                }else {
+                    inputEditTextEventDate.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_wrong,null),null);
+                }
+                if(dateStatus && timeStatus && spinnerStatus){
+                    buttonNext.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        inputEditTextEventTime.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(count>=4){
+                    inputEditTextEventTime.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
+                    timeStatus=true;
+                }else {
+                    inputEditTextEventTime.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_wrong,null),null);
+                }
+                if(dateStatus && timeStatus && spinnerStatus){
+                    buttonNext.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+//        inputEditTextEventDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if(hasFocus){
+//                    if(inputEditTextEventDate.getText().toString().length()>10){
+//                        inputEditTextEventDate.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
+//                    }
+//
+//
+//                }
+//            }
+//        });
+//        inputEditTextEventTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if(!hasFocus){
+//                    if(inputEditTextEventTime.getText().toString().length()>=4){
+//                        inputEditTextEventTime.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
+//                    }else {
+//
+//                    }
+//                }
+//            }
+//        });
        buttonNext.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-
+                
            }
        });
       apiInterface.getEventType().enqueue(new Callback<ArrayList<EventDetail>>() {
@@ -102,14 +212,16 @@ AppCompatSpinner eventTypeSpinner;
                 Toast.makeText(this, "you cant select more than 4", Toast.LENGTH_SHORT).show();
             } else {
                 String item = parent.getItemAtPosition(position).toString();
-
+                spinnerStatus=true;
                 EventDetail eventDetail = new EventDetail(item);
-
+                if(dateStatus && timeStatus && spinnerStatus){
+                    buttonNext.setVisibility(View.VISIBLE);
+                }
                 if (!set.contains(item)) {
                     set.add(item);
 
                     selectedEventType.add(eventDetail);
-                    Toast.makeText(this, "asdasd" + item, Toast.LENGTH_SHORT).show();
+
 
                     adapter.notifyDataSetChanged();
                 }
