@@ -45,7 +45,8 @@ AppCompatSpinner eventTypeSpinner;
     private HashSet<String> set=new HashSet<>();
     private EventTypeAdapter adapter;
     private Button buttonNext;
-    private Boolean dateStatus=false,timeStatus=false,spinnerStatus=false;
+    RecyclerView recyclerView;
+    private Boolean dateStatus=false,timeStatus=false,spinnerStatus=false,titleStatus=false;
     private TextInputEditText inputEditTextEventName,inputEditTextEventDate,inputEditTextEventTime;
     private int mYear, mMonth, mDay, mHour, mMinute;
     @Override
@@ -57,7 +58,9 @@ AppCompatSpinner eventTypeSpinner;
        buttonNext=findViewById(R.id.event_detail_first_button);
         inputEditTextEventDate=findViewById(R.id.event_detail_event_date);
         inputEditTextEventTime=findViewById(R.id.event_detail_event_time);
+        inputEditTextEventName=findViewById(R.id.event_name);
         buttonNext.setVisibility(View.GONE);
+
         inputEditTextEventDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -79,7 +82,32 @@ AppCompatSpinner eventTypeSpinner;
                 return false;
             }
         });
+        inputEditTextEventName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(count>4){
+                        titleStatus=true;
+
+                        inputEditTextEventName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
+                    }else {
+                        inputEditTextEventName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_wrong,null),null);
+                        titleStatus=false;
+                    }
+                if(dateStatus && timeStatus && spinnerStatus && timeStatus){
+                    buttonNext.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         inputEditTextEventDate.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -94,7 +122,7 @@ AppCompatSpinner eventTypeSpinner;
                 }else {
                     inputEditTextEventDate.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_wrong,null),null);
                 }
-                if(dateStatus && timeStatus && spinnerStatus){
+                if(dateStatus && timeStatus && spinnerStatus && titleStatus){
                     buttonNext.setVisibility(View.VISIBLE);
                 }
             }
@@ -118,7 +146,7 @@ AppCompatSpinner eventTypeSpinner;
                 }else {
                     inputEditTextEventTime.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_wrong,null),null);
                 }
-                if(dateStatus && timeStatus && spinnerStatus){
+                if(dateStatus && timeStatus && spinnerStatus && titleStatus){
                     buttonNext.setVisibility(View.VISIBLE);
                 }
             }
@@ -128,34 +156,11 @@ AppCompatSpinner eventTypeSpinner;
 
             }
         });
-//        inputEditTextEventDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if(hasFocus){
-//                    if(inputEditTextEventDate.getText().toString().length()>10){
-//                        inputEditTextEventDate.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
-//                    }
-//
-//
-//                }
-//            }
-//        });
-//        inputEditTextEventTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if(!hasFocus){
-//                    if(inputEditTextEventTime.getText().toString().length()>=4){
-//                        inputEditTextEventTime.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
-//                    }else {
-//
-//                    }
-//                }
-//            }
-//        });
+
        buttonNext.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-                
+
            }
        });
       apiInterface.getEventType().enqueue(new Callback<ArrayList<EventDetail>>() {
@@ -180,7 +185,7 @@ AppCompatSpinner eventTypeSpinner;
               Toast.makeText(eventDetail.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
           }
       });
-        RecyclerView recyclerView=findViewById(R.id.event_detail_recycler_view);
+        recyclerView=findViewById(R.id.event_detail_recycler_view);
         adapter=new EventTypeAdapter(selectedEventType);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -191,8 +196,21 @@ AppCompatSpinner eventTypeSpinner;
         adapter.setRemoveClickListner(new EventTypeAdapter.OnRemoveClickListner() {
              @Override
                  public void onRemoveClick(int position, ArrayList<EventDetail> eventDetails) {
+
                  set.remove(eventDetails.get(position).getEventType());
+
                   selectedEventType.remove(position);
+                 
+                  if(recyclerView.getChildCount()==1){
+                      spinnerStatus=false;
+
+                      buttonNext.setVisibility(View.GONE);
+                  }else {
+                      spinnerStatus=true;
+                      if(dateStatus && timeStatus && spinnerStatus && titleStatus){
+                          buttonNext.setVisibility(View.VISIBLE);
+                      }
+                  }
 
 //                 Log.d("setis: ", String.valueOf(selectedEventType.get(position).getEventType()));
       adapter.notifyDataSetChanged();
@@ -214,7 +232,8 @@ AppCompatSpinner eventTypeSpinner;
                 String item = parent.getItemAtPosition(position).toString();
                 spinnerStatus=true;
                 EventDetail eventDetail = new EventDetail(item);
-                if(dateStatus && timeStatus && spinnerStatus){
+
+                if(dateStatus && timeStatus && spinnerStatus && titleStatus){
                     buttonNext.setVisibility(View.VISIBLE);
                 }
                 if (!set.contains(item)) {
@@ -224,6 +243,7 @@ AppCompatSpinner eventTypeSpinner;
 
 
                     adapter.notifyDataSetChanged();
+                    //
                 }
             }
         }
