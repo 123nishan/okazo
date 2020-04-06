@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.okazo.GeoFenceActivity;
 import com.example.okazo.LoginActivity;
 import com.example.okazo.R;
+import com.example.okazo.TicketDetailActivity;
 import com.example.okazo.eventDetail;
 import com.example.okazo.util.constants;
 import com.google.android.material.appbar.AppBarLayout;
@@ -38,7 +39,7 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
     AppBarLayout appBarLayout;
-    Button buttonLogOut,buttonAddEvent;
+    Button buttonLogOut,buttonAddEvent,buttonTicket;
     AppCompatImageButton imageButtonAdd;
     CollapsingToolbarLayout collapsingToolbarLayout;
     @Override
@@ -50,6 +51,16 @@ public class HomeFragment extends Fragment {
         appBarLayout= view.findViewById(R.id.fragment_home_app_bar);
         imageButtonAdd= view.findViewById(R.id.fragment_home_add);
         collapsingToolbarLayout=view.findViewById(R.id.fragment_home_collapsing_tool_bar);
+
+        buttonTicket=view.findViewById(R.id.ticket);
+        buttonTicket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity().getApplicationContext(), TicketDetailActivity.class);
+                startActivity(intent);
+            }
+        });
+
         buttonAddEvent=view.findViewById(R.id.add_event);
         buttonAddEvent.setOnClickListener(new View.OnClickListener() {
             @Override

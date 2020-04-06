@@ -23,10 +23,58 @@
             android:background="@drawable/ic_circle_outline"/>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/event_detail_pointer"
+        android:id="@+id/event_page_status_layout">
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Page Private"
+            android:textSize="18dp"/>
+        <Switch
+
+            android:layout_marginRight="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textOff="Public"
+            android:checked="false"
+            android:id="@+id/event_page_status"
+            android:textOn="Private"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/event_page_status_layout"
+        android:id="@+id/event_ticket_status_layout">
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ticket Status"
+            android:textSize="18dp"/>
+        <Switch
+
+            android:layout_marginRight="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textOff="Public"
+            android:checked="false"
+            android:id="@+id/event_ticket_status"
+            android:textOn="Private"
+            />
+    </LinearLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
 
-        android:layout_below="@+id/event_detail_pointer"
+        android:layout_below="@+id/event_ticket_status_layout"
         android:layout_height="wrap_content"
         android:id="@+id/event_name_layout">
         <com.google.android.material.textfield.TextInputEditText
@@ -67,9 +115,11 @@
             android:hint="Event Time"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+
     <androidx.appcompat.widget.AppCompatSpinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:id="@+id/event_detail_event_type_spinner"
         android:layout_below="@+id/event_detail_event_time_layout"/>
     <androidx.recyclerview.widget.RecyclerView

@@ -19,8 +19,10 @@ import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +54,7 @@ AppCompatSpinner eventTypeSpinner;
     private TextView spinnerError;
     private Boolean dateStatus=false,timeStatus=false,spinnerStatus=false,titleStatus=false;
     private TextInputEditText inputEditTextEventName,inputEditTextEventDate,inputEditTextEventTime;
-    private int mYear, mMonth, mDay, mHour, mMinute;
+    Switch aSwitch,switchTicket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +65,11 @@ AppCompatSpinner eventTypeSpinner;
         inputEditTextEventDate=findViewById(R.id.event_detail_event_date);
         inputEditTextEventTime=findViewById(R.id.event_detail_event_time);
         inputEditTextEventName=findViewById(R.id.event_name);
+        switchTicket=findViewById(R.id.event_ticket_status);
         spinnerError=(TextView)eventTypeSpinner.getSelectedView();
         buttonNext.setVisibility(View.GONE);
+        aSwitch=findViewById(R.id.event_page_status);
+
 
         inputEditTextEventDate.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -95,7 +100,7 @@ AppCompatSpinner eventTypeSpinner;
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if(count>4){
+                    if(inputEditTextEventName.length()>4){
                         titleStatus=true;
 
                         inputEditTextEventName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
@@ -164,12 +169,26 @@ AppCompatSpinner eventTypeSpinner;
 
        buttonNext.setOnClickListener(new View.OnClickListener() {
            @Override
+
            public void onClick(View v) {
+               String pageStatus,ticketStatus;
+               if(aSwitch.isChecked()){
+                    pageStatus=aSwitch.getTextOn().toString();
+               }else {
+                   pageStatus=aSwitch.getTextOff().toString();
+               }
+               if(switchTicket.isChecked()){
+                   ticketStatus=switchTicket.getTextOn().toString();
+               }else {
+                   ticketStatus=switchTicket.getTextOff().toString();
+               }
+               //Toast.makeText(eventDetail.this, ""+pageStatus, Toast.LENGTH_SHORT).show();
                Intent intent=new Intent(eventDetail.this,EventLocationActivity.class);
                startActivity(intent);
 
            }
        });
+
       apiInterface.getEventType().enqueue(new Callback<ArrayList<EventDetail>>() {
           @Override
           public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
@@ -274,4 +293,5 @@ AppCompatSpinner eventTypeSpinner;
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
 }
