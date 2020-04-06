@@ -1,6 +1,7 @@
 package com.example.okazo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
@@ -37,7 +38,11 @@ LinearLayout linearLayoutTicketTypes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_ticket_detail);
+       // getSupportActionBar().hide();
+        Toolbar toolbar=findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         buttonAddMore=findViewById(R.id.event_ticket_add_more);
         linearLayoutTicketTypes=findViewById(R.id.event_ticket_type_layout);
         radioGroup=findViewById(R.id.radio_group);
