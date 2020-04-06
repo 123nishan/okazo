@@ -57,6 +57,9 @@ dependencies {
     implementation 'com.karumi:dexter:5.0.0'
 
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
+
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.0.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places-v9:0.11.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

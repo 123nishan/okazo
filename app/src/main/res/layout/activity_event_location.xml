@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EventLocationActivity">
+<com.mapbox.mapboxsdk.maps.MapView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    mapbox:mapbox_cameraZoom="15"
+    android:id="@+id/event_location_map"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/select_event_location"
+        android:layout_gravity="bottom"
+        android:text="Select Location"
+        android:background="@color/colorPrimary"/>
+</FrameLayout>
