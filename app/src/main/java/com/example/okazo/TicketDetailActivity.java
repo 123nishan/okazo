@@ -6,22 +6,29 @@ import androidx.appcompat.widget.Toolbar;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -34,7 +41,13 @@ int counter=1;
 int viewCounter=1;
 RadioGroup radioGroup;
 RadioButton radioButton;
+private ImageView imageViewNext;
 LinearLayout linearLayoutTicketTypes;
+private TextView textViewSingleTicketNumberError,textViewSingleTicketPriceError,textViewTicketTypeName,textViewTicketTypePrice,textViewTicketTypeNumber;
+TextInputEditText inputEditTextOneNumberTicket,inputEditTextOneTicketPrice,inputEditTextTicketTypeName,inputEditTextTicketTypePrice,inputEditTextTicketTypeNumber;
+    private TextInputLayout textInputLayoutSingleNumberTicket,textInputLayoutSinglePriceTicket;
+List<TextInputEditText> editTextsList=new ArrayList<>();
+List<TextView> textViewsList=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +57,110 @@ LinearLayout linearLayoutTicketTypes;
         Toolbar toolbar=findViewById(R.id.toolbar_ticket);
         setSupportActionBar(toolbar);
         buttonAddMore=findViewById(R.id.event_ticket_add_more);
+        inputEditTextOneNumberTicket=findViewById(R.id.event_ticket_number);
+        inputEditTextOneTicketPrice=findViewById(R.id.event_ticket_price_single);
+        textViewSingleTicketNumberError=findViewById(R.id.ticket_number_single_error);
         linearLayoutTicketTypes=findViewById(R.id.event_ticket_type_layout);
-        radioGroup=findViewById(R.id.radio_group);
+        textViewSingleTicketPriceError=findViewById(R.id.ticket_price_single_error);
+        textViewTicketTypeName=findViewById(R.id.ticket_type_name_error);
+        textViewTicketTypePrice=findViewById(R.id.ticket_type_price_error);
+        textViewTicketTypeNumber=findViewById(R.id.ticket_type_number_error);
+        textInputLayoutSingleNumberTicket=findViewById(R.id.event_ticket_textview);
+        textInputLayoutSinglePriceTicket=findViewById(R.id.event_ticket_price_layout);
+        textInputLayoutSingleNumberTicket.setVisibility(View.GONE);
+        textInputLayoutSinglePriceTicket.setVisibility(View.GONE);
 
+        inputEditTextTicketTypeName=findViewById(R.id.event_ticket_first_ticket_name);
+        inputEditTextTicketTypePrice=findViewById(R.id.event_ticket_first_ticket_price);
+        inputEditTextTicketTypeNumber=findViewById(R.id.event_ticket_first_ticket_number);
+
+
+
+
+        radioGroup=findViewById(R.id.radio_group);
+        imageViewNext=findViewById(R.id.toolbar_next);
+
+        imageViewNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedID=radioGroup.getCheckedRadioButtonId();
+                radioButton=findViewById(selectedID);
+                int counter=0;
+                if(radioButton.getText().toString().toLowerCase().equals("no")){
+                    //NO
+                   if( inputEditTextOneNumberTicket.getText().toString().equals("")){
+                       textViewSingleTicketNumberError.setText("Please enter number of ticket");
+                       inputEditTextOneNumberTicket.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,getResources().getDrawable(R.drawable.ic_error),null);
+                   }else {
+                       counter+=1;
+                       textViewSingleTicketNumberError.setText("");
+                       inputEditTextOneNumberTicket.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+                   }
+                   if(inputEditTextOneTicketPrice.getText().toString().equals("")){
+                       textViewSingleTicketPriceError.setText("Please enter ticket price");
+                       inputEditTextOneTicketPrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,getResources().getDrawable(R.drawable.ic_error),null);
+
+                   }else {
+                       counter+=1;
+                       textViewSingleTicketPriceError.setText("");
+                       inputEditTextOneTicketPrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+                   }
+                   if(counter==2){
+                       Toast.makeText(TicketDetailActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                   }else {
+                       Toast.makeText(TicketDetailActivity.this, "GG", Toast.LENGTH_SHORT).show();
+                   }
+                }else {
+                    //YES
+                    //for edit text ij list
+                    int listCounter=editTextsList.size();
+                    for(int i=0;i<listCounter;i++){
+
+
+
+                            if (editTextsList.get(i).getText().toString().equals("")) {
+                                textViewsList.get(i).setVisibility(View.VISIBLE);
+                                textViewsList.get(i).setText("Please Enter value");
+                                textViewsList.get(i).setTextColor(Color.RED);
+                                editTextsList.get(i).setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_error), null);
+                            } else {
+                                textViewsList.get(i).setText("");
+                                textViewsList.get(i).setVisibility(View.GONE);
+                                editTextsList.get(i).setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
+                            }
+
+                    }
+                    // for edit text in list
+                    Toast.makeText(TicketDetailActivity.this, "test"+listCounter, Toast.LENGTH_SHORT).show();
+                    int counter1=0;
+                    if(inputEditTextTicketTypeName.getText().toString().equals("")){
+                        textViewTicketTypeName.setText("Please enter value");
+                        inputEditTextTicketTypeName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,getResources().getDrawable(R.drawable.ic_error),null);
+                    }else {
+                        counter+=1;
+                        textViewTicketTypeName.setText("");
+                        inputEditTextTicketTypeName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+                    }
+                    if(inputEditTextTicketTypePrice.getText().toString().equals("")){
+                        inputEditTextTicketTypePrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,getResources().getDrawable(R.drawable.ic_error),null);
+                        textViewTicketTypePrice.setText("Please enter Value");
+                    }else {
+                        counter+=1;
+                        inputEditTextTicketTypePrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+                        textViewTicketTypePrice.setText("");
+                    }
+                    if(inputEditTextTicketTypeNumber.getText().toString().equals("")){
+                        inputEditTextTicketTypeNumber.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,getResources().getDrawable(R.drawable.ic_error),null);
+                        textViewTicketTypeNumber.setText("Please enter value");
+                    }else {
+                        counter+=1;
+                        inputEditTextTicketTypeNumber.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+                        textViewTicketTypeNumber.setText("");
+                    }
+
+                }
+            }
+        });
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -54,13 +168,39 @@ LinearLayout linearLayoutTicketTypes;
                 if(radioButton.getText().toString().toLowerCase().equals("yes")){
                         linearLayoutTicketTypes.setVisibility(View.VISIBLE);
                         buttonAddMore.setVisibility(View.VISIBLE);
+                    textInputLayoutSinglePriceTicket.setVisibility(View.GONE);
+                    textInputLayoutSingleNumberTicket.setVisibility(View.GONE);
+                    textViewSingleTicketNumberError.setVisibility(View.GONE);
+                    textViewSingleTicketPriceError.setVisibility(View.GONE);
+                    textViewSingleTicketPriceError.setText("");
+                    textViewSingleTicketNumberError.setText("");
+                    inputEditTextOneTicketPrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+                    inputEditTextOneNumberTicket.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+                    int listCounter=editTextsList.size();
+                    for (int i=0;i<listCounter;i++){
+                        textViewsList.get(i).setText("");
+                        textViewsList.get(i).setVisibility(View.GONE);
+                        editTextsList.get(i).setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
+                    }
                 }else {
                     linearLayoutTicketTypes.setVisibility(View.GONE);
                     buttonAddMore.setVisibility(View.GONE);
+                    textInputLayoutSingleNumberTicket.setVisibility(View.VISIBLE);
+                    textInputLayoutSinglePriceTicket.setVisibility(View.VISIBLE);
+                    textViewSingleTicketNumberError.setVisibility(View.VISIBLE);
+                    textViewSingleTicketPriceError.setVisibility(View.VISIBLE);
+
+                    textViewTicketTypeName.setText("");
+                    textViewTicketTypePrice.setText("");
+                    textViewTicketTypeNumber.setText("");
+                    inputEditTextTicketTypeNumber.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+                    inputEditTextTicketTypePrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+                    inputEditTextTicketTypeName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
                 }
                 //Toast.makeText(TicketDetailActivity.this, "te"+radioButton.getText(), Toast.LENGTH_SHORT).show();
             }
         });
+
 
         buttonAddMore.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceType")
@@ -71,8 +211,13 @@ LinearLayout linearLayoutTicketTypes;
                 MaterialCardView materialCardView2=new MaterialCardView(TicketDetailActivity.this);
                 LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
                 materialCardView2.setLayoutParams(layoutParams);
-                layoutParams.setMargins(0,8,0,0);
-
+                float scale=getResources().getDisplayMetrics().density;
+                int dpAsPixel=(int) (7*scale+0.5f);
+                layoutParams.setMargins(0,15,0,0);
+                linearLayout.setPadding(dpAsPixel,dpAsPixel,dpAsPixel,dpAsPixel);
+            materialCardView2.setRadius(dpAsPixel);
+                 dpAsPixel=(int) (5*scale+0.5f);
+            materialCardView2.setElevation(dpAsPixel);
 
                 //Relative layout
                 LinearLayout relativeLayout=new LinearLayout(TicketDetailActivity.this);
@@ -81,6 +226,14 @@ LinearLayout linearLayoutTicketTypes;
                         MaterialCardView.LayoutParams.WRAP_CONTENT
                 ));
 relativeLayout.setOrientation(LinearLayout.VERTICAL);
+relativeLayout.setPadding(4,4,4,4);
+
+                LinearLayout.LayoutParams param5=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                ImageButton imageButton=new ImageButton(TicketDetailActivity.this);
+                imageButton.setLayoutParams(param5);
+                imageButton.setBackground(getResources().getDrawable(R.drawable.ic_wrong));
+                param5.gravity=Gravity.RIGHT;
+                relativeLayout.addView(imageButton);
 
                 //first edit text layout
                 LinearLayout.LayoutParams param1=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -106,7 +259,14 @@ relativeLayout.setOrientation(LinearLayout.VERTICAL);
                 textInputEditText.setHint("Name");
                 textInputLayout.addView(textInputEditText);
 
+                LinearLayout.LayoutParams param6=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                TextView textView=new TextView(TicketDetailActivity.this);
+                textView.setText("");
+                textView.setLayoutParams(param6);
+
+
                 relativeLayout.addView(textInputLayout);
+                relativeLayout.addView(textView);
                 counter+=1;
                 //Second edit text layout
                 LinearLayout.LayoutParams param2=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -124,9 +284,15 @@ relativeLayout.setOrientation(LinearLayout.VERTICAL);
                 ));
                 textInputEditText1.setId(counter);
                 textInputEditText1.setHint("price");
+
                 textInputLayout1.addView(textInputEditText1);
                 counter+=1;
                 relativeLayout.addView(textInputLayout1);
+                LinearLayout.LayoutParams param7=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                TextView textView1=new TextView(TicketDetailActivity.this);
+                textView.setText("");
+                textView1.setLayoutParams(param7);
+                relativeLayout.addView(textView1);
                 //third edit text layout
                 LinearLayout.LayoutParams param4=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
                 TextInputLayout textInputLayout3=new TextInputLayout(TicketDetailActivity.this);
@@ -142,24 +308,31 @@ relativeLayout.setOrientation(LinearLayout.VERTICAL);
                 textInputLayout3.addView(textInputEditText2);
                 counter+=1;
                 relativeLayout.addView(textInputLayout3);
-                    //remove button
-                LinearLayout.LayoutParams param3=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT);
-                Button button=new Button(TicketDetailActivity.this);
-                button.setId(counter);
-                button.setText("Remove");
-                button.setLayoutParams(param3);
-                counter+=1;
+                LinearLayout.LayoutParams param8=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                TextView textView2=new TextView(TicketDetailActivity.this);
+                textView.setText("");
+                textView2.setLayoutParams(param8);
+                relativeLayout.addView(textView2);
 
-                button.setGravity(Gravity.RIGHT);
-                button.setOnClickListener(new View.OnClickListener() {
+
+                imageButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        editTextsList.remove(textInputEditText);
+                        editTextsList.remove(textInputEditText1);
+                        editTextsList.remove(textInputEditText2);
                         linearLayout.removeView(materialCardView2);
                     }
-
                 });
-
-                relativeLayout.addView(button);
+                textInputEditText1.setInputType(InputType.TYPE_CLASS_NUMBER);
+                textInputEditText2.setInputType(InputType.TYPE_CLASS_NUMBER);
+                editTextsList.add(textInputEditText);
+                editTextsList.add(textInputEditText1);
+                editTextsList.add(textInputEditText2);
+                textViewsList.add(textView);
+                textViewsList.add(textView1);
+                textViewsList.add(textView2);
+               // relativeLayout.addView(button);
                 materialCardView2.addView(relativeLayout);
                 linearLayout.addView(materialCardView2);
                 viewCounter+=1;

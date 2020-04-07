@@ -40,6 +40,7 @@
                       android:layout_width="30dp"
                       android:layout_height="30dp"
                       android:layout_gravity="right"
+
                       android:background="@drawable/mapbox_ic_check"
                       android:layout_marginRight="10dp"
                       android:id="@+id/event_detail_preview_confirm"/>
@@ -48,7 +49,12 @@
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:layout_marginTop="60dp">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
 
+
+                        android:id="@+id/event_detail_image"/>
               </RelativeLayout>
           </com.google.android.material.appbar.CollapsingToolbarLayout>
       </com.google.android.material.appbar.AppBarLayout>

@@ -74,7 +74,8 @@ android:checkedButton="@id/radio_yes"
 <com.google.android.material.textfield.TextInputLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Total Ticket"
+
+
     android:id="@+id/event_ticket_textview"
     android:textSize="16dp"
     android:layout_below="@+id/radio_group">
@@ -82,14 +83,23 @@ android:checkedButton="@id/radio_yes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inputType="number"
-        android:layout_below="@+id/event_ticket_textview"
+
         android:id="@+id/event_ticket_number"
         android:hint="Number of ticket"/>
 </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#DF0404"
+
+            android:textStyle="bold"
+            android:layout_below="@+id/event_ticket_textview"
+            android:id="@+id/ticket_number_single_error"/>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/event_ticket_textview"
+
+        android:layout_below="@+id/ticket_number_single_error"
         android:text="Ticket Price"
         android:textSize="16dp"
         android:id="@+id/event_ticket_price_layout">
@@ -101,11 +111,21 @@ android:checkedButton="@id/radio_yes"
         android:hint="Ticket Price"
         android:id="@+id/event_ticket_price_single"/>
     </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#DF0404"
+            android:textStyle="bold"
+
+            android:layout_below="@+id/event_ticket_price_layout"
+            android:id="@+id/ticket_price_single_error"/>
+
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/event_ticket_type_layout"
-    android:layout_below="@+id/event_ticket_price_layout"
+    android:layout_below="@+id/ticket_price_single_error"
     android:orientation="vertical">
     <TextView
         android:layout_width="match_parent"
@@ -136,7 +156,14 @@ android:checkedButton="@id/radio_yes"
             android:layout_height="match_parent"/>
 
 
+
     </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:id="@+id/ticket_type_name_error"
+                android:textColor="#E80808"/>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -146,6 +173,27 @@ android:checkedButton="@id/radio_yes"
             android:id="@+id/event_ticket_first_ticket_price"
             android:hint="Ticket Price "/>
     </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:id="@+id/ticket_type_price_error"
+                android:textColor="#E80808"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Ticket Number"
+                    android:id="@+id/event_ticket_first_ticket_number"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#E80808"
+                android:textStyle="bold"
+                android:id="@+id/ticket_type_number_error"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
