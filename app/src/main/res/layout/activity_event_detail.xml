@@ -5,9 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".eventDetail">
+    <include
+        android:id="@+id/toolbar_event_detail"
+        layout="@layout/toolbar_with_next"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_event_detail"
         android:id="@+id/event_detail_pointer"
         android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
@@ -21,60 +25,19 @@
             android:layout_marginLeft="2dp"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_circle_outline"/>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:orientation="horizontal"
-        android:layout_below="@+id/event_detail_pointer"
-        android:id="@+id/event_page_status_layout">
-        <TextView
-
+        <ImageButton
             android:layout_width="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:id="@+id/pointer_ticket"
             android:layout_height="wrap_content"
-            android:text="Page Private"
-            android:textSize="18dp"/>
-        <Switch
+            android:background="@drawable/ic_circle_outline"/>
 
-            android:layout_marginRight="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textOff="Public"
-            android:checked="false"
-            android:id="@+id/event_page_status"
-            android:textOn="Private"
-            />
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:orientation="horizontal"
-        android:layout_below="@+id/event_page_status_layout"
-        android:id="@+id/event_ticket_status_layout">
-        <TextView
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ticket Status"
-            android:textSize="18dp"/>
-        <Switch
-
-            android:layout_marginRight="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textOff="Public"
-            android:checked="false"
-            android:id="@+id/event_ticket_status"
-            android:textOn="Private"
-            />
-    </LinearLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
 
-        android:layout_below="@+id/event_ticket_status_layout"
+        android:layout_below="@+id/event_detail_pointer"
         android:layout_height="wrap_content"
         android:id="@+id/event_name_layout">
         <com.google.android.material.textfield.TextInputEditText
@@ -83,57 +46,274 @@
             android:id="@+id/event_name"
             android:hint="Event Title"/>
     </com.google.android.material.textfield.TextInputLayout>
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/event_name_layout"
-        android:layout_height="wrap_content"
-        android:id="@+id/event_detail_event_date_layout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:drawableRight="@drawable/ic_calendar"
-            android:id="@+id/event_detail_event_date"
-            android:hint="Event Date"/>
-    </com.google.android.material.textfield.TextInputLayout>
+        android:id="@+id/event_name_error"/>
 
-
-    <com.google.android.material.textfield.TextInputLayout
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/event_name_error"
+    android:id="@+id/event_detail_date_time_layout"
+    android:orientation="horizontal"
+    android:weightSum="2">
+    <LinearLayout
         android:layout_width="match_parent"
-
-        android:layout_below="@+id/event_detail_event_date_layout"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/ic_calendar"/>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/event_detail_event_time_layout">
-        <com.google.android.material.textfield.TextInputEditText
+        android:layout_marginLeft="3dp"
+        android:orientation="vertical"
+       >
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:drawableRight="@drawable/ic_clock"
-
-            android:id="@+id/event_detail_event_time"
-            android:hint="Event Time"/>
-    </com.google.android.material.textfield.TextInputLayout>
 
 
-    <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_height="wrap_content"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:id="@+id/event_detail_event_start_date"
+                android:hint="Start Date"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="#EC0404"
+            android:id="@+id/event_detail_event_start_date_error"/>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+
+
+            android:layout_height="wrap_content"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:id="@+id/event_detail_event_end_date"
+                android:hint="End Date"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="#EC0404"
+                android:id="@+id/event_detail_event_end_error"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_clock"
+            android:layout_marginTop="25dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+
+
+            android:layout_height="wrap_content"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:id="@+id/event_detail_event_start_time"
+                android:hint="Start Time"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="#EC0404"
+                android:id="@+id/event_detail_event_start_time_error"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+
+
+            android:layout_height="wrap_content"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:id="@+id/event_detail_event_end_time"
+                android:hint="End Time"/><TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="#EC0404"
+            android:id="@+id/event_detail_event_end_time_error"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+
+
+
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/event_detail_location_layout"
+    android:layout_below="@+id/event_detail_date_time_layout"
+    >
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/mapbox_plugins_ic_user_location"/>
+<com.google.android.material.textfield.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    >
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:id="@+id/event_detail_location"
+        android:hint="Location"/>
+
+</com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#EC0404"
+        android:layout_below="@+id/event_detail_location_layout"
+        android:id="@+id/event_detail_event_location_error"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/event_detail_event_location_error"
+        android:id="@+id/event_detail_description_layout">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/ic_add"/>
+      <com.google.android.material.textfield.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+          <com.google.android.material.textfield.TextInputEditText
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/event_detail_description"
+              android:hint="Event Description"/>
+      </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#EC0404"
+        android:layout_below="@+id/event_detail_description_layout"
+        android:id="@+id/event_detail_event_description_error"/>
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:id="@+id/event_detail_event_type_spinner"
-        android:layout_below="@+id/event_detail_event_time_layout"/>
+        android:layout_below="@+id/event_detail_event_description_error"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#EC0404"
+        android:layout_below="@+id/event_detail_event_type_spinner"
+        android:id="@+id/event_detail_event_tag_error"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/event_detail_recycler_view"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/event_detail_event_type_spinner"/>
+        android:layout_below="@+id/event_detail_event_tag_error"/>
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:orientation="horizontal"
+    android:layout_below="@+id/event_detail_recycler_view"
+    android:id="@+id/event_page_status_layout">
+    <TextView
 
-<Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Page Private"
+        android:textSize="18dp"/>
+    <Switch
+
+        android:layout_marginRight="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textOff="Public"
+        android:checked="false"
+        android:id="@+id/event_page_status"
+        android:textOn="Private"
+        />
+</LinearLayout>
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginLeft="5dp"
+android:orientation="horizontal"
+android:layout_below="@+id/event_page_status_layout"
+android:id="@+id/event_ticket_status_layout">
+<TextView
+
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:text="Next"
-    android:id="@+id/event_detail_first_button"
-    android:layout_below="@+id/event_detail_recycler_view"/>
+    android:text="Ticket Status"
+    android:textSize="18dp"/>
+<Switch
+
+    android:layout_marginRight="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textOff="Public"
+    android:checked="false"
+    android:id="@+id/event_ticket_status"
+    android:textOn="Private"
+    />
+</LinearLayout>
+
+<!--<Button-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_centerHorizontal="true"-->
+<!--    android:text="Next"-->
+<!--    android:id="@+id/event_detail_first_button"-->
+<!--    android:layout_below="@+id/event_detail_recycler_view"/>-->
 
 </RelativeLayout>

@@ -41,7 +41,7 @@ LinearLayout linearLayoutTicketTypes;
 
         setContentView(R.layout.activity_ticket_detail);
        // getSupportActionBar().hide();
-        Toolbar toolbar=findViewById(R.id.toolbar);
+        Toolbar toolbar=findViewById(R.id.toolbar_ticket);
         setSupportActionBar(toolbar);
         buttonAddMore=findViewById(R.id.event_ticket_add_more);
         linearLayoutTicketTypes=findViewById(R.id.event_ticket_type_layout);

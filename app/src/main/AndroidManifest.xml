@@ -23,9 +23,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".TicketDetailActivity"
+        <activity android:name=".EventDetailPreviewActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".EventLocationActivity" />
+        <activity
+            android:name=".TicketDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EventLocationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -42,7 +47,9 @@
             android:name=".GeoFenceActivity"
             android:label="@string/title_activity_geo_fence" />
         <activity android:name=".EventDetailLocationActivity" />
-        <activity android:name=".eventDetail" />
+        <activity
+            android:name=".eventDetail"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".OtpActivity" />
         <activity
             android:name=".LoginActivity"

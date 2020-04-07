@@ -11,4 +11,19 @@ public class constants {
     public static final String KEY_SHARED_PREFERENCE="hello";
     //This is your from email password
     public static final String PASSWORD = "baikuntha";
+    //for event detail
+    public static final String  KEY_EVENT_TITLE="eventTitle";
+    public static final String KEY_EVENT_START_DATE="startDate";
+    public static final String KEY_EVENT_END_DATE="endDate";
+    public static final String KEY_EVENT_START_TIME="startTime";
+    public static final String KEY_EVENT_END_TIME="endTime";
+    public static final String KEY_PAGE_STATUS="pageStatus";
+    public static final String KEY_EVENT_TICKET_STATUS="ticketStatus";
+    public static final String KEY_TAG_ARRAY="eventTags";
+    public static final String KEY_EVENT_SELECTED_LOCATION="selectedLocaiton";
+    public static final String KEY_EVENT_DESCRIPTION="description";
+    public static final String KEY_LATITUDE="latitude";
+    public static final String KEY_LONGITUDE="longitude";
+    //public static final String KYE_EVENT_SELECTED_COUNTRY=""
+
 }

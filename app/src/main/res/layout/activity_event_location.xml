@@ -3,12 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="5dp"
+
     android:layout_height="match_parent"
     tools:context=".EventLocationActivity">
+    <include
+        android:id="@+id/toolbar_event_location"
+        layout="@layout/toolbar_with_next"/>
     <LinearLayout
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_event_location"
         android:id="@+id/event_detail_pointer"
         android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
@@ -24,6 +29,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
+            android:background="@drawable/ic_circle_filled"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:id="@+id/pointer_ticket_location"
             android:background="@drawable/ic_circle_filled"/>
 
     </LinearLayout>
@@ -103,12 +114,12 @@
         android:id="@+id/event_description"
         android:background="@drawable/description"
         />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="Next"
-        android:id="@+id/event_detail_second_button"
-        android:layout_below="@+id/event_description"/>
+<!--    <Button-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:text="Next"-->
+<!--        android:id="@+id/event_detail_second_button"-->
+<!--        android:layout_below="@+id/event_description"/>-->
 
 </RelativeLayout>

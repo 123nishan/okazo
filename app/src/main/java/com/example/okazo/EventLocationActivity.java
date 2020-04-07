@@ -3,6 +3,7 @@ package com.example.okazo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,8 +46,14 @@ import com.mapbox.mapboxsdk.plugins.places.picker.PlacePicker;
 import com.mapbox.mapboxsdk.plugins.places.picker.model.PlacePickerOptions;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import pl.droidsonroids.gif.GifDrawable;
+
+import static com.example.okazo.util.constants.KEY_EVENT_TICKET_STATUS;
 
 
 public class EventLocationActivity extends AppCompatActivity {
@@ -54,7 +62,10 @@ public class EventLocationActivity extends AppCompatActivity {
 private ImageView buttonChangeLocation;
 EditText editTextSelectedLocation,editTextSelectedCountry;
 Double Lat,Lng;
-Button buttonNext;
+ImageView buttonNext;
+    private Bundle bundle;
+    String ticketStatus;
+    ImageButton pointerTicket;
     private static final int REQUEST_CODE = 5678;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +73,32 @@ Button buttonNext;
         Mapbox.getInstance(this,getString(R.string.mapbox_access_token));
 
         setContentView(R.layout.activity_event_location);
+        Toolbar toolbar=findViewById(R.id.toolbar_event_location);
+        setSupportActionBar(toolbar);
+        Intent intent=getIntent();
+         bundle=intent.getBundleExtra("bundle");
+         ticketStatus=bundle.getString(KEY_EVENT_TICKET_STATUS);
         buttonChangeLocation=findViewById(R.id.change_event_location);
         editTextSelectedLocation=findViewById(R.id.event_selected_location);
         editTextSelectedCountry=findViewById(R.id.event_selected_country);
-        buttonNext=findViewById(R.id.event_detail_second_button);
+        pointerTicket=findViewById(R.id.pointer_ticket_location);
+        if(ticketStatus.toLowerCase().equals("private")){
+            pointerTicket.setVisibility(View.VISIBLE);
+        }else {
+            pointerTicket.setVisibility(View.GONE);
+        }
+            buttonNext=findViewById(R.id.toolbar_next);
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent1;
+                if(ticketStatus.toLowerCase().equals("private")) {
+                    intent1 = new Intent(EventLocationActivity.this,TicketDetailActivity.class );
 
+                    //bundle.putString();
+
+                    startActivity(intent1);
+                }
             }
         });
 
@@ -107,32 +136,49 @@ Button buttonNext;
 
                 Lat = carmenFeature.center().latitude();
                  Lng=carmenFeature.center().longitude();
+                List<String> placeList;
 
-                String placeTitle=" " ,country= " ",subCountry=" ",placeCategory=" ",district=" ";
+                String address=" ",addressDetail=" ";
+                int temp=1;
+                String  placeTitle = carmenFeature.placeName();
+                   String[] element=placeTitle.split("\\s*,\\s*");
+                    int addressCounter=1,addressDetailCounter=1;
+                   placeList=Arrays.asList(element);
+                   int placeListCounter=placeList.size();
+                   for (String value:placeList){
+                      if(temp==placeListCounter || temp==placeListCounter-1){
+                          if(addressDetailCounter==1){
+                              addressDetail=value;
+                          }else {
+                              addressDetail = addressDetail + ", " + value;
 
-                if(carmenFeature.text()!=null && !carmenFeature.text().isEmpty()) {
-                     placeTitle = carmenFeature.text();
-                }
-                if(!carmenFeature.properties().get("category").toString().isEmpty() && carmenFeature.properties().get("category").toString()!=null) {
-                     placeCategory = carmenFeature.properties().get("category")+"";
-                }
+                          }
+                          addressDetailCounter+=1;
+                      }else {
+                          if(addressCounter==1){
+                              address=value;
+                          }else {
+                              address = address + ", " + value;
+                          }
+                          addressCounter+=1;
+                      }
 
 
-                int contextSize=carmenFeature.context().size();
-                if(!carmenFeature.context().get(1).text().isEmpty() && carmenFeature.context().get(1).text()!=null){
-                    district=carmenFeature.context().get(1).text()+"";
-                }
-               if(!carmenFeature.context().get(contextSize-1).text().isEmpty() && carmenFeature.context().get(contextSize-1).text()!=null ) {
-                    country = carmenFeature.context().get(contextSize - 1).text();
-               }
-               if(!carmenFeature.context().get(contextSize-2).text().isEmpty() && carmenFeature.context().get(contextSize-2).text()!=null) {
-                    subCountry = carmenFeature.context().get(contextSize - 2).text();
-               }
-                editTextSelectedLocation.setText(placeTitle+", "+district);
-                editTextSelectedCountry.setText(subCountry+", "+country);
+                      temp+=1;
+
+                   }
 
 
-////                Log.d("check:",carmenFeature.toJson()+"");
+
+
+
+
+
+                editTextSelectedLocation.setText(address);
+                editTextSelectedCountry.setText(addressDetail);
+
+
+              //Log.d("check:",carmenFeature.toJson()+"");
                 //Toast.makeText(this, "location: "+carmenFeature.toJson(), Toast.LENGTH_SHORT).show();
 
 //                selectedLocationTextView.setText(String.format(
@@ -143,13 +189,13 @@ Button buttonNext;
             }
         }
     }
-
+//TODO ADD SEARCH BAR IN PLACE PICKER
 
     private void goToPickerActivity() {
         startActivityForResult(
                 new PlacePicker.IntentBuilder()
                         .accessToken(getString(R.string.mapbox_access_token))
-                        .placeOptions(PlacePickerOptions.builder()
+                        .placeOptions(PlacePickerOptions.builder().includeDeviceLocationButton(true)
                                 .statingCameraPosition(new CameraPosition.Builder()
                                         .target(new LatLng(27.7172, 85.3240)).zoom(8).build())
                                 .build())

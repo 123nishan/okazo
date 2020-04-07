@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".EventDetailPreviewActivity">
+
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+      <com.google.android.material.appbar.AppBarLayout
+          android:layout_width="match_parent"
+          android:layout_height="250dp"
+          android:fitsSystemWindows="true"
+          android:id="@+id/event_detail_preview_app_bar"
+          android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+          <com.google.android.material.appbar.CollapsingToolbarLayout
+              android:id="@+id/event_detail_preview_collapsing_tool_bar"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              app:expandedTitleGravity="top"
+              app:layout_scrollFlags="exitUntilCollapsed|scroll"
+              app:contentScrim="?attr/colorPrimary"
+              app:title="Okazo"
+              app:expandedTitleMarginStart="48dp"
+              app:expandedTitleMarginEnd="64dp"
+
+              >
+              <androidx.appcompat.widget.Toolbar
+                  android:id="@+id/event_detail_preview_tool_bar"
+                  android:layout_width="match_parent"
+
+                  app:popupTheme="@style/AppBaseTheme"
+                  android:layout_height="?attr/actionBarSize"
+                  app:layout_collapseMode="pin">
+                  <androidx.appcompat.widget.AppCompatImageButton
+                      android:layout_width="30dp"
+                      android:layout_height="30dp"
+                      android:layout_gravity="right"
+                      android:background="@drawable/mapbox_ic_check"
+                      android:layout_marginRight="10dp"
+                      android:id="@+id/event_detail_preview_confirm"/>
+              </androidx.appcompat.widget.Toolbar>
+              <RelativeLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_marginTop="60dp">
+
+              </RelativeLayout>
+          </com.google.android.material.appbar.CollapsingToolbarLayout>
+      </com.google.android.material.appbar.AppBarLayout>
+      <androidx.core.widget.NestedScrollView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          app:layout_behavior="@string/appbar_scrolling_view_behavior"
+          >
+
+      </androidx.core.widget.NestedScrollView>
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>

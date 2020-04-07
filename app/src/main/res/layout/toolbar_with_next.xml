@@ -24,20 +24,20 @@
             android:paddingRight="20dp">
 
             <ImageView
-                android:id="@+id/insurance_form_submit_btn"
+                android:id="@+id/toolbar_next"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="8dp"
-                android:src="@drawable/mapbox_ic_check" />
+                android:src="@drawable/ic_next" />
 
 
             <ImageView
-                android:id="@+id/insurance_form_back_btn"
+                android:id="@+id/toolbar_previous"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/mapbox_ic_arrow_back" />
+                android:src="@drawable/ic_back" />
 
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>

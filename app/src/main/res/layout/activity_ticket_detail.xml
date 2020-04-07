@@ -11,7 +11,7 @@
        android:orientation="vertical"
        android:layout_height="match_parent">
 <include
-    android:id="@+id/toolbar"
+    android:id="@+id/toolbar_ticket"
     layout="@layout/toolbar_with_next"/>
     <RelativeLayout
         android:padding="5dp"
