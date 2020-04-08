@@ -20,6 +20,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity  {
 private FloatingActionButton floatingActionButton;
 TextView textView;
 //BottomNavigationView bottomNavigationView;
-    SpaceNavigationView bottomNavigationView;
+ public    ChipNavigationBar bottomNavigationView;
 private boolean mLocationPermissionGranted=false;
 SwipeRefreshLayout  swipeRefreshLayout;
 
@@ -72,7 +74,7 @@ String userEmail;
 //        textView=findViewById(R.id.textview);
 //        swipeRefreshLayout=findViewById(R.id.swipe_refresh);
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
-        bottomNavigationView=findViewById(R.id.bottm_nav);
+        bottomNavigationView=findViewById(R.id.bottom_nav_bar);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,
                     new HomeFragment()).commit();
@@ -84,33 +86,34 @@ String userEmail;
         SharedPreferences.Editor shared_editor = sharedPreferences.edit();
         shared_editor.putString("user_email",userEmail);
         shared_editor.commit();
-
-        bottomNavigationView.initWithSaveInstanceState(savedInstanceState);
-        bottomNavigationView.addSpaceItem(new SpaceItem("HOME", R.drawable.ic_home));
-        bottomNavigationView.addSpaceItem(new SpaceItem("SEARCH", R.drawable.ic_place));
-
-        bottomNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
-            @Override
-            public void onCentreButtonClick() {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new ProfileFragment()).commit();
-
-            }
-
-            @Override
-            public void onItemClick(int itemIndex, String itemName) {
-                if(itemName.equals("HOME")){
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
-                }else {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new EventFragment()).commit();
-                }
-
-            }
-
-            @Override
-            public void onItemReselected(int itemIndex, String itemName) {
-
-            }
-        });
+            bottomNavigationView.setItemSelected(R.id.nav_home,true);
+            
+//        bottomNavigationView.initWithSaveInstanceState(savedInstanceState);
+//        bottomNavigationView.addSpaceItem(new SpaceItem("HOME", R.drawable.ic_home));
+//        bottomNavigationView.addSpaceItem(new SpaceItem("SEARCH", R.drawable.ic_place));
+//
+//        bottomNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
+//            @Override
+//            public void onCentreButtonClick() {
+//                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new ProfileFragment()).commit();
+//
+//            }
+//
+//            @Override
+//            public void onItemClick(int itemIndex, String itemName) {
+//                if(itemName.equals("HOME")){
+//                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
+//                }else {
+//                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new EventFragment()).commit();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onItemReselected(int itemIndex, String itemName) {
+//
+//            }
+//        });
 
 //        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 //            @Override

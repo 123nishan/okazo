@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -38,9 +39,12 @@ import com.example.okazo.util.DateTimePicker;
 import com.example.okazo.util.EventTypeAdapter;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 import com.mapbox.mapboxsdk.plugins.places.picker.PlacePicker;
 import com.mapbox.mapboxsdk.plugins.places.picker.model.PlacePickerOptions;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
@@ -57,6 +61,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
+import static com.example.okazo.util.constants.KEY_BUNDLE_EVENT_DETAIL;
 import static com.example.okazo.util.constants.KEY_EVENT_DESCRIPTION;
 import static com.example.okazo.util.constants.KEY_EVENT_END_DATE;
 import static com.example.okazo.util.constants.KEY_EVENT_END_TIME;
@@ -81,6 +86,7 @@ SearchableSpinner eventTypeSpinner;
     private EventTypeAdapter adapter;
     private ImageView buttonNext;
     RecyclerView recyclerView;
+
     ImageButton imageButtonPointerTicket;
     private static final int REQUEST_CODE = 5675;
     private TextView textViewEventNameError,textViewEventStartDateError,textViewEventEndDateError,
@@ -92,6 +98,10 @@ SearchableSpinner eventTypeSpinner;
             inputEditTextEventStartTime,inputEditTextLocation,
             inputEditTextEventEndDate,inputEditTextEventEndTime,inputEditTextEventDescription;
     Switch aSwitch,switchTicket;
+
+    private CarmenFeature home;
+    private CarmenFeature work;
+    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,15 +137,10 @@ SearchableSpinner eventTypeSpinner;
         inputEditTextLocation.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                 if(MotionEvent.ACTION_UP==event.getAction()) {
-                    startActivityForResult(
-                            new PlacePicker.IntentBuilder()
-                                    .accessToken(getString(R.string.mapbox_access_token))
-                                    .placeOptions(PlacePickerOptions.builder().includeDeviceLocationButton(true)
-                                            .statingCameraPosition(new CameraPosition.Builder()
-                                                    .target(new LatLng(27.7172, 85.3240)).zoom(8).build())
-                                            .build())
-                                    .build(eventDetail.this), REQUEST_CODE);
+                    initSearchFab();
+
                 }
                 return false;
             }
@@ -312,33 +317,33 @@ SearchableSpinner eventTypeSpinner;
                }
                Toast.makeText(eventDetail.this, "check"+counter, Toast.LENGTH_SHORT).show();
                if (counter==8) {
+                   Bundle bundle = new Bundle();
+                   bundle.putSerializable(KEY_TAG_ARRAY, selectedEventType);
+                   bundle.putString(KEY_EVENT_TITLE, inputEditTextEventName.getText().toString());
+                   bundle.putString(KEY_EVENT_START_DATE, inputEditTextEventStartDate.getText().toString());
+                   bundle.putString(KEY_EVENT_START_TIME, inputEditTextEventStartTime.getText().toString());
+                   bundle.putString(KEY_EVENT_END_DATE,inputEditTextEventEndDate.getText().toString());
+                   bundle.putString(KEY_EVENT_END_TIME,inputEditTextEventEndTime.getText().toString());
+                   bundle.putString(KEY_EVENT_SELECTED_LOCATION,inputEditTextLocation.getText().toString());
+                   bundle.putString(KEY_EVENT_DESCRIPTION,inputEditTextEventDescription.getText().toString());
+                   bundle.putString(KEY_LATITUDE,String.valueOf(Lat));
+                   bundle.putString(KEY_LONGITUDE,String.valueOf(Lng));
+                   bundle.putString(KEY_EVENT_TICKET_STATUS, ticketStatus);
+                   bundle.putString(KEY_PAGE_STATUS, pageStatus);
                    if (ticketStatus.toLowerCase().equals("private")) {
-                       Toast.makeText(eventDetail.this, "No TIcket", Toast.LENGTH_SHORT).show();
+                       Intent intent = new Intent(eventDetail.this, EventDetailPreviewActivity.class);
+                       intent.putExtra( KEY_BUNDLE_EVENT_DETAIL,bundle);
+                       startActivity(intent);
+                       //Toast.makeText(eventDetail.this, "No TIcket", Toast.LENGTH_SHORT).show();
 
                    } else {
                        //Toast.makeText(eventDetail.this, ""+pageStatus, Toast.LENGTH_SHORT).show();
                        Intent intent = new Intent(eventDetail.this, TicketDetailActivity.class);
-
-
-                       Bundle bundle = new Bundle();
-                       bundle.putSerializable(KEY_TAG_ARRAY, selectedEventType);
-                       bundle.putString(KEY_EVENT_TITLE, inputEditTextEventName.getText().toString());
-                       bundle.putString(KEY_EVENT_START_DATE, inputEditTextEventStartDate.getText().toString());
-                       bundle.putString(KEY_EVENT_START_TIME, inputEditTextEventStartTime.getText().toString());
-                       bundle.putString(KEY_EVENT_END_DATE,inputEditTextEventEndDate.getText().toString());
-                       bundle.putString(KEY_EVENT_END_TIME,inputEditTextEventEndTime.getText().toString());
-                       bundle.putString(KEY_EVENT_SELECTED_LOCATION,inputEditTextLocation.getText().toString());
-                       bundle.putString(KEY_EVENT_DESCRIPTION,inputEditTextEventDescription.getText().toString());
-                       bundle.putString(KEY_LATITUDE,String.valueOf(Lat));
-                       bundle.putString(KEY_LONGITUDE,String.valueOf(Lng));
-                       bundle.putString(KEY_EVENT_TICKET_STATUS, ticketStatus);
-                       bundle.putString(KEY_PAGE_STATUS, pageStatus);
-                       intent.putExtra("bundle", bundle);
+                       intent.putExtras( bundle);
 //               intent.putParcelableArrayListExtra(KEY_TAG_ARRAY,selectedEventType);
 
                        startActivity(intent);
-                       {
-                       }
+
                    }
 
 
@@ -410,7 +415,20 @@ SearchableSpinner eventTypeSpinner;
 
 
     }
+    private void initSearchFab() {
 
+        Intent intent = new PlaceAutocomplete.IntentBuilder()
+                .accessToken(Mapbox.getAccessToken() != null ? Mapbox.getAccessToken() : getString(R.string.mapbox_access_token))
+                .placeOptions(PlaceOptions.builder()
+                        .backgroundColor(Color.parseColor("#EEEEEE"))
+                        .limit(10)
+
+                        .build(PlaceOptions.MODE_CARDS))
+                .build(eventDetail.this);
+        startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
+
+
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -452,6 +470,18 @@ SearchableSpinner eventTypeSpinner;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode== Activity.RESULT_OK && requestCode==REQUEST_CODE_AUTOCOMPLETE){
+
+            CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
+            startActivityForResult(
+                    new PlacePicker.IntentBuilder()
+                            .accessToken(getString(R.string.mapbox_access_token))
+                            .placeOptions(PlacePickerOptions.builder().includeDeviceLocationButton(true)
+                                    .statingCameraPosition(new CameraPosition.Builder()
+                                            .target(new LatLng(((Point)selectedCarmenFeature.geometry()).latitude(), ((Point)selectedCarmenFeature.geometry()).longitude())).zoom(14).build())
+                                    .build())
+                            .build(eventDetail.this), REQUEST_CODE);
+        }
         if (resultCode == RESULT_CANCELED) {
 // Show the button and set the OnClickListener()
 

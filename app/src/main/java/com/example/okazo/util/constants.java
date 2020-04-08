@@ -24,6 +24,16 @@ public class constants {
     public static final String KEY_EVENT_DESCRIPTION="description";
     public static final String KEY_LATITUDE="latitude";
     public static final String KEY_LONGITUDE="longitude";
+    //for event ticket
+    public static final String KEY_RADIO_TICKET_CATEGORY="ticketCategory";
+    public static final String KEY_TICKET_TYPE_SINGLE_NAME="ticketTypeSingleName";
+    public static final String KEY_TICKET_TYPE_SINGLE_PRICE="ticketTypeSinglePrice";
+    public static final String KEY_TICKET_TYPE_SINGLE_NUMBER="ticketTypeSingleNumber";
+    public static final String KEY_TICKET_NUMBER="ticketNumber";
+    public static final String KEY_TICKET_PRICE="ticketPrice";
+    public static final String KEY_BUNDLE_EVENT_DETAIL="eventDetailBundle";
+    public static final String KEY_BUNDLE_TICKET_DETAIL="ticketDetailBundle";
+    public static final String KEY_TICKET_TYPE_LIST="ticketTypeList";
     //public static final String KYE_EVENT_SELECTED_COUNTRY=""
 
 }

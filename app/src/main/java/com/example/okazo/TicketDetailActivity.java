@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -34,6 +35,17 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.okazo.util.constants.KEY_BUNDLE_EVENT_DETAIL;
+import static com.example.okazo.util.constants.KEY_BUNDLE_TICKET_DETAIL;
+import static com.example.okazo.util.constants.KEY_EVENT_DESCRIPTION;
+import static com.example.okazo.util.constants.KEY_RADIO_TICKET_CATEGORY;
+import static com.example.okazo.util.constants.KEY_TICKET_NUMBER;
+import static com.example.okazo.util.constants.KEY_TICKET_PRICE;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_LIST;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_NAME;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_NUMBER;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_PRICE;
+
 public class TicketDetailActivity extends AppCompatActivity {
 MaterialButton buttonAddMore;
 LinearLayout linearLayout=null;
@@ -42,12 +54,14 @@ int viewCounter=1;
 RadioGroup radioGroup;
 RadioButton radioButton;
 private ImageView imageViewNext;
+private Bundle extra;
 LinearLayout linearLayoutTicketTypes;
 private TextView textViewSingleTicketNumberError,textViewSingleTicketPriceError,textViewTicketTypeName,textViewTicketTypePrice,textViewTicketTypeNumber;
 TextInputEditText inputEditTextOneNumberTicket,inputEditTextOneTicketPrice,inputEditTextTicketTypeName,inputEditTextTicketTypePrice,inputEditTextTicketTypeNumber;
     private TextInputLayout textInputLayoutSingleNumberTicket,textInputLayoutSinglePriceTicket;
-List<TextInputEditText> editTextsList=new ArrayList<>();
+ArrayList<TextInputEditText> editTextsList=new ArrayList<>();
 List<TextView> textViewsList=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +87,9 @@ List<TextView> textViewsList=new ArrayList<>();
         inputEditTextTicketTypeName=findViewById(R.id.event_ticket_first_ticket_name);
         inputEditTextTicketTypePrice=findViewById(R.id.event_ticket_first_ticket_price);
         inputEditTextTicketTypeNumber=findViewById(R.id.event_ticket_first_ticket_number);
+
+         extra=getIntent().getBundleExtra(KEY_BUNDLE_EVENT_DETAIL);
+        //Log.d("bundleExtra",extra.getString(KEY_EVENT_DESCRIPTION));
 
 
 
@@ -106,35 +123,23 @@ List<TextView> textViewsList=new ArrayList<>();
                        inputEditTextOneTicketPrice.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
                    }
                    if(counter==2){
+                       Intent intent=new Intent(TicketDetailActivity.this,EventDetailPreviewActivity.class);
+                        Bundle bundle=new Bundle();
+                        bundle.putString(KEY_TICKET_NUMBER,inputEditTextOneNumberTicket.getText().toString());
+                        bundle.putString(KEY_TICKET_PRICE,inputEditTextOneTicketPrice.getText().toString());
+                        intent.putExtra(KEY_BUNDLE_EVENT_DETAIL,extra);
+                        intent.putExtra(KEY_BUNDLE_TICKET_DETAIL,bundle);
+                       startActivity(intent);
                        Toast.makeText(TicketDetailActivity.this, "DONE", Toast.LENGTH_SHORT).show();
-                   }else {
-                       Toast.makeText(TicketDetailActivity.this, "GG", Toast.LENGTH_SHORT).show();
                    }
                 }else {
                     //YES
                     //for edit text ij list
+                    int editTextValidCounter=0;
                     int listCounter=editTextsList.size();
-                    for(int i=0;i<listCounter;i++){
-
-
-
-                            if (editTextsList.get(i).getText().toString().equals("")) {
-                                textViewsList.get(i).setVisibility(View.VISIBLE);
-                                textViewsList.get(i).setText("Please Enter value");
-                                textViewsList.get(i).setTextColor(Color.RED);
-                                editTextsList.get(i).setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_error), null);
-                            } else {
-                                textViewsList.get(i).setText("");
-                                textViewsList.get(i).setVisibility(View.GONE);
-                                editTextsList.get(i).setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
-                            }
-
-                    }
-                    // for edit text in list
-                    Toast.makeText(TicketDetailActivity.this, "test"+listCounter, Toast.LENGTH_SHORT).show();
-                    int counter1=0;
+                   //
                     if(inputEditTextTicketTypeName.getText().toString().equals("")){
-                        textViewTicketTypeName.setText("Please enter value");
+                        textViewTicketTypeName.setText("Please enter asdasdasd");
                         inputEditTextTicketTypeName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,getResources().getDrawable(R.drawable.ic_error),null);
                     }else {
                         counter+=1;
@@ -157,9 +162,62 @@ List<TextView> textViewsList=new ArrayList<>();
                         inputEditTextTicketTypeNumber.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
                         textViewTicketTypeNumber.setText("");
                     }
+//                    if(listCounter==0) {
+//                        // only one ticket type
+//
+//                    if(counter==3){
+//                        Toast.makeText(TicketDetailActivity.this, "check"+"single DONE", Toast.LENGTH_SHORT).show();
+////
+//                    }
+//                      //
+//                    }
+//                    else {
+                        //multiple ticket type
+
+                        for (int i = 0; i < listCounter; i++) {
+
+
+                            if (editTextsList.get(i).getText().toString().equals("")) {
+                                textViewsList.get(i).setVisibility(View.VISIBLE);
+                                textViewsList.get(i).setText("Please Enter value");
+                                textViewsList.get(i).setTextColor(Color.RED);
+                                editTextsList.get(i).setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_error), null);
+                            } else {
+                                editTextValidCounter += 1;
+
+                                textViewsList.get(i).setText("");
+                                textViewsList.get(i).setVisibility(View.GONE);
+                                editTextsList.get(i).setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
+                            }
+
+
+                        }
+                    if(counter==3 && editTextValidCounter==listCounter){
+                        Intent intent=new Intent(TicketDetailActivity.this,EventDetailPreviewActivity.class);
+                        Bundle bundle=new Bundle();
+
+                        bundle.putString(KEY_RADIO_TICKET_CATEGORY,radioButton.getText().toString());
+                        bundle.putString(KEY_TICKET_TYPE_SINGLE_NAME,inputEditTextTicketTypeName.getText().toString());
+                        bundle.putString(KEY_TICKET_TYPE_SINGLE_NUMBER,inputEditTextTicketTypeNumber.getText().toString());
+                        bundle.putString(KEY_TICKET_TYPE_SINGLE_PRICE,inputEditTextTicketTypePrice.getText().toString());
+                        bundle.putSerializable(KEY_TICKET_TYPE_LIST,editTextsList);
+                        intent.putExtra(KEY_BUNDLE_EVENT_DETAIL,extra);
+                        intent.putExtra(KEY_BUNDLE_TICKET_DETAIL,editTextsList);
+                        startActivity(intent);
+
+
+
+                     startActivity(intent);
+
+                    }
+                    }
+
+
+
+
 
                 }
-            }
+           // }
         });
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

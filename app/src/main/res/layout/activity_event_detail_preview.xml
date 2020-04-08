@@ -53,7 +53,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
 
-
+                        android:background="@drawable/ic_upload_image"
                         android:id="@+id/event_detail_image"/>
               </RelativeLayout>
           </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -63,7 +63,70 @@
           android:layout_height="match_parent"
           app:layout_behavior="@string/appbar_scrolling_view_behavior"
           >
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+          <com.alespero.expandablecardview.ExpandableCardView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:title="Event Detail"
+              app:icon="@drawable/ic_add"
+              android:layout_marginLeft="15dp"
+              android:layout_marginRight="15dp"
+              android:layout_marginTop="8dp"
 
+              android:id="@+id/event_detail_preview_expandable_event_detail"
+              app:expandOnClick="true"
+              app:animationDuration="300"
+              app:startExpanded="false"
+                app:inner_view="@layout/expandable_event_detail"
+              />
+              <com.alespero.expandablecardview.ExpandableCardView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:title="Event Date "
+                  app:icon="@drawable/ic_add"
+                  android:layout_marginLeft="15dp"
+                  android:layout_marginRight="15dp"
+                  android:layout_marginTop="8dp"
+
+                  android:id="@+id/event_detail_preview_expandable_event_detail_date"
+                  app:expandOnClick="true"
+                  app:animationDuration="300"
+                  app:startExpanded="false"
+                  app:inner_view="@layout/expandable_event_date"
+                  />
+              <com.alespero.expandablecardview.ExpandableCardView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:title="Event Location "
+                  app:icon="@drawable/ic_add"
+                  android:layout_marginLeft="15dp"
+                  android:layout_marginRight="15dp"
+                  android:layout_marginTop="8dp"
+
+                  android:id="@+id/event_detail_preview_expandable_event_detail_location"
+                  app:expandOnClick="true"
+                  app:animationDuration="300"
+                  app:startExpanded="false"
+                  app:inner_view="@layout/expandable_event_location"
+                  />
+              <com.alespero.expandablecardview.ExpandableCardView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  app:title="Ticket Detail"
+                  app:icon="@drawable/ic_add"
+                  android:layout_marginLeft="15dp"
+                  android:layout_marginRight="15dp"
+                  android:layout_marginTop="8dp"
+                  android:id="@+id/event_detail_preview_expandable_ticket"
+                  app:expandOnClick="true"
+                  app:animationDuration="300"
+                  app:startExpanded="false"
+                  app:inner_view="@layout/expandable_event_detail"
+                  />
+          </LinearLayout>
       </androidx.core.widget.NestedScrollView>
   </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

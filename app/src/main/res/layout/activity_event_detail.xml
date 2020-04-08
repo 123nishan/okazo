@@ -263,6 +263,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
     android:orientation="horizontal"
     android:layout_below="@+id/event_detail_recycler_view"
     android:id="@+id/event_page_status_layout">
@@ -287,6 +288,7 @@
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:layout_marginLeft="5dp"
+    android:layout_marginTop="5dp"
 android:orientation="horizontal"
 android:layout_below="@+id/event_page_status_layout"
 android:id="@+id/event_ticket_status_layout">
@@ -301,10 +303,10 @@ android:id="@+id/event_ticket_status_layout">
     android:layout_marginRight="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textOff="Public"
+    android:textOff="private"
     android:checked="false"
     android:id="@+id/event_ticket_status"
-    android:textOn="Private"
+    android:textOn="public"
     />
 </LinearLayout>
 

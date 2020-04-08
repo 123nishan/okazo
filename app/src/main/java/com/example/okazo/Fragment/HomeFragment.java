@@ -66,8 +66,8 @@ public class HomeFragment extends Fragment {
         buttonAddEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent=new Intent(getActivity().getApplicationContext(), eventDetail.class);
-                Intent intent=new Intent(getActivity().getApplicationContext(), EventDetailPreviewActivity.class);
+                Intent intent=new Intent(getActivity().getApplicationContext(), eventDetail.class);
+                //Intent intent=new Intent(getActivity().getApplicationContext(), EventDetailPreviewActivity.class);
                 startActivity(intent);
             }
         });

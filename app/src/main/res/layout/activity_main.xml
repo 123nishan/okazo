@@ -31,21 +31,22 @@
         <!--    android:text="Here:"-->
         <!--    android:textSize="16dp"-->
         <!--    ></TextView>-->
-        <com.luseen.spacenavigation.SpaceNavigationView
-            android:id="@+id/bottm_nav"
+        <com.ismaeldivita.chipnavigation.ChipNavigationBar
+            android:id="@+id/bottom_nav_bar"
             android:layout_width="match_parent"
+            android:layout_gravity="bottom"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
+            android:background="@color/colorPrimaryLight"
+            app:cnb_addBottomInset="false"
+            app:cnb_addLeftInset="false"
+            app:cnb_addRightInset="false"
+            app:cnb_addTopInset="false"
+            app:cnb_menuResource="@menu/bottom_nav_menu"
+            app:cnb_minExpandedWidth="150dp"
+            app:cnb_orientationMode="horizontal"
 
-            app:active_item_color="@color/green"
-            app:centre_button_color="@color/colorPrimary"
-            app:inactive_item_color="#F00"
-            app:space_background_color="@color/white"
-            app:centre_button_icon="@drawable/ic_home"
-            app:space_item_icon_size="@dimen/space_item_icon_default_size"
-            app:space_item_icon_only_size="@dimen/space_item_icon_only_size"
-            app:space_item_text_size="@dimen/space_item_text_default_size"/>
+            />
 <!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
 <!--            android:layout_alignParentBottom="true"-->
 <!--            android:layout_width="match_parent"-->
