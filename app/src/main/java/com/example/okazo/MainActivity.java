@@ -87,7 +87,7 @@ String userEmail;
         shared_editor.putString("user_email",userEmail);
         shared_editor.commit();
             bottomNavigationView.setItemSelected(R.id.nav_home,true);
-            
+
 //        bottomNavigationView.initWithSaveInstanceState(savedInstanceState);
 //        bottomNavigationView.addSpaceItem(new SpaceItem("HOME", R.drawable.ic_home));
 //        bottomNavigationView.addSpaceItem(new SpaceItem("SEARCH", R.drawable.ic_place));
