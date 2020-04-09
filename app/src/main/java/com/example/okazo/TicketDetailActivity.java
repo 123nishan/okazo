@@ -42,6 +42,9 @@ import static com.example.okazo.util.constants.KEY_RADIO_TICKET_CATEGORY;
 import static com.example.okazo.util.constants.KEY_TICKET_NUMBER;
 import static com.example.okazo.util.constants.KEY_TICKET_PRICE;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_LIST;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_NAME_LIST;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_NUMBER_LIST;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_PRICE_LIST;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_NAME;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_NUMBER;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_PRICE;
@@ -59,7 +62,7 @@ LinearLayout linearLayoutTicketTypes;
 private TextView textViewSingleTicketNumberError,textViewSingleTicketPriceError,textViewTicketTypeName,textViewTicketTypePrice,textViewTicketTypeNumber;
 TextInputEditText inputEditTextOneNumberTicket,inputEditTextOneTicketPrice,inputEditTextTicketTypeName,inputEditTextTicketTypePrice,inputEditTextTicketTypeNumber;
     private TextInputLayout textInputLayoutSingleNumberTicket,textInputLayoutSinglePriceTicket;
-ArrayList<TextInputEditText> editTextsList=new ArrayList<>();
+ArrayList<TextInputEditText> editTextsList=new ArrayList<TextInputEditText>();
 List<TextView> textViewsList=new ArrayList<>();
 
     @Override
@@ -196,23 +199,35 @@ List<TextView> textViewsList=new ArrayList<>();
 
                         }
                     if(counter==3 && editTextValidCounter==listCounter){
-                        Intent intent=new Intent(TicketDetailActivity.this,EventDetailPreviewActivity.class);
+                        ArrayList<String> ticketTypeNameList=new ArrayList<>(),ticketTypePriceList=new ArrayList<>(),ticketTypeNumberList=new ArrayList<>();
+                        for (int i=0;i<editTextsList.size()-1;i=i+3){
+
+                            ticketTypeNameList.add(editTextsList.get(i).getText().toString());
+                            ticketTypePriceList.add((editTextsList.get(i+1).getText().toString()));
+                            ticketTypeNumberList.add((editTextsList.get(i+2).getText().toString()));
+                        }
+
+                        Intent intent1=new Intent(TicketDetailActivity.this,EventDetailPreviewActivity.class);
                         Bundle bundle=new Bundle();
 
                         bundle.putString(KEY_RADIO_TICKET_CATEGORY,radioButton.getText().toString());
                         bundle.putString(KEY_TICKET_TYPE_SINGLE_NAME,inputEditTextTicketTypeName.getText().toString());
                         bundle.putString(KEY_TICKET_TYPE_SINGLE_NUMBER,inputEditTextTicketTypeNumber.getText().toString());
                         bundle.putString(KEY_TICKET_TYPE_SINGLE_PRICE,inputEditTextTicketTypePrice.getText().toString());
-                        bundle.putSerializable(KEY_TICKET_TYPE_LIST,editTextsList);
+                        //bundle.putSerializable(KEY_TICKET_TYPE_LIST,editTextsList);
+                        bundle.putSerializable(KEY_TICKET_TYPE_NAME_LIST,ticketTypeNameList);
+                        bundle.putSerializable(KEY_TICKET_TYPE_PRICE_LIST,ticketTypePriceList);
+                        bundle.putSerializable(KEY_TICKET_TYPE_NUMBER_LIST,ticketTypeNumberList);
+
                         extra.putBundle(KEY_BUNDLE_TICKET_DETAIL,bundle);
-                        intent.putExtras(extra);
+
+                        intent1.putExtras(extra);
 //                        intent.putExtra(KEY_BUNDLE_EVENT_DETAIL,extra);
 //                        intent.putExtra(KEY_BUNDLE_TICKET_DETAIL,bundle);
-                        startActivity(intent);
+                        startActivity(intent1);
 
 
 
-                     startActivity(intent);
 
                     }
                     }

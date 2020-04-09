@@ -5,18 +5,122 @@
     android:paddingRight="30dp"
     android:paddingTop="10dp"
     android:layout_height="match_parent">
-<com.google.android.material.textfield.TextInputLayout
+<TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    >
-    <com.google.android.material.textfield.TextInputEditText
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text=""
-        android:id="@+id/expand_ticket_status"
-        android:hint="Ticket Status"/>
+    android:text="All ticket types"
+    android:textSize="18dp"
+    android:id="@+id/expand_ticket_status"
+    android:textStyle="bold"/>
 
-</com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <LinearLayout
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--row 1-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Ticket Name:"
+                    android:textSize="16dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gold Pass"
+                    android:textStyle="bold"
+                    android:id="@+id/expand_ticket_type_name"
+                    android:textSize="16dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+        <!--row 2-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Ticket Price:"
+                    android:textSize="16dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gold Pass"
+                    android:textStyle="bold"
+                    android:id="@+id/expand_ticket_type_price"
+                    android:textSize="16dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+        <!--row 3-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Ticket Quantity:"
+                    android:textSize="16dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gold Pass"
+                    android:textStyle="bold"
+                    android:id="@+id/expand_ticket_type_Number"
+                    android:textSize="16dp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -27,13 +131,21 @@
            android:layout_height="wrap_content"
            android:orientation="vertical"
            android:id="@+id/expand_yes_ticket_type">
+           <ListView
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+                android:divider="#151514"
+
+               android:dividerHeight="2px"
+               android:id="@+id/expand_ticket_types_list_view"/>
 
        </LinearLayout>
     <LinearLayout
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="3dp"
         android:weightSum="2"
         android:id="@+id/expand_no_ticket_type"
         >

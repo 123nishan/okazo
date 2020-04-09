@@ -26,12 +26,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alespero.expandablecardview.ExpandableCardView;
 import com.bumptech.glide.Glide;
 import com.example.okazo.Model.EventDetail;
+import com.example.okazo.util.EventPreviewTicketTypeAdapter;
 import com.example.okazo.util.EventTypeAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -60,6 +62,9 @@ import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import static com.example.okazo.util.constants.KEY_TAG_ARRAY;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_LIST;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_NAME_LIST;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_NUMBER_LIST;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_PRICE_LIST;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
@@ -97,14 +102,15 @@ public class EventDetailPreviewActivity extends AppCompatActivity {
     private Uri uriProfileImage;
     private Bundle bundleEventDetail,bundleTicketDetail;
  private ArrayList<EventDetail> selectedEventType=new ArrayList<EventDetail>();
- private ArrayList<TextInputEditText> editTextsList=new ArrayList<>();
+
     private MapView mapView;
-    private EventTypeAdapter adapter;
+
     private MarkerViewManager markerViewManager;
  private String eventTitle,startDate,endDate,startTime,endTime,pageStatus,ticketStatus,selectedLocaition,description,latitude,longitude,
          ticketCategory,ticketTypeSingleName,ticketTypeSinglePrice,ticketTypeSingleNumber,ticketNumber,ticketPrice;
 ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,expandableCardViewEventDate,expandableCardViewEventLocation;
     private static final String SOURCE_ID = "SOURCE_ID";
+    private  ArrayList<String> ticketTypeNameList=new ArrayList<>(),ticketTypePriceList=new ArrayList<>(),ticketTypeNumberList=new ArrayList<>();
 
     private static final String ICON_ID = "ICON_ID";
     private static final String LAYER_ID = "LAYER_ID";
@@ -147,20 +153,27 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                 ticketPrice=bundleTicketDetail.getString(KEY_TICKET_PRICE);
             }else {
                 bundleTicketDetail=getIntent().getBundleExtra(KEY_BUNDLE_TICKET_DETAIL);
-                editTextsList= (ArrayList<TextInputEditText>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_LIST);
+               // editTextsList= (ArrayList<TextInputEditText>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_LIST);
                 ticketTypeSingleName=bundleTicketDetail.getString(KEY_TICKET_TYPE_SINGLE_NAME);
                 ticketTypeSinglePrice=bundleTicketDetail.getString(KEY_TICKET_TYPE_SINGLE_PRICE);
                 ticketTypeSingleNumber=bundleTicketDetail.getString(KEY_TICKET_TYPE_SINGLE_NUMBER);
+                ticketTypeNameList= (ArrayList<String>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_NAME_LIST);
+                ticketTypePriceList= (ArrayList<String>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_PRICE_LIST);
+                ticketTypeNumberList= (ArrayList<String>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_NUMBER_LIST);
+
             }
 
 
-        }else{
-
+        }
+        for (EventDetail val :selectedEventType
+             ) {
+            Log.d("itis",val.getEventType());
         }
         expandableCardViewTicketDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
             @Override
             public void onExpandChanged(View v, boolean isExpanded) {
-                TextInputEditText textInputEditTextTicket=v.findViewById(R.id.expand_ticket_status);
+                if(isExpanded){
+                TextView textInputEditTextTicket=v.findViewById(R.id.expand_ticket_status);
                 LinearLayout linearLayoutTicketLayout=v.findViewById(R.id.expand_ticket_layout_yes);
                 //private means  No ticket
                 if(ticketStatus.toLowerCase().equals("public")){
@@ -172,7 +185,7 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                 }
                 //Yes  ticket
                 else {
-                    textInputEditTextTicket.setText("Ticket Detail Below");
+                    textInputEditTextTicket.setText("All Ticket Details");
                     linearLayoutTicketLayout.setVisibility(View.VISIBLE);
 
                     LinearLayout linearLayoutNoTicketType=v.findViewById(R.id.expand_no_ticket_type);
@@ -191,110 +204,67 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                     }else {
                         linearLayoutNoTicketType.setVisibility(View.GONE);
                         linearLayoutYesTicketType.setVisibility(View.VISIBLE);
-                        // for more than one category
-
-                        float scale=getResources().getDisplayMetrics().density;
-                        int dpAsPixel=(int) (16*scale+0.5f);
-                        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-                        TextView textView=new TextView(EventDetailPreviewActivity.this);
-                        textView.setLayoutParams(layoutParams);
-                        textView.setText("Ticket Types");
-                        textView.setTextSize(dpAsPixel);
-                        linearLayoutYesTicketType.addView(textView);
-
-                        LinearLayout.LayoutParams layoutParams1=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-                        LinearLayout linearLayout=new LinearLayout(EventDetailPreviewActivity.this);
-                        linearLayout.setLayoutParams(layoutParams1);
-                        linearLayout.setOrientation(LinearLayout.VERTICAL);
-                        linearLayoutYesTicketType.addView(linearLayout);
-
-                        LinearLayout.LayoutParams layoutParams2=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-                        //  edittext Name
-                        TextInputLayout textInputLayout=new TextInputLayout(EventDetailPreviewActivity.this);
-                        textInputLayout.setLayoutParams(layoutParams2);
-                        linearLayout.addView(textInputLayout);
-
-                        TextInputEditText textInputEditText=new TextInputEditText(EventDetailPreviewActivity.this);
-                        textInputEditText.setLayoutParams(new TextInputLayout.LayoutParams(
-                                TextInputLayout.LayoutParams.MATCH_PARENT,
-                                TextInputLayout.LayoutParams.MATCH_PARENT
-                        ));
-                        textInputEditText.setHint("Ticket Name");
-                        textInputEditText.setText(ticketTypeSingleName);
-                        textInputEditText.setClickable(false);
-                        textInputEditText.setCursorVisible(false);
-                        textInputEditText.setFocusable(false);
-                        textInputEditText.setFocusableInTouchMode(false);
-
-                        textInputLayout.addView(textInputEditText);
-
-                        //edit text Price
-                        TextInputLayout textInputLayout1=new TextInputLayout(EventDetailPreviewActivity.this);
-                        textInputLayout1.setLayoutParams(layoutParams2);
-                        linearLayout.addView(textInputLayout1);
-
-                        TextInputEditText textInputEditText1=new TextInputEditText(EventDetailPreviewActivity.this);
-                        textInputEditText1.setLayoutParams(new TextInputLayout.LayoutParams(
-                                TextInputLayout.LayoutParams.MATCH_PARENT,
-                                TextInputLayout.LayoutParams.MATCH_PARENT
-                        ));
-                        textInputEditText1.setHint("Ticket Price");
-                        textInputEditText1.setText(ticketTypeSinglePrice);
-                        textInputEditText1.setClickable(false);
-                        textInputEditText1.setCursorVisible(false);
-                        textInputEditText1.setFocusable(false);
-                        textInputEditText1.setFocusableInTouchMode(false);
-
-                        textInputLayout1.addView(textInputEditText1);
-
-                        //edit text Number
-                        TextInputLayout textInputLayout2=new TextInputLayout(EventDetailPreviewActivity.this);
-                        textInputLayout2.setLayoutParams(layoutParams2);
-                        linearLayout.addView(textInputLayout2);
-
-                        TextInputEditText textInputEditText2=new TextInputEditText(EventDetailPreviewActivity.this);
-                        textInputEditText2.setLayoutParams(new TextInputLayout.LayoutParams(
-                                TextInputLayout.LayoutParams.MATCH_PARENT,
-                                TextInputLayout.LayoutParams.MATCH_PARENT
-                        ));
-                        textInputEditText2.setHint("Ticket Quantity");
-                        textInputEditText2.setText(ticketTypeSingleNumber);
-                        textInputEditText2.setClickable(false);
-                        textInputEditText2.setCursorVisible(false);
-                        textInputEditText2.setFocusable(false);
-                        textInputEditText2.setFocusableInTouchMode(false);
-
-                        textInputLayout2.addView(textInputEditText2);
-
-                        if(editTextsList.size()==0){
-                            //only one cateogry
-                            //dont add other fields
-
-                        }else {
-                            //many ticket category
-                        }
+                        TextView textViewTicketName=v.findViewById(R.id.expand_ticket_type_name);
+                        TextView textViewTicketPrice=v.findViewById(R.id.expand_ticket_type_price);
+                        TextView textViewTicketNumber=v.findViewById(R.id.expand_ticket_type_Number);
+                        textViewTicketName.setText(ticketTypeSingleName);
+                        textViewTicketPrice.setText(ticketTypeSinglePrice);
+                        textViewTicketNumber.setText(ticketTypeSingleNumber);
+                        ListView listView = v.findViewById(R.id.expand_ticket_types_list_view);
+                        EventPreviewTicketTypeAdapter adapter = new EventPreviewTicketTypeAdapter(EventDetailPreviewActivity.this, ticketTypeNameList, ticketTypePriceList, ticketTypeNumberList);
+                        listView.setAdapter(adapter);
 
                     }
+
+
+                    }
+                }else {
+
                 }
             }
         });
+
+
+        RecyclerView recyclerView=findViewById(R.id.expand_event_tag_recylerview);
+        String parentClass="preview";
+        EventTypeAdapter adapter1;
+        adapter1=new EventTypeAdapter(selectedEventType,parentClass);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(EventDetailPreviewActivity.this);
+
         expandableCardViewEventDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+            int counter=0;
             @Override
             public void onExpandChanged(View v, boolean isExpanded) {
-                if(isExpanded){
-                   // TextView textView=v.findViewById(R.id.expand_textview);
-                   // textView.setText(eventTitle);
-                    String parentClass="preview";
-                    RecyclerView recyclerView=findViewById(R.id.expand_event_tag_recylerview);
-                    Toast.makeText(EventDetailPreviewActivity.this, "size"+selectedEventType.size(), Toast.LENGTH_SHORT).show();
-                    adapter=new EventTypeAdapter(selectedEventType,parentClass);
-                    LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
-                    linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    recyclerView.setAdapter(adapter);
+                if(isExpanded) {
+
+                        // TextView textView=v.findViewById(R.id.expand_textview);
+                        // textView.setText(eventTitle);
+
+
+                        ArrayList<EventDetail> eventTags = new ArrayList<EventDetail>();
+
+
+                        recyclerView.getRecycledViewPool().clear();
+                        eventTags = selectedEventType;
+                        Log.d("eventVal", eventTags.size() + " a");
+                        for (EventDetail val : eventTags
+                        ) {
+                            Log.d("eventVal", val.getEventType() + " b");
+                        }
+
+                        adapter1.notifyDataSetChanged();
+                        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        recyclerView.setHasFixedSize(false);
+                        recyclerView.setItemAnimator(new DefaultItemAnimator());
+                        recyclerView.setAdapter(adapter1);
+
+
+                    }
+
                 }
-            }
+
+
         });
         expandableCardViewEventLocation.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
             @Override

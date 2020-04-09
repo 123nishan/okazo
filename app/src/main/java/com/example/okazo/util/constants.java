@@ -34,6 +34,9 @@ public class constants {
     public static final String KEY_BUNDLE_EVENT_DETAIL="eventDetailBundle";
     public static final String KEY_BUNDLE_TICKET_DETAIL="ticketDetailBundle";
     public static final String KEY_TICKET_TYPE_LIST="ticketTypeList";
+    public static final String KEY_TICKET_TYPE_NAME_LIST="ticketTypeNameList";
+    public static final String KEY_TICKET_TYPE_PRICE_LIST="ticketTypePriceList";
+    public static final String KEY_TICKET_TYPE_NUMBER_LIST="ticketTypeNumberList";
     //public static final String KYE_EVENT_SELECTED_COUNTRY=""
 
 }
