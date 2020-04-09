@@ -127,6 +127,7 @@ List<TextView> textViewsList=new ArrayList<>();
                         Bundle bundle=new Bundle();
                         bundle.putString(KEY_TICKET_NUMBER,inputEditTextOneNumberTicket.getText().toString());
                         bundle.putString(KEY_TICKET_PRICE,inputEditTextOneTicketPrice.getText().toString());
+
                         intent.putExtra(KEY_BUNDLE_EVENT_DETAIL,extra);
                         intent.putExtra(KEY_BUNDLE_TICKET_DETAIL,bundle);
                        startActivity(intent);

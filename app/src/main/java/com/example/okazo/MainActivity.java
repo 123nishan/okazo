@@ -91,7 +91,7 @@ String userEmail;
 //        bottomNavigationView.initWithSaveInstanceState(savedInstanceState);
 //        bottomNavigationView.addSpaceItem(new SpaceItem("HOME", R.drawable.ic_home));
 //        bottomNavigationView.addSpaceItem(new SpaceItem("SEARCH", R.drawable.ic_place));
-//
+
 //        bottomNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
 //            @Override
 //            public void onCentreButtonClick() {
@@ -115,32 +115,42 @@ String userEmail;
 //            }
 //        });
 
-//        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-//
-//                switch (menuItem.getItemId()){
-//                    case R.id.nav_home:
-//
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
-//                        return true;
-//                    case R.id.nav_event:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new EventFragment()).commit();
-//
-//                        return true;
-//                    case R.id.nav_shop:
-//                        Toast.makeText(MainActivity.this, "No thing added", Toast.LENGTH_SHORT).show();
-////                        Intent intent1=new Intent(getApplicationContext(),RegisterActivity.class);
-////                        startActivity(intent1);
-//
-//                        return true;
-//                    case R.id.nav_profile:
-//                        getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new ProfileFragment()).commit();
-//                        return true;
-//                }
-//                return false;
-//            }
-//        });
+        bottomNavigationView.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(int i) {
+                FrameLayout frameLayout;
+                frameLayout = findViewById(R.id.frame_container);
+                switch (i){
+                    case R.id.nav_home:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.pop_in, R.anim.pop_out, R.anim.pop_in, R.anim.pop_out)
+                                .replace(R.id.frame_container,new HomeFragment())
+                                .addToBackStack(null)
+                                .commit();
+                        frameLayout.removeAllViewsInLayout();
+                        break;
+                    case R.id.nav_profile:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.pop_in, R.anim.pop_out, R.anim.pop_in, R.anim.pop_out)
+                                .replace(R.id.frame_container,new EventFragment())
+                                .addToBackStack(null)
+                                .commit();
+                        frameLayout.removeAllViewsInLayout();
+                        break;
+                    case R.id.nav_shop:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.pop_in, R.anim.pop_out, R.anim.pop_in, R.anim.pop_out)
+                                .replace(R.id.frame_container,new ProfileFragment())
+                                .addToBackStack(null)
+                                .commit();
+                        frameLayout.removeAllViewsInLayout();
+                        break;
+                }
+            }
+        });
 //        floatingActionButton=findViewById(R.id.add);
 //
 //        floatingActionButton.setOnClickListener(View ->

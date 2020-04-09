@@ -116,7 +116,7 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
                         geofenceslist.add(new Geofence.Builder()
                                 .setRequestId(""+27.680438+"-"+85.335270)
                                 .setCircularRegion(
-                                        27.680438,85.335270,100
+                                        27.680438,85.335270,30
                                 )
                                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_DWELL)

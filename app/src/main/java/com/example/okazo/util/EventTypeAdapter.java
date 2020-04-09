@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.MyViewHolder> {
     private ArrayList<EventDetail> eventDetails;
+    private String parentClass;
     public EventTypeAdapter.OnRemoveClickListner removeClickListner;
 
     public interface OnRemoveClickListner{
@@ -31,13 +32,19 @@ public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.MyVi
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.card_event_type,parent,false);
         return new MyViewHolder(view);
     }
-    public  EventTypeAdapter(ArrayList<EventDetail> eventDetails){
+    public  EventTypeAdapter(ArrayList<EventDetail> eventDetails,String parentClass){
         this.eventDetails=eventDetails;
+        this.parentClass=parentClass;
     }
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         EventDetail detail=eventDetails.get(position);
         holder.textViewEventType.setText(detail.getEventType());
+        if(parentClass.equals("preview")){
+            holder.removeEventType.setVisibility(View.GONE);
+        }else {
+            holder.removeEventType.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

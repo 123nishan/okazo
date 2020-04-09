@@ -303,10 +303,10 @@ android:id="@+id/event_ticket_status_layout">
     android:layout_marginRight="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textOff="private"
+    android:textOff="public"
     android:checked="false"
     android:id="@+id/event_ticket_status"
-    android:textOn="public"
+    android:textOn="private"
     />
 </LinearLayout>
 

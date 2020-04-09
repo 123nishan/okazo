@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,15 +25,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alespero.expandablecardview.ExpandableCardView;
 import com.bumptech.glide.Glide;
 import com.example.okazo.Model.EventDetail;
+import com.example.okazo.util.EventTypeAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
@@ -51,6 +57,9 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
+
+import static com.example.okazo.util.constants.KEY_TAG_ARRAY;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_LIST;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
@@ -90,6 +99,7 @@ public class EventDetailPreviewActivity extends AppCompatActivity {
  private ArrayList<EventDetail> selectedEventType=new ArrayList<EventDetail>();
  private ArrayList<TextInputEditText> editTextsList=new ArrayList<>();
     private MapView mapView;
+    private EventTypeAdapter adapter;
     private MarkerViewManager markerViewManager;
  private String eventTitle,startDate,endDate,startTime,endTime,pageStatus,ticketStatus,selectedLocaition,description,latitude,longitude,
          ticketCategory,ticketTypeSingleName,ticketTypeSinglePrice,ticketTypeSingleNumber,ticketNumber,ticketPrice;
@@ -122,27 +132,155 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
          description=bundleEventDetail.getString(KEY_EVENT_DESCRIPTION);
          latitude=bundleEventDetail.getString(KEY_LATITUDE);
          longitude=bundleEventDetail.getString(KEY_LONGITUDE);
+         selectedEventType= (ArrayList<EventDetail>) bundleEventDetail.getSerializable(KEY_TAG_ARRAY);
 
-        if(ticketStatus.toLowerCase().equals("public")){
-
-            bundleTicketDetail=getIntent().getBundleExtra(KEY_BUNDLE_TICKET_DETAIL);
+        if(ticketStatus.toLowerCase().equals("private")){
             ticketCategory=bundleTicketDetail.getString(KEY_RADIO_TICKET_CATEGORY);
-            ticketTypeSingleName=bundleTicketDetail.getString(KEY_TICKET_TYPE_SINGLE_NAME);
-            ticketTypeSinglePrice=bundleTicketDetail.getString(KEY_TICKET_TYPE_SINGLE_PRICE);
-            ticketTypeSingleNumber=bundleTicketDetail.getString(KEY_TICKET_TYPE_SINGLE_NUMBER);
-            ticketNumber=bundleTicketDetail.getString(KEY_TICKET_NUMBER);
-            ticketPrice=bundleTicketDetail.getString(KEY_TICKET_PRICE);
+
+            if(ticketCategory.toLowerCase().equals("no")){
+                ticketNumber=bundleTicketDetail.getString(KEY_TICKET_NUMBER);
+                ticketPrice=bundleTicketDetail.getString(KEY_TICKET_PRICE);
+            }else {
+                bundleTicketDetail=getIntent().getBundleExtra(KEY_BUNDLE_TICKET_DETAIL);
+                editTextsList= (ArrayList<TextInputEditText>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_LIST);
+                ticketTypeSingleName=bundleTicketDetail.getString(KEY_TICKET_TYPE_SINGLE_NAME);
+                ticketTypeSinglePrice=bundleTicketDetail.getString(KEY_TICKET_TYPE_SINGLE_PRICE);
+                ticketTypeSingleNumber=bundleTicketDetail.getString(KEY_TICKET_TYPE_SINGLE_NUMBER);
+            }
 
 
         }else{
 
         }
+        expandableCardViewTicketDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+            @Override
+            public void onExpandChanged(View v, boolean isExpanded) {
+                TextInputEditText textInputEditTextTicket=findViewById(R.id.expand_ticket_status);
+                LinearLayout linearLayoutTicketLayout=findViewById(R.id.expand_ticket_layout_yes);
+                //private means  No ticket
+                if(ticketStatus.toLowerCase().equals("public")){
+                    textInputEditTextTicket.setText("Free Entry");
+                    linearLayoutTicketLayout.setVisibility(View.GONE);
+
+
+
+                }
+                //Yes  ticket
+                else {
+                    textInputEditTextTicket.setText("Ticket Detail Below");
+                    linearLayoutTicketLayout.setVisibility(View.VISIBLE);
+
+                    LinearLayout linearLayoutNoTicketType=findViewById(R.id.expand_no_ticket_type);
+                    LinearLayout linearLayoutYesTicketType=findViewById(R.id.expand_yes_ticket_type);
+                    if(ticketCategory.toLowerCase().equals("no")){
+                        linearLayoutNoTicketType.setVisibility(View.VISIBLE);
+                        linearLayoutYesTicketType.setVisibility(View.GONE);
+
+                    }else {
+                        linearLayoutNoTicketType.setVisibility(View.GONE);
+                        linearLayoutYesTicketType.setVisibility(View.VISIBLE);
+                        // for more than one category
+
+                        float scale=getResources().getDisplayMetrics().density;
+                        int dpAsPixel=(int) (16*scale+0.5f);
+                        LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                        TextView textView=new TextView(EventDetailPreviewActivity.this);
+                        textView.setLayoutParams(layoutParams);
+                        textView.setText("Ticket Types");
+                        textView.setTextSize(dpAsPixel);
+                        linearLayoutYesTicketType.addView(textView);
+
+                        LinearLayout.LayoutParams layoutParams1=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                        LinearLayout linearLayout=new LinearLayout(EventDetailPreviewActivity.this);
+                        linearLayout.setLayoutParams(layoutParams1);
+                        linearLayout.setOrientation(LinearLayout.VERTICAL);
+                        linearLayoutYesTicketType.addView(linearLayout);
+
+                        LinearLayout.LayoutParams layoutParams2=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                        //  edittext Name
+                        TextInputLayout textInputLayout=new TextInputLayout(EventDetailPreviewActivity.this);
+                        textInputLayout.setLayoutParams(layoutParams2);
+                        linearLayout.addView(textInputLayout);
+
+                        TextInputEditText textInputEditText=new TextInputEditText(EventDetailPreviewActivity.this);
+                        textInputEditText.setLayoutParams(new TextInputLayout.LayoutParams(
+                                TextInputLayout.LayoutParams.MATCH_PARENT,
+                                TextInputLayout.LayoutParams.MATCH_PARENT
+                        ));
+                        textInputEditText.setHint("Ticket Name");
+                        textInputEditText.setText(ticketTypeSingleName);
+                        textInputEditText.setClickable(false);
+                        textInputEditText.setCursorVisible(false);
+                        textInputEditText.setFocusable(false);
+                        textInputEditText.setFocusableInTouchMode(false);
+
+                        textInputLayout.addView(textInputEditText);
+
+                        //edit text Price
+                        TextInputLayout textInputLayout1=new TextInputLayout(EventDetailPreviewActivity.this);
+                        textInputLayout1.setLayoutParams(layoutParams2);
+                        linearLayout.addView(textInputLayout1);
+
+                        TextInputEditText textInputEditText1=new TextInputEditText(EventDetailPreviewActivity.this);
+                        textInputEditText1.setLayoutParams(new TextInputLayout.LayoutParams(
+                                TextInputLayout.LayoutParams.MATCH_PARENT,
+                                TextInputLayout.LayoutParams.MATCH_PARENT
+                        ));
+                        textInputEditText1.setHint("Ticket Price");
+                        textInputEditText1.setText(ticketTypeSinglePrice);
+                        textInputEditText1.setClickable(false);
+                        textInputEditText1.setCursorVisible(false);
+                        textInputEditText1.setFocusable(false);
+                        textInputEditText1.setFocusableInTouchMode(false);
+
+                        textInputLayout1.addView(textInputEditText1);
+
+                        //edit text Number
+                        TextInputLayout textInputLayout2=new TextInputLayout(EventDetailPreviewActivity.this);
+                        textInputLayout2.setLayoutParams(layoutParams2);
+                        linearLayout.addView(textInputLayout2);
+
+                        TextInputEditText textInputEditText2=new TextInputEditText(EventDetailPreviewActivity.this);
+                        textInputEditText2.setLayoutParams(new TextInputLayout.LayoutParams(
+                                TextInputLayout.LayoutParams.MATCH_PARENT,
+                                TextInputLayout.LayoutParams.MATCH_PARENT
+                        ));
+                        textInputEditText2.setHint("Ticket Quantity");
+                        textInputEditText2.setText(ticketTypeSingleNumber);
+                        textInputEditText2.setClickable(false);
+                        textInputEditText2.setCursorVisible(false);
+                        textInputEditText2.setFocusable(false);
+                        textInputEditText2.setFocusableInTouchMode(false);
+
+                        textInputLayout2.addView(textInputEditText2);
+
+                        if(editTextsList.size()==0){
+                            //only one cateogry
+                            //dont add other fields
+
+                        }else {
+                            //many ticket category
+                        }
+
+                    }
+                }
+            }
+        });
         expandableCardViewEventDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
             @Override
             public void onExpandChanged(View v, boolean isExpanded) {
                 if(isExpanded){
                    // TextView textView=v.findViewById(R.id.expand_textview);
                    // textView.setText(eventTitle);
+                    String parentClass="preview";
+                    RecyclerView recyclerView=findViewById(R.id.expand_event_tag_recylerview);
+                    Toast.makeText(EventDetailPreviewActivity.this, "size"+selectedEventType.size(), Toast.LENGTH_SHORT).show();
+                    adapter=new EventTypeAdapter(selectedEventType,parentClass);
+                    LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
+                    linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(adapter);
                 }
             }
         });
@@ -267,13 +405,8 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
 
         }
     }
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
 
-        markerViewManager.onDestroy();
 
-        mapView.onDestroy();
-    }
+
 
 }

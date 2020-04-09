@@ -315,7 +315,7 @@ SearchableSpinner eventTypeSpinner;
                    counter+=1;
                    textViewEventTagError.setText("");
                }
-               Toast.makeText(eventDetail.this, "check"+counter, Toast.LENGTH_SHORT).show();
+
                if (counter==8) {
                    Bundle bundle = new Bundle();
                    bundle.putSerializable(KEY_TAG_ARRAY, selectedEventType);
@@ -330,11 +330,11 @@ SearchableSpinner eventTypeSpinner;
                    bundle.putString(KEY_LONGITUDE,String.valueOf(Lng));
                    bundle.putString(KEY_EVENT_TICKET_STATUS, ticketStatus);
                    bundle.putString(KEY_PAGE_STATUS, pageStatus);
-                   if (ticketStatus.toLowerCase().equals("private")) {
-                       Intent intent = new Intent(eventDetail.this, EventDetailPreviewActivity.class);
-                       intent.putExtra( KEY_BUNDLE_EVENT_DETAIL,bundle);
-                       startActivity(intent);
-                       //Toast.makeText(eventDetail.this, "No TIcket", Toast.LENGTH_SHORT).show();
+                   if (ticketStatus.toLowerCase().equals("public")) {
+//                       Intent intent = new Intent(eventDetail.this, EventDetailPreviewActivity.class);
+//                       intent.putExtra( KEY_BUNDLE_EVENT_DETAIL,bundle);
+//                       startActivity(intent);
+                       Toast.makeText(eventDetail.this, "No TIcket"+ticketStatus, Toast.LENGTH_SHORT).show();
 
                    } else {
                        //Toast.makeText(eventDetail.this, ""+pageStatus, Toast.LENGTH_SHORT).show();
@@ -372,8 +372,9 @@ SearchableSpinner eventTypeSpinner;
               Toast.makeText(eventDetail.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
           }
       });
+      String parentClass="eventDetail";
         recyclerView=findViewById(R.id.event_detail_recycler_view);
-        adapter=new EventTypeAdapter(selectedEventType);
+        adapter=new EventTypeAdapter(selectedEventType,parentClass);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
