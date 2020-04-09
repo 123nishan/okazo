@@ -124,7 +124,7 @@
                   app:expandOnClick="true"
                   app:animationDuration="300"
                   app:startExpanded="false"
-                  app:inner_view="@layout/expandable_event_detail"
+                  app:inner_view="@layout/expandable_event_ticket"
                   />
           </LinearLayout>
       </androidx.core.widget.NestedScrollView>

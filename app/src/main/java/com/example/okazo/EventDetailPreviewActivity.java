@@ -120,21 +120,26 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         expandableCardViewEventDetail=findViewById(R.id.event_detail_preview_expandable_event_detail);
         expandableCardViewTicketDetail=findViewById(R.id.event_detail_preview_expandable_ticket);
         expandableCardViewEventLocation=findViewById(R.id.event_detail_preview_expandable_event_detail_location);
-         bundleEventDetail=getIntent().getBundleExtra(KEY_BUNDLE_EVENT_DETAIL);
-         ticketStatus=bundleEventDetail.getString(KEY_EVENT_TICKET_STATUS);
-         eventTitle=bundleEventDetail.getString(KEY_EVENT_TITLE);
-         startDate=bundleEventDetail.getString(KEY_EVENT_START_DATE);
-         endDate=bundleEventDetail.getString(KEY_EVENT_END_DATE);
-         startTime=bundleEventDetail.getString(KEY_EVENT_START_TIME);
-         endTime=bundleEventDetail.getString(KEY_EVENT_END_TIME);
-         pageStatus=bundleEventDetail.getString(KEY_PAGE_STATUS);
-         selectedLocaition=bundleEventDetail.getString(KEY_EVENT_SELECTED_LOCATION);
-         description=bundleEventDetail.getString(KEY_EVENT_DESCRIPTION);
-         latitude=bundleEventDetail.getString(KEY_LATITUDE);
-         longitude=bundleEventDetail.getString(KEY_LONGITUDE);
-         selectedEventType= (ArrayList<EventDetail>) bundleEventDetail.getSerializable(KEY_TAG_ARRAY);
+        Bundle intent=getIntent().getExtras();
+
+         //bundleEventDetail=getIntent().getBundleExtra(KEY_BUNDLE_EVENT_DETAIL);
+
+         eventTitle=intent.getString(KEY_EVENT_TITLE);
+         Log.d("bundleEvent",eventTitle);
+         startDate=intent.getString(KEY_EVENT_START_DATE);
+         endDate=intent.getString(KEY_EVENT_END_DATE);
+         startTime=intent.getString(KEY_EVENT_START_TIME);
+         endTime=intent.getString(KEY_EVENT_END_TIME);
+         pageStatus=intent.getString(KEY_PAGE_STATUS);
+        ticketStatus=intent.getString(KEY_EVENT_TICKET_STATUS);
+         selectedLocaition=intent.getString(KEY_EVENT_SELECTED_LOCATION);
+         description=intent.getString(KEY_EVENT_DESCRIPTION);
+         latitude=intent.getString(KEY_LATITUDE);
+         longitude=intent.getString(KEY_LONGITUDE);
+         selectedEventType= (ArrayList<EventDetail>) intent.getSerializable(KEY_TAG_ARRAY);
 
         if(ticketStatus.toLowerCase().equals("private")){
+            bundleTicketDetail=intent.getBundle(KEY_BUNDLE_TICKET_DETAIL);
             ticketCategory=bundleTicketDetail.getString(KEY_RADIO_TICKET_CATEGORY);
 
             if(ticketCategory.toLowerCase().equals("no")){
@@ -155,8 +160,8 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         expandableCardViewTicketDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
             @Override
             public void onExpandChanged(View v, boolean isExpanded) {
-                TextInputEditText textInputEditTextTicket=findViewById(R.id.expand_ticket_status);
-                LinearLayout linearLayoutTicketLayout=findViewById(R.id.expand_ticket_layout_yes);
+                TextInputEditText textInputEditTextTicket=v.findViewById(R.id.expand_ticket_status);
+                LinearLayout linearLayoutTicketLayout=v.findViewById(R.id.expand_ticket_layout_yes);
                 //private means  No ticket
                 if(ticketStatus.toLowerCase().equals("public")){
                     textInputEditTextTicket.setText("Free Entry");
@@ -170,11 +175,18 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                     textInputEditTextTicket.setText("Ticket Detail Below");
                     linearLayoutTicketLayout.setVisibility(View.VISIBLE);
 
-                    LinearLayout linearLayoutNoTicketType=findViewById(R.id.expand_no_ticket_type);
-                    LinearLayout linearLayoutYesTicketType=findViewById(R.id.expand_yes_ticket_type);
+                    LinearLayout linearLayoutNoTicketType=v.findViewById(R.id.expand_no_ticket_type);
+
+                    LinearLayout linearLayoutYesTicketType=v.findViewById(R.id.expand_yes_ticket_type);
+
                     if(ticketCategory.toLowerCase().equals("no")){
                         linearLayoutNoTicketType.setVisibility(View.VISIBLE);
                         linearLayoutYesTicketType.setVisibility(View.GONE);
+                        TextInputEditText textInputEditTextNumber=v.findViewById(R.id.expand_event_total_ticket);
+                        TextInputEditText textInputEditTextPrice=v.findViewById(R.id.expand_ticekt_price);
+                        textInputEditTextNumber.setText(ticketNumber);
+                        textInputEditTextPrice.setText(ticketPrice);
+                        //Toast.makeText(EventDetailPreviewActivity.this, "test"+ticketCategory, Toast.LENGTH_SHORT).show();
 
                     }else {
                         linearLayoutNoTicketType.setVisibility(View.GONE);

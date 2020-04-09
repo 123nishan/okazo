@@ -12,7 +12,7 @@
     <com.google.android.material.textfield.TextInputEditText
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="Free Entry"
+        android:text=""
         android:id="@+id/expand_ticket_status"
         android:hint="Ticket Status"/>
 
@@ -30,7 +30,7 @@
 
        </LinearLayout>
     <LinearLayout
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -70,15 +70,10 @@
                             android:cursorVisible="false"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
-                            android:id="@+id/event_detail_event_start_date"
+                            android:id="@+id/expand_event_total_ticket"
                             android:hint="Number of ticket"/>
                     </com.google.android.material.textfield.TextInputLayout>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:textColor="#EC0404"
-                        android:id="@+id/event_detail_event_start_date_error"/>
+
 
 
                 </LinearLayout>
@@ -109,15 +104,13 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-
-                            android:id="@+id/event_detail_event_start_time"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:id="@+id/expand_ticekt_price"
                             android:hint="Ticket price"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:textColor="#EC0404"
-                            android:id="@+id/event_detail_event_start_time_error"/>
+
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>

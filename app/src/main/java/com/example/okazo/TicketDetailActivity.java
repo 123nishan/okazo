@@ -88,7 +88,7 @@ List<TextView> textViewsList=new ArrayList<>();
         inputEditTextTicketTypePrice=findViewById(R.id.event_ticket_first_ticket_price);
         inputEditTextTicketTypeNumber=findViewById(R.id.event_ticket_first_ticket_number);
 
-         extra=getIntent().getBundleExtra(KEY_BUNDLE_EVENT_DETAIL);
+         extra=getIntent().getExtras();
         //Log.d("bundleExtra",extra.getString(KEY_EVENT_DESCRIPTION));
 
 
@@ -127,11 +127,13 @@ List<TextView> textViewsList=new ArrayList<>();
                         Bundle bundle=new Bundle();
                         bundle.putString(KEY_TICKET_NUMBER,inputEditTextOneNumberTicket.getText().toString());
                         bundle.putString(KEY_TICKET_PRICE,inputEditTextOneTicketPrice.getText().toString());
-
-                        intent.putExtra(KEY_BUNDLE_EVENT_DETAIL,extra);
-                        intent.putExtra(KEY_BUNDLE_TICKET_DETAIL,bundle);
+                        bundle.putString(KEY_RADIO_TICKET_CATEGORY,radioButton.getText().toString());
+                        extra.putBundle(KEY_BUNDLE_TICKET_DETAIL,bundle);
+                        intent.putExtras(extra);
+//                        intent.putExtra(KEY_BUNDLE_EVENT_DETAIL,extra);
+//                        intent.putExtra(KEY_BUNDLE_TICKET_DETAIL,bundle);
                        startActivity(intent);
-                       Toast.makeText(TicketDetailActivity.this, "DONE", Toast.LENGTH_SHORT).show();
+                       //Toast.makeText(TicketDetailActivity.this, "DONE", Toast.LENGTH_SHORT).show();
                    }
                 }else {
                     //YES
@@ -202,8 +204,10 @@ List<TextView> textViewsList=new ArrayList<>();
                         bundle.putString(KEY_TICKET_TYPE_SINGLE_NUMBER,inputEditTextTicketTypeNumber.getText().toString());
                         bundle.putString(KEY_TICKET_TYPE_SINGLE_PRICE,inputEditTextTicketTypePrice.getText().toString());
                         bundle.putSerializable(KEY_TICKET_TYPE_LIST,editTextsList);
-                        intent.putExtra(KEY_BUNDLE_EVENT_DETAIL,extra);
-                        intent.putExtra(KEY_BUNDLE_TICKET_DETAIL,editTextsList);
+                        extra.putBundle(KEY_BUNDLE_TICKET_DETAIL,bundle);
+                        intent.putExtras(extra);
+//                        intent.putExtra(KEY_BUNDLE_EVENT_DETAIL,extra);
+//                        intent.putExtra(KEY_BUNDLE_TICKET_DETAIL,bundle);
                         startActivity(intent);
 
 

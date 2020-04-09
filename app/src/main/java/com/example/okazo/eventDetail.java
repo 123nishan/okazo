@@ -331,18 +331,18 @@ SearchableSpinner eventTypeSpinner;
                    bundle.putString(KEY_EVENT_TICKET_STATUS, ticketStatus);
                    bundle.putString(KEY_PAGE_STATUS, pageStatus);
                    if (ticketStatus.toLowerCase().equals("public")) {
-//                       Intent intent = new Intent(eventDetail.this, EventDetailPreviewActivity.class);
-//                       intent.putExtra( KEY_BUNDLE_EVENT_DETAIL,bundle);
-//                       startActivity(intent);
+                       Intent intent = new Intent(eventDetail.this, EventDetailPreviewActivity.class);
+                       intent.putExtras( bundle);
+                       startActivity(intent);
                        Toast.makeText(eventDetail.this, "No TIcket"+ticketStatus, Toast.LENGTH_SHORT).show();
 
                    } else {
                        //Toast.makeText(eventDetail.this, ""+pageStatus, Toast.LENGTH_SHORT).show();
                        Intent intent = new Intent(eventDetail.this, TicketDetailActivity.class);
-                       intent.putExtras( bundle);
+                      intent.putExtras( bundle);
 //               intent.putParcelableArrayListExtra(KEY_TAG_ARRAY,selectedEventType);
-
-                       startActivity(intent);
+                       Toast.makeText(eventDetail.this, "No TIcket"+ticketStatus+556, Toast.LENGTH_SHORT).show();
+                      startActivity(intent);
 
                    }
 
