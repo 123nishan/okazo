@@ -57,6 +57,8 @@ public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.MyVi
 
     @Override
     public int getItemCount() {
+
+
         return eventDetails.size();
     }
 
@@ -65,7 +67,7 @@ public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.MyVi
         ImageButton removeEventType;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            Log.d("OnCreate","found");
+
             textViewEventType=itemView.findViewById(R.id.card_event_detail_event_type);
             removeEventType=itemView.findViewById(R.id.card_event_detail_remove);
             removeEventType.setOnClickListener(new View.OnClickListener() {

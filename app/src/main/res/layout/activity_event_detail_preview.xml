@@ -113,8 +113,8 @@
                   app:inner_view="@layout/expandable_event_location"
                   />
               <com.alespero.expandablecardview.ExpandableCardView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
                   app:title="Ticket Detail"
                   app:icon="@drawable/ic_add"
                   android:layout_marginLeft="15dp"

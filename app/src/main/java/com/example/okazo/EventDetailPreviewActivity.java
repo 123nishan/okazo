@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -102,8 +103,9 @@ public class EventDetailPreviewActivity extends AppCompatActivity {
     private Uri uriProfileImage;
     private Bundle bundleEventDetail,bundleTicketDetail;
  private ArrayList<EventDetail> selectedEventType=new ArrayList<EventDetail>();
-
+private  EventPreviewTicketTypeAdapter adapterListView;
     private MapView mapView;
+
 
     private MarkerViewManager markerViewManager;
  private String eventTitle,startDate,endDate,startTime,endTime,pageStatus,ticketStatus,selectedLocaition,description,latitude,longitude,
@@ -127,11 +129,13 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         expandableCardViewTicketDetail=findViewById(R.id.event_detail_preview_expandable_ticket);
         expandableCardViewEventLocation=findViewById(R.id.event_detail_preview_expandable_event_detail_location);
         Bundle intent=getIntent().getExtras();
+       // expandableCardViewEventDetail.collapse();
+
 
          //bundleEventDetail=getIntent().getBundleExtra(KEY_BUNDLE_EVENT_DETAIL);
 
          eventTitle=intent.getString(KEY_EVENT_TITLE);
-         Log.d("bundleEvent",eventTitle);
+
          startDate=intent.getString(KEY_EVENT_START_DATE);
          endDate=intent.getString(KEY_EVENT_END_DATE);
          startTime=intent.getString(KEY_EVENT_START_TIME);
@@ -161,75 +165,105 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                 ticketTypePriceList= (ArrayList<String>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_PRICE_LIST);
                 ticketTypeNumberList= (ArrayList<String>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_NUMBER_LIST);
 
+
+
+
+
             }
 
 
         }
-        for (EventDetail val :selectedEventType
-             ) {
-            Log.d("itis",val.getEventType());
+//
+        TextView textInputEditTextTicket=findViewById(R.id.expand_ticket_status);
+        LinearLayout linearLayoutTicketLayout=findViewById(R.id.expand_ticket_layout_yes);
+        //private means  No ticket
+        if(ticketStatus.toLowerCase().equals("public")){
+            textInputEditTextTicket.setText("Free Entry");
+            linearLayoutTicketLayout.setVisibility(View.GONE);
+
+
+
         }
+        //Yes  ticket
+        else {
+
+            textInputEditTextTicket.setText("All Ticket Details");
+            linearLayoutTicketLayout.setVisibility(View.VISIBLE);
+
+            LinearLayout linearLayoutNoTicketType=findViewById(R.id.expand_no_ticket_type);
+
+            LinearLayout linearLayoutYesTicketType=findViewById(R.id.expand_yes_ticket_type);
+
+            if(ticketCategory.toLowerCase().equals("no")){
+                linearLayoutNoTicketType.setVisibility(View.VISIBLE);
+                linearLayoutYesTicketType.setVisibility(View.GONE);
+                TextInputEditText textInputEditTextNumber=findViewById(R.id.expand_event_total_ticket);
+                TextInputEditText textInputEditTextPrice=findViewById(R.id.expand_ticekt_price);
+                textInputEditTextNumber.setText(ticketNumber);
+                textInputEditTextPrice.setText(ticketPrice);
+                //Toast.makeText(EventDetailPreviewActivity.this, "test"+ticketCategory, Toast.LENGTH_SHORT).show();
+
+            }else {
+
+                linearLayoutNoTicketType.setVisibility(View.GONE);
+                linearLayoutYesTicketType.setVisibility(View.VISIBLE);
+                TextView textViewTicketName=findViewById(R.id.expand_ticket_type_name);
+                TextView textViewTicketPrice=findViewById(R.id.expand_ticket_type_price);
+                TextView textViewTicketNumber=findViewById(R.id.expand_ticket_type_Number);
+                textViewTicketName.setText(ticketTypeSingleName);
+                textViewTicketPrice.setText(ticketTypeSinglePrice);
+                textViewTicketNumber.setText(ticketTypeSingleNumber);
+
+                RecyclerView recyclerViewTicketType = findViewById(R.id.expand_ticket_types_recycler_view);
+
+                EventPreviewTicketTypeAdapter eventPreviewTicketTypeAdapter=new EventPreviewTicketTypeAdapter(ticketTypeNameList,ticketTypeNumberList,ticketTypePriceList);
+                LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(recyclerViewTicketType.getContext(),linearLayoutManager.getOrientation());
+                recyclerViewTicketType.addItemDecoration(dividerItemDecoration);
+                recyclerViewTicketType.setLayoutManager(linearLayoutManager);
+                recyclerViewTicketType.setAdapter(eventPreviewTicketTypeAdapter);
+
+
+            }
+
+
+        }
+
+        //
+
         expandableCardViewTicketDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+
             @Override
             public void onExpandChanged(View v, boolean isExpanded) {
                 if(isExpanded){
-                TextView textInputEditTextTicket=v.findViewById(R.id.expand_ticket_status);
-                LinearLayout linearLayoutTicketLayout=v.findViewById(R.id.expand_ticket_layout_yes);
-                //private means  No ticket
-                if(ticketStatus.toLowerCase().equals("public")){
-                    textInputEditTextTicket.setText("Free Entry");
-                    linearLayoutTicketLayout.setVisibility(View.GONE);
-
-
-
-                }
-                //Yes  ticket
-                else {
-                    textInputEditTextTicket.setText("All Ticket Details");
-                    linearLayoutTicketLayout.setVisibility(View.VISIBLE);
-
-                    LinearLayout linearLayoutNoTicketType=v.findViewById(R.id.expand_no_ticket_type);
-
-                    LinearLayout linearLayoutYesTicketType=v.findViewById(R.id.expand_yes_ticket_type);
-
-                    if(ticketCategory.toLowerCase().equals("no")){
-                        linearLayoutNoTicketType.setVisibility(View.VISIBLE);
-                        linearLayoutYesTicketType.setVisibility(View.GONE);
-                        TextInputEditText textInputEditTextNumber=v.findViewById(R.id.expand_event_total_ticket);
-                        TextInputEditText textInputEditTextPrice=v.findViewById(R.id.expand_ticekt_price);
-                        textInputEditTextNumber.setText(ticketNumber);
-                        textInputEditTextPrice.setText(ticketPrice);
-                        //Toast.makeText(EventDetailPreviewActivity.this, "test"+ticketCategory, Toast.LENGTH_SHORT).show();
-
-                    }else {
-                        linearLayoutNoTicketType.setVisibility(View.GONE);
-                        linearLayoutYesTicketType.setVisibility(View.VISIBLE);
-                        TextView textViewTicketName=v.findViewById(R.id.expand_ticket_type_name);
-                        TextView textViewTicketPrice=v.findViewById(R.id.expand_ticket_type_price);
-                        TextView textViewTicketNumber=v.findViewById(R.id.expand_ticket_type_Number);
-                        textViewTicketName.setText(ticketTypeSingleName);
-                        textViewTicketPrice.setText(ticketTypeSinglePrice);
-                        textViewTicketNumber.setText(ticketTypeSingleNumber);
-                        ListView listView = v.findViewById(R.id.expand_ticket_types_list_view);
-                        EventPreviewTicketTypeAdapter adapter = new EventPreviewTicketTypeAdapter(EventDetailPreviewActivity.this, ticketTypeNameList, ticketTypePriceList, ticketTypeNumberList);
-                        listView.setAdapter(adapter);
-
-                    }
-
-
-                    }
-                }else {
 
                 }
             }
         });
-
-
+//
         RecyclerView recyclerView=findViewById(R.id.expand_event_tag_recylerview);
         String parentClass="preview";
-        EventTypeAdapter adapter1;
-        adapter1=new EventTypeAdapter(selectedEventType,parentClass);
+        EventTypeAdapter adapter1=new EventTypeAdapter(selectedEventType,parentClass);
+
+
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(EventDetailPreviewActivity.this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+
+
+
+
+
+
+        recyclerView.setHasFixedSize(false);
+        //recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter1);
+//
+        TextInputEditText textInputEditTextEventTitle=findViewById(R.id.expand_event_title);
+        TextInputEditText textInputEditTextEventDescription=findViewById(R.id.expand_event_description);
+        textInputEditTextEventTitle.setText(eventTitle);
+        textInputEditTextEventDescription.setText(description);
 
         expandableCardViewEventDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
             int counter=0;
@@ -237,34 +271,8 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
             public void onExpandChanged(View v, boolean isExpanded) {
                 if(isExpanded) {
 
-                        // TextView textView=v.findViewById(R.id.expand_textview);
-                        // textView.setText(eventTitle);
-
-
-                        ArrayList<EventDetail> eventTags = new ArrayList<EventDetail>();
-
-
-                        recyclerView.getRecycledViewPool().clear();
-                        eventTags = selectedEventType;
-                        Log.d("eventVal", eventTags.size() + " a");
-                        for (EventDetail val : eventTags
-                        ) {
-                            Log.d("eventVal", val.getEventType() + " b");
-                        }
-
-                        adapter1.notifyDataSetChanged();
-                        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                        recyclerView.setLayoutManager(linearLayoutManager);
-                        recyclerView.setHasFixedSize(false);
-                        recyclerView.setItemAnimator(new DefaultItemAnimator());
-                        recyclerView.setAdapter(adapter1);
-
-
                     }
-
                 }
-
-
         });
         expandableCardViewEventLocation.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
             @Override
@@ -273,7 +281,7 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                     SupportMapFragment mapFragment;
                     Mapbox.getInstance(EventDetailPreviewActivity.this, getString(R.string.mapbox_access_token));
                     if(savedInstanceState==null) {
-                        Log.d("latLng",latitude);
+
                         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         MapboxMapOptions options = MapboxMapOptions.createFromAttributes(EventDetailPreviewActivity.this, null);
                         options.camera(new CameraPosition.Builder()
