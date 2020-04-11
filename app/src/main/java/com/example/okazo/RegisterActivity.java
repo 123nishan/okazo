@@ -216,7 +216,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Toast.makeText(RegisterActivity.this, "asd"+" "+s, Toast.LENGTH_SHORT).show();
+
                 if(count >5){
                     nameStatus=true;
                     editTextName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
@@ -260,7 +260,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Timestamp timestamp=new Timestamp(date.getTime());
                                 Toast.makeText(RegisterActivity.this, "time"+verified, Toast.LENGTH_SHORT).show();
 
-                                apiInterface.otp(email,String.valueOf(num),verified,timestamp).enqueue(new Callback<APIResponse>() {
+                                apiInterface.otp(email,String.valueOf(num),timestamp).enqueue(new Callback<APIResponse>() {
                                     @Override
                                     public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                                         APIResponse result = response.body();

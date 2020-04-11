@@ -1,35 +1,28 @@
 package com.example.okazo;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.alespero.expandablecardview.ExpandableCardView;
 import com.bumptech.glide.Glide;
@@ -38,13 +31,12 @@ import com.example.okazo.util.EventPreviewTicketTypeAdapter;
 import com.example.okazo.util.EventTypeAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -53,27 +45,20 @@ import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.maps.SupportMapFragment;
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
-import com.mapbox.mapboxsdk.plugins.markerview.MarkerView;
 import com.mapbox.mapboxsdk.plugins.markerview.MarkerViewManager;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import static com.example.okazo.util.constants.KEY_TAG_ARRAY;
-import static com.example.okazo.util.constants.KEY_TICKET_TYPE_LIST;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_NAME_LIST;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_NUMBER_LIST;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_PRICE_LIST;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.example.okazo.util.constants.KEY_BUNDLE_EVENT_DETAIL;
 import static com.example.okazo.util.constants.KEY_BUNDLE_TICKET_DETAIL;
 import static com.example.okazo.util.constants.KEY_EVENT_DESCRIPTION;
 import static com.example.okazo.util.constants.KEY_EVENT_END_DATE;
@@ -93,7 +78,7 @@ import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_NAME;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_NUMBER;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_PRICE;
 
-public class EventDetailPreviewActivity extends AppCompatActivity {
+public class EventDetailPreviewActivity extends AppCompatActivity  {
     AppBarLayout appBarLayout;
     AppCompatImageButton buttonConfirm;
 
@@ -106,8 +91,11 @@ public class EventDetailPreviewActivity extends AppCompatActivity {
 private  EventPreviewTicketTypeAdapter adapterListView;
     private MapView mapView;
 
-
+    private ImageButton imageButtonExpandToolBarConfirm;
+    private TextView textViewExpandToolBarEventTitle;
     private MarkerViewManager markerViewManager;
+    private LinearLayout linearLayoutExpandToolBarLayout;
+    private RelativeLayout relativeLayoutExpandToolbarImageLayout;
  private String eventTitle,startDate,endDate,startTime,endTime,pageStatus,ticketStatus,selectedLocaition,description,latitude,longitude,
          ticketCategory,ticketTypeSingleName,ticketTypeSinglePrice,ticketTypeSingleNumber,ticketNumber,ticketPrice;
 ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,expandableCardViewEventDate,expandableCardViewEventLocation;
@@ -116,18 +104,28 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
 
     private static final String ICON_ID = "ICON_ID";
     private static final String LAYER_ID = "LAYER_ID";
+    String sharedPreferencesConstant = "hello";
+    String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
         setContentView(R.layout.activity_event_detail_preview);
+
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(sharedPreferencesConstant, MODE_PRIVATE);
+        userId=sharedPreferences.getString("user_id","");
         appBarLayout= findViewById(R.id.event_detail_preview_app_bar);
         buttonConfirm=findViewById(R.id.event_detail_preview_confirm);
+        imageButtonExpandToolBarConfirm=findViewById(R.id.expand_toolbar_confirm_button);
+        textViewExpandToolBarEventTitle=findViewById(R.id.expand_toolbar_event_title);
+        relativeLayoutExpandToolbarImageLayout=findViewById(R.id.expand_toolbar_image_select_layout);
+        linearLayoutExpandToolBarLayout=findViewById(R.id.expand_toolbar_layout);
         imageView=findViewById(R.id.event_detail_image);
         expandableCardViewEventDetail=findViewById(R.id.event_detail_preview_expandable_event_detail);
         expandableCardViewTicketDetail=findViewById(R.id.event_detail_preview_expandable_ticket);
         expandableCardViewEventLocation=findViewById(R.id.event_detail_preview_expandable_event_detail_location);
+        expandableCardViewEventDate=findViewById(R.id.event_detail_preview_expandable_event_detail_date);
         Bundle intent=getIntent().getExtras();
        // expandableCardViewEventDetail.collapse();
 
@@ -147,6 +145,22 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
          latitude=intent.getString(KEY_LATITUDE);
          longitude=intent.getString(KEY_LONGITUDE);
          selectedEventType= (ArrayList<EventDetail>) intent.getSerializable(KEY_TAG_ARRAY);
+
+        textViewExpandToolBarEventTitle.setText(eventTitle);
+//collapsed toolbar
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDetail();
+            }
+        });
+        //extended tool bar
+        imageButtonExpandToolBarConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmDetail();
+            }
+        });
 
         if(ticketStatus.toLowerCase().equals("private")){
             bundleTicketDetail=intent.getBundle(KEY_BUNDLE_TICKET_DETAIL);
@@ -173,7 +187,31 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
 
 
         }
+        expandableCardViewEventDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+            @Override
+            public void onExpandChanged(View v, boolean isExpanded) {
+                if(isExpanded){
+
+                }
+            }
+        });
 //
+        expandableCardViewTicketDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+            @Override
+            public void onExpandChanged(View v, boolean isExpanded) {
+                if(isExpanded) {
+
+                }
+            }
+        });
+        expandableCardViewEventDate.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+            @Override
+            public void onExpandChanged(View v, boolean isExpanded) {
+                if(isExpanded){
+
+                }
+            }
+        });
         TextView textInputEditTextTicket=findViewById(R.id.expand_ticket_status);
         LinearLayout linearLayoutTicketLayout=findViewById(R.id.expand_ticket_layout_yes);
         //private means  No ticket
@@ -232,15 +270,18 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
 
         //
 
-        expandableCardViewTicketDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+        //expandable for date
+        TextInputEditText textInputEditTextExpandStartDate,textInputEditTextExpandEndDate,textInputEditTextExpandStartTime,textInputEditTextExpandEndTime;
+        textInputEditTextExpandEndDate=findViewById(R.id.expand_event_detail_event_end_date);
+        textInputEditTextExpandStartDate=findViewById(R.id.expand_event_detail_event_start_date);
+        textInputEditTextExpandStartTime=findViewById(R.id.expand_event_detail_event_start_time);
+        textInputEditTextExpandEndTime=findViewById(R.id.expand_event_detail_event_end_time);
+        textInputEditTextExpandEndDate.setText(endDate);
+        textInputEditTextExpandStartDate.setText(startDate);
+        textInputEditTextExpandStartTime.setText(startTime);
+        textInputEditTextExpandEndTime.setText(endTime);
 
-            @Override
-            public void onExpandChanged(View v, boolean isExpanded) {
-                if(isExpanded){
-
-                }
-            }
-        });
+        //
 //
         RecyclerView recyclerView=findViewById(R.id.expand_event_tag_recylerview);
         String parentClass="preview";
@@ -265,19 +306,15 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         textInputEditTextEventTitle.setText(eventTitle);
         textInputEditTextEventDescription.setText(description);
 
-        expandableCardViewEventDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
-            int counter=0;
-            @Override
-            public void onExpandChanged(View v, boolean isExpanded) {
-                if(isExpanded) {
+        TextInputEditText textInputEditTextExpandLocation;
+        textInputEditTextExpandLocation=findViewById(R.id.expand_event_location_detail);
+        textInputEditTextExpandLocation.setText(selectedLocaition);
 
-                    }
-                }
-        });
         expandableCardViewEventLocation.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
             @Override
             public void onExpandChanged(View v, boolean isExpanded) {
                 if(isExpanded){
+
                     SupportMapFragment mapFragment;
                     Mapbox.getInstance(EventDetailPreviewActivity.this, getString(R.string.mapbox_access_token));
                     if(savedInstanceState==null) {
@@ -356,12 +393,16 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                    imageView.setVisibility(View.GONE);
                    buttonConfirm.setVisibility(View.VISIBLE);
                    collapsingToolbarLayout.setTitle("Okazo");
+                   linearLayoutExpandToolBarLayout.setVisibility(View.GONE);
+                   relativeLayoutExpandToolbarImageLayout.setVisibility(View.GONE);
 
                }else {
                    //fully expanded
                    imageView.setVisibility(View.VISIBLE);
                    buttonConfirm.setVisibility(View.GONE);
                    collapsingToolbarLayout.setTitle("");
+                   linearLayoutExpandToolBarLayout.setVisibility(View.VISIBLE);
+                   relativeLayoutExpandToolbarImageLayout.setVisibility(View.VISIBLE);
 
                }
            }
@@ -396,7 +437,25 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         }
     }
 
+private void confirmDetail(){
+   new AlertDialog.Builder(EventDetailPreviewActivity.this)
+           .setTitle("Event Confirmation")
+           .setMessage("Do you want to confirm the details?")
+           .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialog, int which) {
 
+               }
+           })
+           .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialog, int which) {
+
+               }
+           })
+           .show();
+
+}
 
 
 }

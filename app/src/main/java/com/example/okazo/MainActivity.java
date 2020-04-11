@@ -66,7 +66,7 @@ private boolean mLocationPermissionGranted=false;
 SwipeRefreshLayout  swipeRefreshLayout;
 
 private FusedLocationProviderClient mFusedLocationClient;
-String userEmail;
+String userEmail,userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,9 +82,11 @@ String userEmail;
 
         }
         userEmail=getIntent().getExtras().getString("email");
+        userId=getIntent().getExtras().getString("userId");
         SharedPreferences sharedPreferences=getApplicationContext().getSharedPreferences(constants.KEY_SHARED_PREFERENCE,MODE_PRIVATE);
         SharedPreferences.Editor shared_editor = sharedPreferences.edit();
         shared_editor.putString("user_email",userEmail);
+        shared_editor.putString("user_id",userId);
         shared_editor.commit();
             bottomNavigationView.setItemSelected(R.id.nav_home,true);
 

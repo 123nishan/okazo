@@ -37,7 +37,7 @@
                android:id="@+id/fragment_home_tool_bar"
                android:layout_width="match_parent"
 
-               app:popupTheme="@style/AppBaseTheme"
+               app:popupTheme="@style/AppTheme"
                android:layout_height="?attr/actionBarSize"
                app:layout_collapseMode="pin">
 

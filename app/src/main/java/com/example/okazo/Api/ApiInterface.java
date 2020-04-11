@@ -53,7 +53,7 @@ public interface ApiInterface {
     Call<APIResponse> otp(
             @Field("email") String email,
             @Field("code") String code,
-            @Field("verified") String verified,
+
             @Field("time") Timestamp time
 
     );

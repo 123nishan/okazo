@@ -4,6 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
+    @SerializedName("id")
+    @Expose
+    private String id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -27,6 +30,10 @@ public class User {
     @SerializedName("verified")
     @Expose
     private String verified;
+
+    public String getId() {
+        return id;
+    }
 
     public String getVerified() {
         return verified;

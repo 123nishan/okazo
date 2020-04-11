@@ -83,7 +83,7 @@ public class OtpActivity extends AppCompatActivity {
                 apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
 
 
-                        String verified="non-verified";
+                        String verified="2";
 
                         apiInterface.otpVerification(email,verified).enqueue(new Callback<APIResponse>() {
                             @Override
@@ -95,7 +95,7 @@ public class OtpActivity extends AppCompatActivity {
                                     String code = result.getUser().getCode();
 
                                    if (editTextOtp.getText().toString().equals(code)) {
-                                         String verified="verified";
+                                         String verified="1";
                                          apiInterface.otpVerification(email,verified).enqueue(new Callback<APIResponse>() {
                                              @Override
                                              public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {

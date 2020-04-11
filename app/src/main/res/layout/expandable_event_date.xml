@@ -40,7 +40,7 @@
                         android:cursorVisible="false"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:id="@+id/event_detail_event_start_date"
+                        android:id="@+id/expand_event_detail_event_start_date"
                         android:hint="Start Date"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,7 +57,7 @@
                         android:cursorVisible="false"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:id="@+id/event_detail_event_end_date"
+                        android:id="@+id/expand_event_detail_event_end_date"
                         android:hint="End Date"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -94,7 +94,7 @@
                         android:cursorVisible="false"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:id="@+id/event_detail_event_start_time"
+                        android:id="@+id/expand_event_detail_event_start_time"
                         android:hint="Start Time"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -111,7 +111,7 @@
                         android:cursorVisible="false"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:id="@+id/event_detail_event_end_time"
+                        android:id="@+id/expand_event_detail_event_end_time"
                         android:hint="End Time"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
