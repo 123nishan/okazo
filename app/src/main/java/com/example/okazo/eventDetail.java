@@ -55,6 +55,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -112,6 +114,8 @@ SearchableSpinner eventTypeSpinner;
         eventTypeSpinner=findViewById(R.id.event_detail_event_type_spinner);
        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
        buttonNext=findViewById(R.id.toolbar_next);
+
+
         inputEditTextEventStartDate=findViewById(R.id.event_detail_event_start_date);
         inputEditTextEventStartTime=findViewById(R.id.event_detail_event_start_time);
         inputEditTextEventEndDate=findViewById(R.id.event_detail_event_end_date);

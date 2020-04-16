@@ -1,31 +1,46 @@
 package com.example.okazo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.alespero.expandablecardview.ExpandableCardView;
 import com.bumptech.glide.Glide;
+import com.example.okazo.Api.APIResponse;
+import com.example.okazo.Api.ApiClient;
+import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.util.EventPreviewTicketTypeAdapter;
 import com.example.okazo.util.EventTypeAdapter;
@@ -33,6 +48,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
+import com.mapbox.android.core.FileUtils;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
@@ -49,6 +65,9 @@ import com.mapbox.mapboxsdk.plugins.markerview.MarkerViewManager;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.nekoloop.base64image.Base64Image;
+import com.nekoloop.base64image.RequestEncode;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import static com.example.okazo.util.constants.KEY_TAG_ARRAY;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_NAME_LIST;
@@ -57,7 +76,29 @@ import static com.example.okazo.util.constants.KEY_TICKET_TYPE_PRICE_LIST;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static com.example.okazo.util.constants.KEY_BUNDLE_TICKET_DETAIL;
 import static com.example.okazo.util.constants.KEY_EVENT_DESCRIPTION;
@@ -81,7 +122,7 @@ import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_PRICE;
 public class EventDetailPreviewActivity extends AppCompatActivity  {
     AppBarLayout appBarLayout;
     AppCompatImageButton buttonConfirm;
-
+    private ApiInterface apiInterface;
     private ImageView imageView;
     CollapsingToolbarLayout collapsingToolbarLayout;
     private static final int CHOOSE_IMAGE = 505;
@@ -90,7 +131,7 @@ public class EventDetailPreviewActivity extends AppCompatActivity  {
  private ArrayList<EventDetail> selectedEventType=new ArrayList<EventDetail>();
 private  EventPreviewTicketTypeAdapter adapterListView;
     private MapView mapView;
-
+    private String ConvertImage ;
     private ImageButton imageButtonExpandToolBarConfirm;
     private TextView textViewExpandToolBarEventTitle;
     private MarkerViewManager markerViewManager;
@@ -151,7 +192,8 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmDetail();
+                //confirmDetail();
+
             }
         });
         //extended tool bar
@@ -413,8 +455,9 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select profile image"), CHOOSE_IMAGE);
+        startActivityForResult(Intent.createChooser(intent, "Select image"), CHOOSE_IMAGE);
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -424,16 +467,121 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                 && data.getData() != null) {
             uriProfileImage = data.getData();
 
+            Glide.with(EventDetailPreviewActivity.this)
+                    .load(uriProfileImage)
+                    .placeholder(R.drawable.ic_place_holder_background)
+                    //.error(R.drawable.ic_image_not_found_background)
+                    .centerCrop()
+                    .into(imageView);
+            Bitmap bitmap = null;
 
-                Glide.with(EventDetailPreviewActivity.this)
-                        .load(uriProfileImage)
-                        .placeholder(R.drawable.ic_place_holder_background)
-                        //.error(R.drawable.ic_image_not_found_background)
-                        .centerCrop()
-                        .into(imageView);
-                //imageView.setImageBitmap(bitmap);
+            Cursor cursor=getContentResolver().query(uriProfileImage,null,null,null);
+            cursor.moveToFirst();
+            String doc_id=cursor.getString(0);
+            doc_id=doc_id.substring(doc_id.lastIndexOf(":")+1);
+            cursor.close();
+            cursor=getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    null,MediaStore.Images.Media._ID+" = ? ",new String[]{doc_id},null);
+            cursor.moveToFirst();
+            String path=cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            cursor.close();
+
+                bitmap= BitmapFactory.decodeFile(path);
+                ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG,0,byteArrayOutputStream);
+                byte [] b=byteArrayOutputStream.toByteArray();
+                ConvertImage=Base64.encodeToString(b,Base64.DEFAULT);
+                byte[] dataByte=Base64.decode(ConvertImage,Base64.DEFAULT);
+
+           File file=new File(ConvertImage);
+
+            RequestBody requestBody=RequestBody.create(MediaType.parse(getContentResolver().getType(uriProfileImage)),file);
+            RequestBody fileName=RequestBody.create(MediaType.parse("text/plain"),"test");
+            MultipartBody.Part fileToUpload=MultipartBody.Part.createFormData("file",file.getName(),requestBody);
+            //RequestBody descBody=RequestBody.create(MediaType.parse("text/plain"),file.getName());
+            ApiInterface  apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+
+            apiInterface.eventCreation(fileToUpload,fileName).enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    if(response.isSuccessful()){
+
+                        Log.d("001011100", "api hit hanyosabai thik ");
+                    }
+                    else{
+                        Log.d("001011100", "api hit hanyo tara error cha "+ response.body().getErrorMsg());
+                    }
+                    Log.d("imageValue1",response.body().getErrorMsg());
+                }
+
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
+                    Log.d("001011100", call.toString());
+
+                Log.d("imageError",t.getMessage());
+                }
+            });
+            Log.d("imageValue",ConvertImage);
+
+//            Cursor cursor = null;
+//            try {
+//                String[] proj = { MediaStore.Images.Media.DATA };
+//                cursor = getApplicationContext().getContentResolver().query(uriProfileImage,  proj, null, null, null);
+//                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//                cursor.moveToFirst();
+//                 Log.d("imageValue",cursor.getString(column_index));
+//            } catch (Exception e) {
+//                Log.d("imageValue", "getRealPathFromURI Exception : " + e.toString());
+//
+//            }
+
+
+
+//            ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.JPEG,80,byteArrayOutputStream);
+//            byte[] bytes=byteArrayOutputStream.toByteArray();
+//            ConvertImage=Base64.encodeToString(bytes,Base64.DEFAULT);
+//
+//            Log.d("imageValue", String.valueOf(uriProfileImage));
+//            Log.d("imageValue1", ConvertImage);
+//            Log.d("imageValue2", bytes+"");
+
+//            try {
+//                InputStream inputStream=getContentResolver().openInputStream(uriProfileImage);
+//                Bitmap bitmap= BitmapFactory.decodeStream(inputStream);
+//
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+
+
+            //imageView.setImageBitmap(bitmap);
                // handleUpload(bitmap);
 
+        }
+    }
+
+    void writeFile(InputStream in, File file) {
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if ( out != null ) {
+                    out.close();
+                }
+                in.close();
+            } catch ( IOException e ) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -444,7 +592,7 @@ private void confirmDetail(){
            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialog, int which) {
-
+                   confirmedDetail();
                }
            })
            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -457,5 +605,28 @@ private void confirmDetail(){
 
 }
 
+private void confirmedDetail(){
+
+    Random random=new Random();
+    String eventId="E"+(String.format("%06d",random.nextInt(999999)));
+   //Toast.makeText(this, "evet"+eve, Toast.LENGTH_SHORT).show();
+    apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+    StringBuilder stringBuilder=new StringBuilder(startDate);
+    String sDate=stringBuilder.substring(4,stringBuilder.length()-1);
+    stringBuilder=new StringBuilder(endDate);
+    String eDate=stringBuilder.substring(4,stringBuilder.length()-1);
+
+
+//    apiInterface.eventCreation(eventId,eventId,description,startTime,endTime,sDate,eDate,selectedLocaition,latitude,longitude,).enqueue(new Callback<APIResponse>() {
+//       @Override
+//        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+//
+//       }
+//
+//       @Override
+//       public void onFailure(Call<APIResponse> call, Throwable t) {
+//       }
+//   });
+}
 
 }
