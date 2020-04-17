@@ -78,31 +78,39 @@ public interface ApiInterface {
     @Multipart
     @POST("eventDetail/event_creation.php")
     Call<APIResponse> eventCreation(
-//            @Field("title") String title,
-//            @Field("id") String id,
-//            @Field("description") String description,
-//            @Field("start_time") String start_time,
-//            @Field("end_time") String end_time,
-//            @Field("start_date") String start_date,
-//            @Field("end_date") String end_date,
-//            @Field("place") String place,
-//            @Field("latitude") String latitude,
-//            @Field("longitude") String longitude,
+            @Field("title") String title,
+            @Field("id") String id,
+            @Field("description") String description,
+            @Field("start_time") String start_time,
+            @Field("end_time") String end_time,
+            @Field("start_date") String start_date,
+            @Field("end_date") String end_date,
+            @Field("place") String place,
+            @Field("latitude") String latitude,
+            @Field("longitude") String longitude,
 //            @Field("image") String image,
-//            @Field("ticket_status") String ticket_status,
-//            @Field("page_status") String page_status,
-//            @Field("user_id") String user_id,
-//            @Field("ticket_category") String ticket_category,
-//            @Field("moderator_id") String moderator_id,
-//            @Field("ticket_price") String ticket_price,
-//            @Field("ticket_quantity") String ticket_quantity,
-//            @Field("ticket_price_array") String[] ticket_price_array,
-//            @Field("ticket_name_array") String[] ticket_name_array,
-//            @Field("ticket_quantity_array") String[] ticket_quantity_array
-//          @Part ("image\"; filename=\"myfile.jpg\" ") RequestBody file, @Part ("image")RequestBody image
+            @Field("ticket_status") String ticket_status,
+            @Field("page_status") String page_status,
+            @Field("user_id") String user_id,
+            @Field("ticket_category") String ticket_category,
+            @Field("moderator_id") String moderator_id,
+            @Field("ticket_price") String ticket_price,
+            @Field("ticket_quantity") String ticket_quantity,
+            @Field("ticket_price_array") String[] ticket_price_array,
+            @Field("ticket_name_array") String[] ticket_name_array,
+            @Field("ticket_quantity_array") String[] ticket_quantity_array
 
-            @Part MultipartBody.Part file,@Part ("filename") RequestBody name
+           // @Part MultipartBody.Part file,@Part ("file") RequestBody name
+
+
 
             );
+
+
+    @Multipart
+    @POST("eventDetail/event_profile_image.php")
+    Call<APIResponse> uploadEventProfileImage(
+            @Part MultipartBody.Part file,@Part ("file") RequestBody name
+    );
 
 }

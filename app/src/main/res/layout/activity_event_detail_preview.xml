@@ -64,15 +64,22 @@
                       android:layout_width="match_parent"
                       android:gravity="right"
                       android:layout_height="match_parent">
-                  <ImageButton
-                      android:layout_width="30dp"
-                      android:layout_height="30dp"
-                      android:layout_gravity="center"
+                 <com.github.jorgecastilloprz.FABProgressCircle
+                     android:layout_width="wrap_content"
+                     android:id="@+id/fabProgressCircle"
+                     app:reusable="true"
+                     app:finalIcon="@drawable/ic_wrong"
+                     android:layout_height="wrap_content">
+                     <com.google.android.material.floatingactionbutton.FloatingActionButton
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:id="@+id/fab"
+                         app:rippleColor="@color/fab_orange_bright"
+                         android:elevation="5dp"
+                        android:src="@drawable/ic_clock"
 
-
-                      android:background="@drawable/mapbox_ic_check"
-                      android:layout_marginRight="10dp"
-                      android:id="@+id/expand_toolbar_confirm_button"/>
+                         />
+                 </com.github.jorgecastilloprz.FABProgressCircle>
                   </LinearLayout>
               </LinearLayout>
               <RelativeLayout
