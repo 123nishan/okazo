@@ -81,13 +81,23 @@ String userEmail,userId;
 //            navigationView.setCheckedItem(R.id.nav_message);
 
         }
-        userEmail=getIntent().getExtras().getString("email");
-        userId=getIntent().getExtras().getString("userId");
-        SharedPreferences sharedPreferences=getApplicationContext().getSharedPreferences(constants.KEY_SHARED_PREFERENCE,MODE_PRIVATE);
-        SharedPreferences.Editor shared_editor = sharedPreferences.edit();
-        shared_editor.putString("user_email",userEmail);
-        shared_editor.putString("user_id",userId);
-        shared_editor.commit();
+
+
+        SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences(constants.KEY_SHARED_PREFERENCE, MODE_PRIVATE);
+        if(sharedPreferences1.getString("user_id","")!=null && !sharedPreferences1.getString("user_id","").isEmpty()){
+
+        }else {
+
+
+
+                    userEmail = getIntent().getExtras().getString("email");
+            userId = getIntent().getExtras().getString("userId");
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(constants.KEY_SHARED_PREFERENCE, MODE_PRIVATE);
+            SharedPreferences.Editor shared_editor = sharedPreferences.edit();
+            shared_editor.putString("user_email", userEmail);
+            shared_editor.putString("user_id", userId);
+            shared_editor.commit();
+        }
             bottomNavigationView.setItemSelected(R.id.nav_home,true);
 
 //        bottomNavigationView.initWithSaveInstanceState(savedInstanceState);

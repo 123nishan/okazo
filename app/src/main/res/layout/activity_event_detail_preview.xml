@@ -36,15 +36,27 @@
 
                   app:popupTheme="@style/AppTheme"
                   android:layout_height="?attr/actionBarSize"
-                  app:layout_collapseMode="pin">
-                  <androidx.appcompat.widget.AppCompatImageButton
-                      android:layout_width="30dp"
-                      android:layout_height="30dp"
-                      android:layout_gravity="right"
 
-                      android:background="@drawable/mapbox_ic_check"
-                      android:layout_marginRight="10dp"
-                      android:id="@+id/event_detail_preview_confirm"/>
+                  app:layout_collapseMode="pin">
+                  <com.github.jorgecastilloprz.FABProgressCircle
+                      android:layout_width="wrap_content"
+                      android:layout_gravity="right"
+                      android:id="@+id/fabProgressCircleToolBar"
+                      app:reusable="true"
+
+                      app:finalIcon="@drawable/ic_correct"
+                      android:layout_height="wrap_content">
+                      <com.google.android.material.floatingactionbutton.FloatingActionButton
+                          android:layout_width="54dp"
+                          android:layout_height="54dp"
+
+                          android:id="@+id/fabToolBar"
+                          app:rippleColor="@color/fab_orange_dark"
+                          android:elevation="5dp"
+                          android:src="@drawable/ic_save"
+
+                          />
+                  </com.github.jorgecastilloprz.FABProgressCircle>
               </androidx.appcompat.widget.Toolbar>
               <LinearLayout
                   android:layout_width="match_parent"
@@ -71,12 +83,12 @@
                      app:finalIcon="@drawable/ic_wrong"
                      android:layout_height="wrap_content">
                      <com.google.android.material.floatingactionbutton.FloatingActionButton
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
+                         android:layout_width="54dp"
+                         android:layout_height="54dp"
                          android:id="@+id/fab"
                          app:rippleColor="@color/fab_orange_bright"
                          android:elevation="5dp"
-                        android:src="@drawable/ic_clock"
+                        android:src="@drawable/ic_save"
 
                          />
                  </com.github.jorgecastilloprz.FABProgressCircle>

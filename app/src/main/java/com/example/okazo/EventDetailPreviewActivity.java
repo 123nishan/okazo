@@ -124,13 +124,14 @@ import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_PRICE;
 
 public class EventDetailPreviewActivity extends AppCompatActivity  {
     AppBarLayout appBarLayout;
-    AppCompatImageButton buttonConfirm;
+    FloatingActionButton buttonConfirm;
+
     private ApiInterface apiInterface;
     private ImageView imageView;
     CollapsingToolbarLayout collapsingToolbarLayout;
     private static final int CHOOSE_IMAGE = 505;
     private Uri uriProfileImage;
-    private FABProgressCircle fabProgressCircle;
+    private FABProgressCircle fabProgressCircle,fabProgressCircleToolBar;
     private Bundle bundleEventDetail,bundleTicketDetail;
  private ArrayList<EventDetail> selectedEventType=new ArrayList<EventDetail>();
 private  EventPreviewTicketTypeAdapter adapterListView;
@@ -158,11 +159,13 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
 
 
         setContentView(R.layout.activity_event_detail_preview);
+        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(sharedPreferencesConstant, MODE_PRIVATE);
         userId=sharedPreferences.getString("user_id","");
         appBarLayout= findViewById(R.id.event_detail_preview_app_bar);
-        buttonConfirm=findViewById(R.id.event_detail_preview_confirm);
+        buttonConfirm=findViewById(R.id.fabToolBar);
+        fabProgressCircleToolBar=findViewById(R.id.fabProgressCircleToolBar);
         imageButtonExpandToolBarConfirm=findViewById(R.id.fab);
         fabProgressCircle=findViewById(R.id.fabProgressCircle);
         textViewExpandToolBarEventTitle=findViewById(R.id.expand_toolbar_event_title);
@@ -187,6 +190,7 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
          endTime=intent.getString(KEY_EVENT_END_TIME);
          pageStatus=intent.getString(KEY_PAGE_STATUS);
         ticketStatus=intent.getString(KEY_EVENT_TICKET_STATUS);
+        Toast.makeText(this, ticketStatus, Toast.LENGTH_SHORT).show();
          selectedLocaition=intent.getString(KEY_EVENT_SELECTED_LOCATION);
          description=intent.getString(KEY_EVENT_DESCRIPTION);
          latitude=intent.getString(KEY_LATITUDE);
@@ -198,6 +202,7 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fabProgressCircleToolBar.show();
                 confirmDetail();
 
             }
@@ -213,6 +218,7 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         });
 
         if(ticketStatus.toLowerCase().equals("private")){
+            ticketStatus="1";
             bundleTicketDetail=intent.getBundle(KEY_BUNDLE_TICKET_DETAIL);
             ticketCategory=bundleTicketDetail.getString(KEY_RADIO_TICKET_CATEGORY);
 
@@ -228,9 +234,13 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                 ticketTypeNameList= (ArrayList<String>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_NAME_LIST);
                 ticketTypePriceList= (ArrayList<String>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_PRICE_LIST);
                 ticketTypeNumberList= (ArrayList<String>) bundleTicketDetail.getSerializable(KEY_TICKET_TYPE_NUMBER_LIST);
+                ticketTypeNameList.add(ticketTypeSingleName);
+                ticketTypePriceList.add(ticketTypeSinglePrice);
+                ticketTypeNumberList.add(ticketTypeSingleNumber);
                 ticketNameArray=ticketTypeNameList.toArray(new String[0]);
                 ticketPriceArray=ticketTypePriceList.toArray(new String [0]);
                 ticketQuantityArray=ticketTypeNumberList.toArray(new String[0]);
+
 
 
 
@@ -257,6 +267,7 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                 }
             }
         });
+
         expandableCardViewEventDate.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
             @Override
             public void onExpandChanged(View v, boolean isExpanded) {
@@ -267,8 +278,10 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         });
         TextView textInputEditTextTicket=findViewById(R.id.expand_ticket_status);
         LinearLayout linearLayoutTicketLayout=findViewById(R.id.expand_ticket_layout_yes);
+        LinearLayout linearLayoutSingleLayout=findViewById(R.id.expand_ticket_single_layout);
         //private means  No ticket
         if(ticketStatus.toLowerCase().equals("public")){
+            ticketStatus="0";
             textInputEditTextTicket.setText("Free Entry");
             linearLayoutTicketLayout.setVisibility(View.GONE);
 
@@ -277,9 +290,9 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         }
         //Yes  ticket
         else {
-
-            textInputEditTextTicket.setText("All Ticket Details");
             linearLayoutTicketLayout.setVisibility(View.VISIBLE);
+            textInputEditTextTicket.setText("All Ticket Details");
+
 
             LinearLayout linearLayoutNoTicketType=findViewById(R.id.expand_no_ticket_type);
 
@@ -288,6 +301,7 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
             if(ticketCategory.toLowerCase().equals("no")){
                 linearLayoutNoTicketType.setVisibility(View.VISIBLE);
                 linearLayoutYesTicketType.setVisibility(View.GONE);
+                linearLayoutSingleLayout.setVisibility(View.GONE);
                 TextInputEditText textInputEditTextNumber=findViewById(R.id.expand_event_total_ticket);
                 TextInputEditText textInputEditTextPrice=findViewById(R.id.expand_ticekt_price);
                 textInputEditTextNumber.setText(ticketNumber);
@@ -295,15 +309,16 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
                 //Toast.makeText(EventDetailPreviewActivity.this, "test"+ticketCategory, Toast.LENGTH_SHORT).show();
 
             }else {
-
+                linearLayoutTicketLayout.setVisibility(View.VISIBLE);
                 linearLayoutNoTicketType.setVisibility(View.GONE);
+                linearLayoutSingleLayout.setVisibility(View.GONE);
                 linearLayoutYesTicketType.setVisibility(View.VISIBLE);
-                TextView textViewTicketName=findViewById(R.id.expand_ticket_type_name);
-                TextView textViewTicketPrice=findViewById(R.id.expand_ticket_type_price);
-                TextView textViewTicketNumber=findViewById(R.id.expand_ticket_type_Number);
-                textViewTicketName.setText(ticketTypeSingleName);
-                textViewTicketPrice.setText(ticketTypeSinglePrice);
-                textViewTicketNumber.setText(ticketTypeSingleNumber);
+//                TextView textViewTicketName=findViewById(R.id.expand_ticket_type_name);
+//                TextView textViewTicketPrice=findViewById(R.id.expand_ticket_type_price);
+//                TextView textViewTicketNumber=findViewById(R.id.expand_ticket_type_Number);
+//                textViewTicketName.setText(ticketTypeSingleName);
+//                textViewTicketPrice.setText(ticketTypeSinglePrice);
+//                textViewTicketNumber.setText(ticketTypeSingleNumber);
 
                 RecyclerView recyclerViewTicketType = findViewById(R.id.expand_ticket_types_recycler_view);
 
@@ -513,13 +528,13 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
 //                ConvertImage=Base64.encodeToString(b,Base64.DEFAULT);
 //                byte[] dataByte=Base64.decode(ConvertImage,Base64.DEFAULT);
 
-           File file=new File(path);
-
-            RequestBody requestBody=RequestBody.create(MediaType.parse("*/*"),file);
-            RequestBody fileName=RequestBody.create(MediaType.parse("text/plain"),file.getName());
-            MultipartBody.Part fileToUpload=MultipartBody.Part.createFormData("file",file.getName(),requestBody);
-            //RequestBody descBody=RequestBody.create(MediaType.parse("text/plain"),file.getName());
-            ApiInterface  apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+//           File file=new File(path);
+//
+//            RequestBody requestBody=RequestBody.create(MediaType.parse("*/*"),file);
+//            RequestBody fileName=RequestBody.create(MediaType.parse("text/plain"),file.getName());
+//            MultipartBody.Part fileToUpload=MultipartBody.Part.createFormData("file",file.getName(),requestBody);
+//            //RequestBody descBody=RequestBody.create(MediaType.parse("text/plain"),file.getName());
+//            ApiInterface  apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
 //
 //            apiInterface.eventCreation(fileToUpload,fileName).enqueue(new Callback<APIResponse>() {
 //                @Override
@@ -621,74 +636,157 @@ private void confirmDetail(){
 
 private void confirmedDetail() {
 
+
     Random random = new Random();
-    String eventId = "E" + (String.format("%06d", random.nextInt(999999)));
+    String moderatorId="M"+ (String.format("%06d", random.nextInt(999999)));
+
+    apiInterface.checkModerator(userId).enqueue(new Callback<APIResponse>() {
+        @Override
+        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+            APIResponse apiResponse=response.body();
+            String mod_status="0";
+            if(!apiResponse.getError()){
+                if(apiResponse.getErrorMsg()==null || apiResponse.getErrorMsg().isEmpty()){
+                    mod_status="1";
+                    createEvent(apiResponse.getMod_Id(),mod_status);
+                    Toast.makeText(EventDetailPreviewActivity.this, "mod is present", Toast.LENGTH_SHORT).show();
+                }else {
+
+                    mod_status="0";
+                    createEvent(moderatorId,mod_status);
+                    Toast.makeText(EventDetailPreviewActivity.this, "create new mode", Toast.LENGTH_SHORT).show();
+                }
+
+            }else {
+                DynamicToast.makeError(EventDetailPreviewActivity.this,apiResponse.getErrorMsg()).show();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<APIResponse> call, Throwable t) {
+            fabProgressCircle.hide();
+
+        }
+    });
+
+
+
+
+}
+private void createEvent(String modId,String mod_status){
+    Random random1 = new Random();
+    String eventId = "E" + (String.format("%06d", random1.nextInt(999999)));
     //Toast.makeText(this, "evet"+eve, Toast.LENGTH_SHORT).show();
-    apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+    if(ticketStatus.toLowerCase().equals("private") || ticketStatus.equals("1")) {
+        if (ticketCategory.toLowerCase().equals("no") || ticketCategory.equals("0")) {
+            ticketCategory = "0";
+        } else {
+            ticketCategory = "1";
+        }
+    }
     StringBuilder stringBuilder = new StringBuilder(startDate);
     String sDate = stringBuilder.substring(4, stringBuilder.length() - 1);
     stringBuilder = new StringBuilder(endDate);
     String eDate = stringBuilder.substring(4, stringBuilder.length() - 1);
-    String moderatorId="M"+ (String.format("%06d", random.nextInt(999999)));
+    //page status off means 0/public
+    if(pageStatus.toLowerCase().equals("public") || pageStatus.equals("0")){
+        pageStatus="0";
+    }else {
+        pageStatus="1";
+    }
 
+   String allTicketName=null;
+    int counter=0;
+    for (String value:ticketNameArray
+         ) {
+        if(counter==0){
+            allTicketName=value;
+        }else {
+            allTicketName=allTicketName+","+value;
+        }
+        counter+=1;
+    }
+    String allTicketPrice=null;
+    counter=0;
+    for (String value:ticketPriceArray
+    ) {
+        if(counter==0){
+            allTicketPrice=value;
+        }else {
+            allTicketPrice=allTicketPrice+","+value;
+        }
+        counter+=1;
+    }
+    String allTicketNumber=null;
+    counter=0;
+    for (String value:ticketQuantityArray
+    ) {
+        if(counter==0){
+            allTicketNumber=value;
+        }else {
+            allTicketNumber=allTicketNumber+","+value;
+        }
+        counter+=1;
+    }
+    apiInterface.eventCreation(eventTitle,eventId,description,startTime,endTime,sDate,eDate,selectedLocaition,latitude,longitude,
+            ticketStatus,pageStatus,userId,ticketCategory,modId,ticketPrice,ticketNumber,allTicketPrice,allTicketName,allTicketNumber,mod_status).enqueue(new Callback<APIResponse>() {
+        @Override
+        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+            APIResponse eventDetail=response.body();
+            if(!eventDetail.getError()){
 
-//    File file = new File(path);
-//
-//    String imageName=eventId+"_"+"profile"+".png";
-//    RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
-//    RequestBody fileName = RequestBody.create(MediaType.parse("text/plain"), imageName);
-//    MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-        apiInterface.eventCreation(eventTitle,eventId,description,startTime,endTime,sDate,eDate,selectedLocaition,latitude,longitude,
-                ticketStatus,pageStatus,userId,ticketCategory,moderatorId,ticketPrice,ticketNumber,ticketPriceArray,ticketNameArray,ticketQuantityArray).enqueue(new Callback<APIResponse>() {
-            @Override
-            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                APIResponse eventDetail=response.body();
-                if(!eventDetail.getError()){
-                    Toast.makeText(EventDetailPreviewActivity.this, "ready to call image API", Toast.LENGTH_SHORT).show();
-                    if (path == null) {
-                        fabProgressCircle.hide();
-                        Toast.makeText(EventDetailPreviewActivity.this, "uploading information", Toast.LENGTH_SHORT).show();
-                    } else {
-                        fabProgressCircle.beginFinalAnimation();
-
-                        File file = new File(path);
-
-                            String imageName=eventId+"_"+"profile"+".png";
-                        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
-                        RequestBody fileName = RequestBody.create(MediaType.parse("text/plain"), imageName);
-                        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-                        apiInterface.uploadEventProfileImage(fileToUpload,fileName).enqueue(new Callback<APIResponse>() {
-                            @Override
-                            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                    APIResponse response1=response.body();
-                                    if(!response1.getError()){
-                                        fabProgressCircle.beginFinalAnimation();
-                                    }else {
-                                        fabProgressCircle.hide();
-                                        DynamicToast.makeError(EventDetailPreviewActivity.this,"There was problem while uploading image").show();
-                                    }
-                            }
-
-                            @Override
-                            public void onFailure(Call<APIResponse> call, Throwable t) {
-                                DynamicToast.makeError(EventDetailPreviewActivity.this,"Failed To upload detail").show();
-                            }
-                        });
-                    }
-                }else {
+                if (path == null) {
                     fabProgressCircle.hide();
-                    Toast.makeText(EventDetailPreviewActivity.this, eventDetail.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                    fabProgressCircleToolBar.hide();
+                    Toast.makeText(EventDetailPreviewActivity.this, "uploading information", Toast.LENGTH_SHORT).show();
+                } else {
+
+
+                    File file = new File(path);
+
+                    String imageName=(eventDetail.getEvent_id())+"_"+"profile"+".png";
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+                    RequestBody fileName = RequestBody.create(MediaType.parse("text/plain"), imageName);
+                    MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+                    apiInterface.uploadEventProfileImage(fileToUpload,fileName).enqueue(new Callback<APIResponse>() {
+                        @Override
+                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                            APIResponse response1=response.body();
+                            if(!response1.getError()){
+                                fabProgressCircle.beginFinalAnimation();
+                                fabProgressCircleToolBar.beginFinalAnimation();
+                                Intent  intent=new Intent(getApplicationContext(),MainActivity.class);
+                                DynamicToast.makeSuccess(EventDetailPreviewActivity.this,"Event is Created").show();
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                startActivity(intent);
+
+                            }else {
+                                fabProgressCircle.hide();
+                                fabProgressCircleToolBar.hide();
+                                DynamicToast.makeError(EventDetailPreviewActivity.this,"There was problem while uploading image").show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<APIResponse> call, Throwable t) {
+                            DynamicToast.makeError(EventDetailPreviewActivity.this,"Failed To upload detail").show();
+                        }
+                    });
                 }
+            }else {
+                fabProgressCircle.hide();
+                fabProgressCircleToolBar.hide();
+                Toast.makeText(EventDetailPreviewActivity.this, eventDetail.getErrorMsg(), Toast.LENGTH_SHORT).show();
             }
+        }
 
-            @Override
-            public void onFailure(Call<APIResponse> call, Throwable t) {
-                Toast.makeText(EventDetailPreviewActivity.this, "test+ "+t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-//}
-
-
+        @Override
+        public void onFailure(Call<APIResponse> call, Throwable t) {
+            fabProgressCircle.hide();
+            fabProgressCircleToolBar.hide();
+            Toast.makeText(EventDetailPreviewActivity.this, "test+ "+t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
+    });
 }
 
 }

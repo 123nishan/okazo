@@ -20,6 +20,23 @@ public class APIResponse {
     @Expose
     private String errorMsg;
 
+    public String getMod_Id() {
+        return mod_Id;
+    }
+
+    public String getEvent_id() {
+        return event_id;
+    }
+
+    @SerializedName("event_id")
+@Expose
+private String event_id;
+
+    @SerializedName("mod_id")
+    @Expose
+    private String mod_Id;
+
+
     public APIResponse() {
     }
 

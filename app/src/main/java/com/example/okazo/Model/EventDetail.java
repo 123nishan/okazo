@@ -9,6 +9,8 @@ public class EventDetail implements Serializable {
     @SerializedName("event_type")
     @Expose
     private String eventType;
+  
+
     public EventDetail(String eventType){
         this.eventType=eventType;
     }

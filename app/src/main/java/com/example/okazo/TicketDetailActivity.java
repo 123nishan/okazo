@@ -2,6 +2,7 @@ package com.example.okazo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -50,7 +51,7 @@ import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_NUMBER;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_SINGLE_PRICE;
 
 public class TicketDetailActivity extends AppCompatActivity {
-MaterialButton buttonAddMore;
+Button buttonAddMore;
 LinearLayout linearLayout=null;
 int counter=1;
 int viewCounter=1;
@@ -286,7 +287,7 @@ List<TextView> textViewsList=new ArrayList<>();
             public void onClick(View v) {
                 linearLayout=findViewById(R.id.event_ticket_type_layout);
 
-                MaterialCardView materialCardView2=new MaterialCardView(TicketDetailActivity.this);
+                CardView materialCardView2=new CardView(TicketDetailActivity.this);
                 LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
                 materialCardView2.setLayoutParams(layoutParams);
                 float scale=getResources().getDisplayMetrics().density;

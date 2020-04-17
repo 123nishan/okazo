@@ -74,8 +74,17 @@ public interface ApiInterface {
         @Field("email") String email,
         @Field("verified") String verified
     );
-    //@FormUrlEncoded
-    @Multipart
+
+    @FormUrlEncoded
+    @POST("eventDetail/moderator.php")
+    Call<APIResponse> checkModerator(
+            @Field("id") String id
+    );
+
+
+
+
+    @FormUrlEncoded
     @POST("eventDetail/event_creation.php")
     Call<APIResponse> eventCreation(
             @Field("title") String title,
@@ -96,9 +105,11 @@ public interface ApiInterface {
             @Field("moderator_id") String moderator_id,
             @Field("ticket_price") String ticket_price,
             @Field("ticket_quantity") String ticket_quantity,
-            @Field("ticket_price_array") String[] ticket_price_array,
-            @Field("ticket_name_array") String[] ticket_name_array,
-            @Field("ticket_quantity_array") String[] ticket_quantity_array
+            @Field("ticket_price_array") String ticket_price_array,
+            @Field("ticket_name_array") String ticket_name_array,
+            @Field("ticket_quantity_array") String ticket_quantity_array,
+            @Field("mod_status") String mod_status
+            // mod status 1 is true  there is mod and 0 is false there is no mod
 
            // @Part MultipartBody.Part file,@Part ("file") RequestBody name
 
