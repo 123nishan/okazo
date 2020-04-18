@@ -100,34 +100,36 @@ public class DateTimePicker implements DatePickerDialog.OnDateSetListener{
 
     public void showTimePickerDialog(Activity activity,TextView targetTextView){
 
-        timePickerDialog = new TimePickerDialog(activity,android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+        timePickerDialog = new TimePickerDialog(activity,android.R.style.Theme_Material_Light_Dialog,
                 new TimePickerDialog.OnTimeSetListener() {
+
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hourOfDay , int minutes) {
 
-                        if (hourOfDay >= 12) {
-                            amPm = "PM";
-                        } else {
-                            amPm = "AM";
-                        }
+//                        if (hourOfDay >= 12) {
+//                            amPm = "PM";
+//                        } else {
+//                            amPm = "AM";
+//                        }
                         String time = hourOfDay + ":" + minutes;
+                        finalTxt.setText(time);
 //                        if (hourOfDay < 10 || hourOfDay >17) {
 //                            DynamicToast.makeWarning(activity, "Please select time after 10AM and before 5PM", Toast.LENGTH_SHORT).show();
 //                           // showTimePickerDialog(activity);
 //                        }
 //
 //                        else{
-                        try {
-                            final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
-                            final Date dateObj = sdf.parse(time);
-                            preferredTime =  new SimpleDateFormat("K:mm").format(dateObj) + " " + amPm;
-                            finalTxt.setText(preferredTime);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                     //   }
+//                        try {
+//                            final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+//                            final Date dateObj = sdf.parse(time);
+//                            preferredTime =  new SimpleDateFormat("K:mm").format(dateObj) ;
+//                            finalTxt.setText(preferredTime);
+//                        } catch (ParseException e) {
+//                            e.printStackTrace();
+//                     //   }
+//                    }
                     }
-                    }
-                },0,0,false);
+                },0,0,true);
         timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         timePickerDialog.show();
 

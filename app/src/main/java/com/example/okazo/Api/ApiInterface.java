@@ -88,7 +88,7 @@ public interface ApiInterface {
     @POST("eventDetail/event_creation.php")
     Call<APIResponse> eventCreation(
             @Field("title") String title,
-            @Field("id") String id,
+
             @Field("description") String description,
             @Field("start_time") String start_time,
             @Field("end_time") String end_time,
@@ -108,7 +108,8 @@ public interface ApiInterface {
             @Field("ticket_price_array") String ticket_price_array,
             @Field("ticket_name_array") String ticket_name_array,
             @Field("ticket_quantity_array") String ticket_quantity_array,
-            @Field("mod_status") String mod_status
+            @Field("mod_status") String mod_status,
+            @Field("tags") String allTag
             // mod status 1 is true  there is mod and 0 is false there is no mod
 
            // @Part MultipartBody.Part file,@Part ("file") RequestBody name

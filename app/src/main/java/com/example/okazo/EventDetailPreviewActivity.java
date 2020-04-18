@@ -148,7 +148,10 @@ private  EventPreviewTicketTypeAdapter adapterListView;
 ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,expandableCardViewEventDate,expandableCardViewEventLocation;
     private static final String SOURCE_ID = "SOURCE_ID";
     private  ArrayList<String> ticketTypeNameList=new ArrayList<>(),ticketTypePriceList=new ArrayList<>(),ticketTypeNumberList=new ArrayList<>();
-    private String  [] ticketPriceArray, ticketNameArray,ticketQuantityArray;
+    private String  [] ticketPriceArray;
+    private String  [] ticketNameArray;
+    private String  [] ticketQuantityArray;
+    private EventDetail[] selectedTag;
     private static final String ICON_ID = "ICON_ID";
     private static final String LAYER_ID = "LAYER_ID";
     String sharedPreferencesConstant = "hello";
@@ -196,7 +199,7 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
          latitude=intent.getString(KEY_LATITUDE);
          longitude=intent.getString(KEY_LONGITUDE);
          selectedEventType= (ArrayList<EventDetail>) intent.getSerializable(KEY_TAG_ARRAY);
-
+        selectedTag=selectedEventType.toArray(new EventDetail [0]);
         textViewExpandToolBarEventTitle.setText(eventTitle);
 //collapsed toolbar
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
@@ -627,7 +630,8 @@ private void confirmDetail(){
            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialog, int which) {
-
+                   fabProgressCircle.hide();
+                   fabProgressCircleToolBar.hide();
                }
            })
            .show();
@@ -675,13 +679,48 @@ private void confirmedDetail() {
 }
 private void createEvent(String modId,String mod_status){
     Random random1 = new Random();
-    String eventId = "E" + (String.format("%06d", random1.nextInt(999999)));
+    String allTicketName=null,allTicketPrice=null,allTicketNumber=null;
+    //String eventId = "E" + (String.format("%06d", random1.nextInt(999999)));
     //Toast.makeText(this, "evet"+eve, Toast.LENGTH_SHORT).show();
+    int counter=0;
     if(ticketStatus.toLowerCase().equals("private") || ticketStatus.equals("1")) {
         if (ticketCategory.toLowerCase().equals("no") || ticketCategory.equals("0")) {
             ticketCategory = "0";
         } else {
             ticketCategory = "1";
+             allTicketName=null;
+
+            for (String value:ticketNameArray
+            ) {
+                if(counter==0){
+                    allTicketName=value;
+                }else {
+                    allTicketName=allTicketName+","+value;
+                }
+                counter+=1;
+            }
+             allTicketPrice=null;
+            counter=0;
+            for (String value:ticketPriceArray
+            ) {
+                if(counter==0){
+                    allTicketPrice=value;
+                }else {
+                    allTicketPrice=allTicketPrice+","+value;
+                }
+                counter+=1;
+            }
+             allTicketNumber=null;
+            counter=0;
+            for (String value:ticketQuantityArray
+            ) {
+                if(counter==0){
+                    allTicketNumber=value;
+                }else {
+                    allTicketNumber=allTicketNumber+","+value;
+                }
+                counter+=1;
+            }
         }
     }
     StringBuilder stringBuilder = new StringBuilder(startDate);
@@ -695,41 +734,22 @@ private void createEvent(String modId,String mod_status){
         pageStatus="1";
     }
 
-   String allTicketName=null;
-    int counter=0;
-    for (String value:ticketNameArray
+
+   String allTags=null;
+    counter=0;
+    for (EventDetail value:selectedTag
          ) {
         if(counter==0){
-            allTicketName=value;
+            allTags=value.getEventType();
         }else {
-            allTicketName=allTicketName+","+value;
+            allTags=allTags+" "+value.getEventType();
         }
         counter+=1;
     }
-    String allTicketPrice=null;
-    counter=0;
-    for (String value:ticketPriceArray
-    ) {
-        if(counter==0){
-            allTicketPrice=value;
-        }else {
-            allTicketPrice=allTicketPrice+","+value;
-        }
-        counter+=1;
-    }
-    String allTicketNumber=null;
-    counter=0;
-    for (String value:ticketQuantityArray
-    ) {
-        if(counter==0){
-            allTicketNumber=value;
-        }else {
-            allTicketNumber=allTicketNumber+","+value;
-        }
-        counter+=1;
-    }
-    apiInterface.eventCreation(eventTitle,eventId,description,startTime,endTime,sDate,eDate,selectedLocaition,latitude,longitude,
-            ticketStatus,pageStatus,userId,ticketCategory,modId,ticketPrice,ticketNumber,allTicketPrice,allTicketName,allTicketNumber,mod_status).enqueue(new Callback<APIResponse>() {
+    allTags=allTags+" "+eventTitle;
+
+    apiInterface.eventCreation(eventTitle,description,startTime,endTime,sDate,eDate,selectedLocaition,latitude,longitude,
+            ticketStatus,pageStatus,userId,ticketCategory,modId,ticketPrice,ticketNumber,allTicketPrice,allTicketName,allTicketNumber,mod_status,allTags).enqueue(new Callback<APIResponse>() {
         @Override
         public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
             APIResponse eventDetail=response.body();
