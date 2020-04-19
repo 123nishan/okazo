@@ -246,7 +246,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         }
                                                     });
                                             }else {
-                                                Log.d("userOTP","there");
+                                               // Log.d("userOTP","there");
                                                 progressBar.setProgress(100);
                                                 Toast.makeText(LoginActivity.this, "userId:"+userId, Toast.LENGTH_SHORT).show();
                                                 Intent intent1 = new Intent(getApplicationContext(), MainActivity.class);

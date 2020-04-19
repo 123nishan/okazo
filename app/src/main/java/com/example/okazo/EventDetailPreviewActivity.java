@@ -72,6 +72,7 @@ import com.nekoloop.base64image.Base64Image;
 import com.nekoloop.base64image.RequestEncode;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
 import static com.example.okazo.util.constants.KEY_TAG_ARRAY;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_NAME_LIST;
 import static com.example.okazo.util.constants.KEY_TICKET_TYPE_NUMBER_LIST;
@@ -164,7 +165,7 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
         setContentView(R.layout.activity_event_detail_preview);
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
 
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(sharedPreferencesConstant, MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
         userId=sharedPreferences.getString("user_id","");
         appBarLayout= findViewById(R.id.event_detail_preview_app_bar);
         buttonConfirm=findViewById(R.id.fabToolBar);

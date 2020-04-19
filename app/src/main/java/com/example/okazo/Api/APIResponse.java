@@ -1,5 +1,6 @@
 package com.example.okazo.Api;
 
+import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.User;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -15,6 +16,15 @@ public class APIResponse {
     @SerializedName("user")
     @Expose
     private User user;
+
+
+    public EventDetail getEvent() {
+        return event;
+    }
+
+    @SerializedName("event")
+    @Expose
+    private EventDetail event;
 
     @SerializedName("error_msg")
     @Expose

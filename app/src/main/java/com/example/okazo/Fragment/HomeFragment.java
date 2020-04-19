@@ -3,6 +3,7 @@ package com.example.okazo.Fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +18,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.okazo.Api.APIResponse;
+import com.example.okazo.Api.ApiClient;
+import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.EventDetailPreviewActivity;
 import com.example.okazo.GeoFenceActivity;
 import com.example.okazo.LoginActivity;
@@ -30,7 +37,14 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static android.content.Context.MODE_PRIVATE;
+import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
+import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
 
 
 public class HomeFragment extends Fragment {
@@ -39,10 +53,15 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {
         // Required empty public constructor
     }
-    AppBarLayout appBarLayout;
-    Button buttonLogOut,buttonAddEvent,buttonTicket;
-    AppCompatImageButton imageButtonAdd;
-    CollapsingToolbarLayout collapsingToolbarLayout;
+    private AppBarLayout appBarLayout;
+    private  Button buttonLogOut,buttonAddEvent,buttonTicket;
+    private  AppCompatImageButton imageButtonAdd;
+    private  CollapsingToolbarLayout collapsingToolbarLayout;
+    private CircleImageView circleImageView;
+    private TextView textViewFirst,textViewSecond,textViewThird;
+    private ApiInterface apiInterface;
+    private String userId;
+    private RelativeLayout relativeLayoutExtented;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,26 +70,123 @@ public class HomeFragment extends Fragment {
         buttonLogOut=view.findViewById(R.id.home_fragment_log_out);
         appBarLayout= view.findViewById(R.id.fragment_home_app_bar);
         imageButtonAdd= view.findViewById(R.id.fragment_home_add);
+        circleImageView=view.findViewById(R.id.home_fragment_circular_Image);
+        textViewFirst=view.findViewById(R.id.home_fragment_first_textview);
+        textViewSecond=view.findViewById(R.id.home_fragment_second_textview);
+        textViewThird=view.findViewById(R.id.home_fragment_third_textview);
+        relativeLayoutExtented=view.findViewById(R.id.home_fragment_extented_relative_layout);
+
         collapsingToolbarLayout=view.findViewById(R.id.fragment_home_collapsing_tool_bar);
 
-        buttonTicket=view.findViewById(R.id.ticket);
-        buttonTicket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(getActivity().getApplicationContext(), TicketDetailActivity.class);
-                startActivity(intent);
-            }
-        });
+        SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
 
-        buttonAddEvent=view.findViewById(R.id.add_event);
-        buttonAddEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(getActivity().getApplicationContext(), eventDetail.class);
-                //Intent intent=new Intent(getActivity().getApplicationContext(), EventDetailPreviewActivity.class);
-                startActivity(intent);
-            }
-        });
+        if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
+            userId=sharedPreferences.getString("user_id","");
+            String request="home";
+            //api for user name
+            apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+            apiInterface.getUserName(userId,request).enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    APIResponse apiResponse=response.body();
+                    if(!apiResponse.getError()){
+                                textViewSecond.setText((apiResponse.getUser().getName().toUpperCase()));
+                    }else {
+                       DynamicToast.makeError(getActivity().getApplicationContext(),apiResponse.getErrorMsg()).show();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("user_email","");
+                        editor.putString("user_id","");
+                        Intent intent=new Intent(getActivity().getApplicationContext(),LoginActivity.class);
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                }
+            });
+            //api for event name
+            apiInterface.checkEvent(userId).enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    APIResponse apiResponse=response.body();
+                    if(!apiResponse.getError()){
+                        textViewFirst.setVisibility(View.VISIBLE);
+                        textViewThird.setVisibility(View.GONE);
+                        textViewFirst.setText(apiResponse.getEvent().getTitle().toUpperCase());
+                        String imagePath=KEY_IMAGE_ADDRESS+(apiResponse.getEvent().getImage());
+                        Glide.with(getActivity().getApplicationContext())
+                                .load(Uri.parse(imagePath))
+                                .placeholder(R.drawable.ic_place_holder_background)
+                                //.error(R.drawable.ic_image_not_found_background)
+                                .centerCrop()
+                                .into(circleImageView);
+                        textViewFirst.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(getActivity().getApplicationContext(), "here "+apiResponse.getEvent().getLatitude(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }else {
+                        textViewFirst.setVisibility(View.GONE);
+                        textViewThird.setVisibility(View.VISIBLE);
+                        Glide.with(getActivity().getApplicationContext())
+                                .load(R.mipmap.ic_okazo_logo_round)
+                                .placeholder(R.drawable.ic_place_holder_background)
+                                //.error(R.drawable.ic_image_not_found_background)
+                                .centerCrop()
+                                .into(circleImageView);
+                        if(apiResponse.getErrorMsg().equals("NO EVENT")){
+                                textViewThird.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent=new Intent(getActivity().getApplicationContext(), eventDetail.class);
+                                        //Intent intent=new Intent(getActivity().getApplicationContext(), EventDetailPreviewActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                        }else {
+                            DynamicToast.makeError(getActivity().getApplicationContext(),apiResponse.getErrorMsg()).show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                }
+            });
+        }else {
+            DynamicToast.makeError(getActivity().getApplicationContext(),"Something went wrong").show();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("user_email","");
+            editor.putString("user_id","");
+            Intent intent=new Intent(getActivity().getApplicationContext(),LoginActivity.class);
+            startActivity(intent);
+        }
+
+
+
+//        buttonTicket=view.findViewById(R.id.ticket);
+//        buttonTicket.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent=new Intent(getActivity().getApplicationContext(), TicketDetailActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
+        //buttonAddEvent=view.findViewById(R.id.add_event);
+//        buttonAddEvent.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent=new Intent(getActivity().getApplicationContext(), eventDetail.class);
+//                //Intent intent=new Intent(getActivity().getApplicationContext(), EventDetailPreviewActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             int scrollRange=-1;
@@ -84,10 +200,12 @@ public class HomeFragment extends Fragment {
 
                     imageButtonAdd.setVisibility(View.VISIBLE);
                     collapsingToolbarLayout.setTitle("Okazo");
+                    relativeLayoutExtented.setVisibility(View.GONE);
 
                 }else {
                     //fully expanded
                     imageButtonAdd.setVisibility(View.GONE);
+                    relativeLayoutExtented.setVisibility(View.VISIBLE);
                     collapsingToolbarLayout.setTitle("");
 
                 }
@@ -98,9 +216,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DynamicToast.makeWarning(getActivity(),"Logging Out").show();
-                SharedPreferences pref = getActivity().getSharedPreferences(constants.KEY_SHARED_PREFERENCE, MODE_PRIVATE);
+                SharedPreferences pref = getActivity().getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("user_email","");
+                editor.putString("user_id","");
                 editor.commit();
 
                 Intent intent=new Intent(getActivity(), LoginActivity.class);
@@ -111,7 +230,7 @@ public class HomeFragment extends Fragment {
         imageButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-           //
+
           Intent intent=new Intent(getActivity().getApplicationContext(), GeoFenceActivity.class);
             startActivity(intent);
             }

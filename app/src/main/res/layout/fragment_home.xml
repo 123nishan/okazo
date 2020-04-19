@@ -14,7 +14,7 @@
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:id="@+id/fragment_home_app_bar"
-            android:layout_height="250dp"
+            android:layout_height="200dp"
             android:fitsSystemWindows="true"
 
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -54,11 +54,47 @@
            <RelativeLayout
                android:layout_width="match_parent"
                android:layout_height="match_parent"
+               android:id="@+id/home_fragment_extented_relative_layout"
                android:layout_marginTop="60dp">
-                
-<!--               <ImageView-->
-<!--                   android:layout_width=""-->
-<!--                   android:layout_height=""-->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="120dp"
+
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="120dp"
+                    app:civ_border_width="1dp"
+
+                    android:id="@+id/home_fragment_circular_Image"
+                    app:civ_border_color="#FF000000"/>
+               <LinearLayout
+                   android:layout_marginLeft="10dp"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                  android:layout_marginTop="10dp"
+                   android:layout_toRightOf="@+id/home_fragment_circular_Image"
+                   android:orientation="vertical">
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/home_fragment_first_textview"
+                       android:text="Event Name"
+                       android:textSize="24dp"
+                       android:textStyle="bold"/>
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:id="@+id/home_fragment_second_textview"
+                       android:text="User Name"
+                       android:textSize="20dp"
+                       android:textStyle="bold"/>
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Create Event"
+                       android:textSize="16dp"
+                       android:textStyle="italic"
+                       android:id="@+id/home_fragment_third_textview"/>
+               </LinearLayout>
+
            </RelativeLayout>
        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -72,18 +108,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-            <Button
-            android:id="@+id/add_event"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Event"
+<!--            <Button-->
+<!--            android:id="@+id/add_event"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Event"-->
 
-            />
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ticket"
-            android:id="@+id/ticket"/>
+<!--            />-->
+<!--        <Button-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Ticket"-->
+<!--            android:id="@+id/ticket"/>-->
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

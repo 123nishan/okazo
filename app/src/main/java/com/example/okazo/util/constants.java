@@ -9,6 +9,8 @@ public class constants {
     public static final String EMAIL = "nishan.nishan.timalsena@gmail.com";
     //shared preference  constant
     public static final String KEY_SHARED_PREFERENCE="hello";
+    //constant ip for image locaiton
+    public static final String KEY_IMAGE_ADDRESS="http://192.168.0.199/";
     //This is your from email password
     public static final String PASSWORD = "baikuntha";
     //for event detail

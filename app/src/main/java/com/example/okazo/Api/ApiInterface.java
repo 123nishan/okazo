@@ -81,8 +81,17 @@ public interface ApiInterface {
             @Field("id") String id
     );
 
-
-
+    @FormUrlEncoded
+    @POST("eventDetail/check_event.php")
+    Call<APIResponse> checkEvent(
+            @Field("user_id") String userId
+    );
+@FormUrlEncoded
+@POST("user/user_detail.php")
+Call<APIResponse> getUserName(
+  @Field("id") String userId,
+  @Field("request") String request
+);
 
     @FormUrlEncoded
     @POST("eventDetail/event_creation.php")
@@ -124,5 +133,7 @@ public interface ApiInterface {
     Call<APIResponse> uploadEventProfileImage(
             @Part MultipartBody.Part file,@Part ("file") RequestBody name
     );
+
+
 
 }

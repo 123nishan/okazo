@@ -31,6 +31,14 @@ public class User {
     @Expose
     private String verified;
 
+    @SerializedName("role")
+    @Expose
+    private String role;
+
+    @SerializedName("status")
+    @Expose
+    private String status;
+
     public String getId() {
         return id;
     }
@@ -68,6 +76,14 @@ public class User {
 
     public String getPhone() {
         return phone;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public void setPhone(String phone) {
