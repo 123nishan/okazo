@@ -6,9 +6,14 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -19,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,13 +35,17 @@ import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.EventDetailPreviewActivity;
 import com.example.okazo.GeoFenceActivity;
 import com.example.okazo.LoginActivity;
+import com.example.okazo.MainActivity;
 import com.example.okazo.R;
 import com.example.okazo.TicketDetailActivity;
 import com.example.okazo.eventDetail;
 import com.example.okazo.util.constants;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.tabs.TabLayout;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -61,6 +71,8 @@ public class HomeFragment extends Fragment {
     private TextView textViewFirst,textViewSecond,textViewThird;
     private ApiInterface apiInterface;
     private String userId;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
     private RelativeLayout relativeLayoutExtented;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,12 +87,21 @@ public class HomeFragment extends Fragment {
         textViewSecond=view.findViewById(R.id.home_fragment_second_textview);
         textViewThird=view.findViewById(R.id.home_fragment_third_textview);
         relativeLayoutExtented=view.findViewById(R.id.home_fragment_extented_relative_layout);
-
+        tabLayout=view.findViewById(R.id.home_fragment_tab_layout);
+        viewPager=view.findViewById(R.id.home_fragment_view_pager);
         collapsingToolbarLayout=view.findViewById(R.id.fragment_home_collapsing_tool_bar);
 
         SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
-
+        MainActivity mainActivity= (MainActivity) this.getActivity();
+        ActionBar bar=mainActivity.getSupportActionBar();
+        bar.hide();
         if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
+            HomeFragment.ViewPagerAdapter viewPagerAdapter=new HomeFragment.ViewPagerAdapter(getChildFragmentManager());
+            viewPagerAdapter.addFragment(new FeedFragment() ,"Feed");
+            viewPagerAdapter.addFragment(new FeedFragment(),"map");
+            viewPager.setAdapter(viewPagerAdapter);
+            tabLayout.setupWithViewPager(viewPager);
+
             userId=sharedPreferences.getString("user_id","");
             String request="home";
             //api for user name
@@ -211,7 +232,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+
         buttonLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,5 +259,40 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    class ViewPagerAdapter extends FragmentPagerAdapter
 
+    {
+        private ArrayList<Fragment> fragments;
+        private ArrayList<String> titles;
+        ViewPagerAdapter(FragmentManager fm){
+            super(fm);
+            this.fragments=new ArrayList<>();
+            this.titles=new ArrayList<>();
+        }
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+        public void addFragment(Fragment fragment,String title){
+            fragments.add(fragment);
+            titles.add(title);
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles.get(position);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
 }

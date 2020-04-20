@@ -5,6 +5,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
+import com.example.okazo.MainActivity;
 import com.example.okazo.Model.Note;
 import com.example.okazo.R;
 import com.google.android.gms.maps.GoogleMap;
@@ -87,6 +89,7 @@ private void initGoogleMap(Bundle savedInstanceState,View v){
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+
     }
 
     @Override

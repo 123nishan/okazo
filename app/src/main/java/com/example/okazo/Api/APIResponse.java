@@ -18,6 +18,7 @@ public class APIResponse {
     private User user;
 
 
+
     public EventDetail getEvent() {
         return event;
     }
