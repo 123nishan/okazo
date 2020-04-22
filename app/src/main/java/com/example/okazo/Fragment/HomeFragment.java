@@ -17,6 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +37,7 @@ import com.example.okazo.EventDetailPreviewActivity;
 import com.example.okazo.GeoFenceActivity;
 import com.example.okazo.LoginActivity;
 import com.example.okazo.MainActivity;
+import com.example.okazo.Model.EventDetail;
 import com.example.okazo.R;
 import com.example.okazo.TicketDetailActivity;
 import com.example.okazo.eventDetail;
@@ -95,6 +97,7 @@ public class HomeFragment extends Fragment {
         MainActivity mainActivity= (MainActivity) this.getActivity();
         ActionBar bar=mainActivity.getSupportActionBar();
         bar.hide();
+        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
             HomeFragment.ViewPagerAdapter viewPagerAdapter=new HomeFragment.ViewPagerAdapter(getChildFragmentManager());
             viewPagerAdapter.addFragment(new FeedFragment() ,"Feed");
@@ -103,9 +106,10 @@ public class HomeFragment extends Fragment {
             tabLayout.setupWithViewPager(viewPager);
 
             userId=sharedPreferences.getString("user_id","");
+
             String request="home";
             //api for user name
-            apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+
             apiInterface.getUserName(userId,request).enqueue(new Callback<APIResponse>() {
                 @Override
                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {

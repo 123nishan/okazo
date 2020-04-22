@@ -1,9 +1,12 @@
 package com.example.okazo.Api;
 
 import com.example.okazo.Model.EventDetail;
+import com.example.okazo.Model.Posts;
 import com.example.okazo.Model.User;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 public class APIResponse {
     @SerializedName("error")
@@ -17,11 +20,19 @@ public class APIResponse {
     @Expose
     private User user;
 
+    public ArrayList<Posts> getPostArray() {
+        return postArray;
+    }
 
+    @SerializedName("postArray")
+    @Expose
+    private ArrayList<Posts> postArray;
 
     public EventDetail getEvent() {
         return event;
     }
+
+
 
     @SerializedName("event")
     @Expose

@@ -93,6 +93,13 @@ Call<APIResponse> getUserName(
   @Field("request") String request
 );
 
+@FormUrlEncoded
+@POST("user/feed.php")
+Call<APIResponse> getFeed(
+        @Field("user_id") String userId
+);
+
+
     @FormUrlEncoded
     @POST("eventDetail/event_creation.php")
     Call<APIResponse> eventCreation(
