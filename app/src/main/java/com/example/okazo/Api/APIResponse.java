@@ -50,6 +50,10 @@ public class APIResponse {
         return event_id;
     }
 
+    public String getTotalLike() {
+        return totalLike;
+    }
+
     @SerializedName("event_id")
 @Expose
 private String event_id;
@@ -58,6 +62,9 @@ private String event_id;
     @Expose
     private String mod_Id;
 
+    @SerializedName("total_like")
+    @Expose
+    private String totalLike;
 
     public APIResponse() {
     }

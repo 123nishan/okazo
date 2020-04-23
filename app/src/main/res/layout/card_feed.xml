@@ -56,12 +56,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="like"
+                android:text=" 0 like"
                 android:id="@+id/card_feed_total_like"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Comment"
+                android:text=" 0 Comment"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="5dp"
                 android:id="@+id/card_feed_total_comment"
@@ -78,33 +78,55 @@
           android:layout_marginTop="3dp"
           android:src="@drawable/border"
          />
+        <!--like for posty-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="2"
+
             android:layout_marginTop="3dp"
+
             android:orientation="horizontal">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:id="@+id/card_feed_post_like_layout"
                 android:layout_weight="1">
-                <TextView
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/card_feed_post_like_black"
+                    android:src="@drawable/ic_like_black"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/card_feed_test"
+                    android:layout_marginLeft="5dp"
                     android:gravity="center"
                     android:text="LIKE"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:layout_weight="1">
-                <TextView
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/card_feed_post_comment"
+                    android:src="@drawable/ic_comment"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:gravity="center"
                     android:text="Commemt"/>
             </LinearLayout>
         </LinearLayout>
+        <!--like for posty-->
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

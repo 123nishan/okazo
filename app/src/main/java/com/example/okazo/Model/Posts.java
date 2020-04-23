@@ -25,9 +25,25 @@ public class Posts {
     @Expose
     private String detail;
 
+    @SerializedName("userLike")
+    @Expose
+    private String userLike;
+
+    public String getUserLike() {
+        return userLike;
+    }
+
+    public String getLikes() {
+        return likes;
+    }
+
     @SerializedName("image")
     @Expose
     private String image;
+
+    @SerializedName("likes")
+    @Expose
+    private String likes;
 
     @SerializedName("created_date")
     @Expose

@@ -1,7 +1,9 @@
 package com.example.okazo.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,7 +14,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.okazo.Api.APIResponse;
 import com.example.okazo.Api.ApiClient;
@@ -45,7 +51,9 @@ private RecyclerView recyclerView;
     private ApiInterface apiInterface;
         private String userId;
         private TextView textViewTest;
-        private ArrayList<String> arrayListEventTitle=new ArrayList<>(),arrayListProfileImage=new ArrayList<>(),arrayListDetail=new ArrayList<>(),arrayListCreatedDate=new ArrayList<>();
+        private ArrayList<String> arrayListEventTitle=new ArrayList<>(),arrayListProfileImage=new ArrayList<>(),
+                arrayListDetail=new ArrayList<>(),arrayListCreatedDate=new ArrayList<>(),
+                arrayListPostId=new ArrayList<>(),arrayListLikes=new ArrayList<>(),arrayListUserLike=new ArrayList<>(),arrayListEventId=new ArrayList<>();
         private FeedAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,14 +84,58 @@ private RecyclerView recyclerView;
                             arrayListCreatedDate.add(value.getCreatedDate());
                             arrayListDetail.add(value.getDetail());
                             arrayListProfileImage.add(value.getProfileImage());
+                            arrayListPostId.add(value.getPostId());
+                            arrayListLikes.add(value.getLikes());
+                            arrayListUserLike.add(value.getUserLike());
+                            arrayListEventId.add(value.getId());
 
                        }
                      //  Log.d("title",arrayListEventTitle.size()+"=="+apiResponse.getEventArray().size());
-                       adapter=new FeedAdapter(arrayListEventTitle,arrayListProfileImage,arrayListDetail,arrayListCreatedDate,getActivity().getApplicationContext());
+                       adapter=new FeedAdapter(arrayListEventTitle,arrayListProfileImage,arrayListDetail,arrayListCreatedDate,
+                               getActivity().getApplicationContext(),arrayListPostId,arrayListLikes,arrayListUserLike,arrayListEventId);
                        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity().getApplicationContext());
                        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                        recyclerView.setLayoutManager(linearLayoutManager);
                        recyclerView.setAdapter(adapter);
+                       adapter.setOnLikeClickListener(new FeedAdapter.OnLikeClickListener() {
+                           @Override
+                           public void OnLikeClick(int position) {
+                               apiInterface.setLike(userId,arrayListPostId.get(position)).enqueue(new Callback<APIResponse>() {
+                                   @Override
+                                   public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                       APIResponse apiResponse1=response.body();
+                                       if(!apiResponse1.getError()){
+//                                           final Animation anim_out = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), android.R.anim.fade_out);
+//                                           final Animation anim_in  = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), android.R.anim.fade_in);
+
+                                           if(apiResponse1.getErrorMsg().equals("LIKED")){
+
+                                               ImageView imageView=((ImageView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black));
+
+                                                animation(getActivity().getApplicationContext(),imageView,R.drawable.ic_like_red);
+                                               ((TextView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_total_like)).setText(apiResponse1.getTotalLike());
+
+                                           }else {
+
+                                               ImageView imageView=((ImageView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black));
+                                               animation(getActivity().getApplicationContext(),imageView,R.drawable.ic_like_black);
+                                               ((TextView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_total_like)).setText(apiResponse1.getTotalLike());
+                                              // ((ImageView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black)).setImageResource(R.drawable.ic_like_black);
+                                           }
+
+                                       }else {
+                                           DynamicToast.makeError(getActivity().getApplicationContext(),apiResponse1.getErrorMsg()).show();
+                                       }
+                                   }
+
+                                   @Override
+                                   public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                   }
+                               });
+
+                           }
+                       });
                    }else if(apiResponse.getErrorMsg().equals("NO FEED")) {
                        recyclerView.setVisibility(View.GONE);
                        textViewTest.setVisibility(View.VISIBLE);
@@ -107,5 +159,26 @@ private RecyclerView recyclerView;
             startActivity(intent);
         }
         return view;
+
+    }
+    private void animation(Context c, ImageView v, int r){
+        final Animation anim_out = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
+        final Animation anim_in  = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
+        anim_out.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override public void onAnimationStart(Animation animation) {}
+            @Override public void onAnimationRepeat(Animation animation) {}
+            @Override public void onAnimationEnd(Animation animation)
+            {
+                v.setImageResource(r);
+                anim_in.setAnimationListener(new Animation.AnimationListener() {
+                    @Override public void onAnimationStart(Animation animation) {}
+                    @Override public void onAnimationRepeat(Animation animation) {}
+                    @Override public void onAnimationEnd(Animation animation) {}
+                });
+                v.startAnimation(anim_in);
+            }
+        });
+        v.startAnimation(anim_out);
     }
 }

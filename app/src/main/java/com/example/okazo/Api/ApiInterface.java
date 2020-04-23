@@ -98,8 +98,12 @@ Call<APIResponse> getUserName(
 Call<APIResponse> getFeed(
         @Field("user_id") String userId
 );
-
-
+@FormUrlEncoded
+@POST("user/like.php")
+Call<APIResponse> setLike(
+        @Field("user_id") String userId,
+        @Field("post_id") String postId
+);
     @FormUrlEncoded
     @POST("eventDetail/event_creation.php")
     Call<APIResponse> eventCreation(

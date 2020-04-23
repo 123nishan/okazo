@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Fragment.EventFragment;
+import com.example.okazo.Fragment.EventLocationFragment;
 import com.example.okazo.Fragment.HomeFragment;
 import com.example.okazo.Fragment.ProfileFragment;
 import com.example.okazo.Model.Note;
@@ -36,6 +37,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -100,32 +102,6 @@ String userEmail,userId;
         }
             bottomNavigationView.setItemSelected(R.id.nav_home,true);
 
-//        bottomNavigationView.initWithSaveInstanceState(savedInstanceState);
-//        bottomNavigationView.addSpaceItem(new SpaceItem("HOME", R.drawable.ic_home));
-//        bottomNavigationView.addSpaceItem(new SpaceItem("SEARCH", R.drawable.ic_place));
-
-//        bottomNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
-//            @Override
-//            public void onCentreButtonClick() {
-//                getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new ProfileFragment()).commit();
-//
-//            }
-//
-//            @Override
-//            public void onItemClick(int itemIndex, String itemName) {
-//                if(itemName.equals("HOME")){
-//                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new HomeFragment()).commit();
-//                }else {
-//                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container,new EventFragment()).commit();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onItemReselected(int itemIndex, String itemName) {
-//
-//            }
-//        });
 
         bottomNavigationView.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
             @Override
@@ -141,6 +117,20 @@ String userEmail,userId;
                                 .addToBackStack(null)
                                 .commit();
                         frameLayout.removeAllViewsInLayout();
+                        break;
+                    case R.id.nav_event:
+
+
+
+
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.pop_in, R.anim.pop_out, R.anim.pop_in, R.anim.pop_out)
+                                .replace(R.id.frame_container,new EventLocationFragment())
+                                .addToBackStack(null)
+                                .commit();
+                        frameLayout.removeAllViewsInLayout();
+
                         break;
                     case R.id.nav_profile:
                         getSupportFragmentManager()
@@ -172,27 +162,27 @@ String userEmail,userId;
 
 
     }
-//    private void getLastKnowLocation(){
-//        d("location","last location");
-//        if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-//            return;
-//        }
-//        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Location> task) {
-//                if(task.isSuccessful()){
-//                    Location location=task.getResult();
-//                    d("lat",String.valueOf(location.getLatitude()));
-//                    d("longi",String.valueOf(location.getLongitude()));
-//
-//                }else {
-//                    d("Failed","");
-//                }
-//            }
-//        });
-//    }
+    private void getLastKnowLocation(){
+        d("location","last location");
+        if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            return;
+        }
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if(task.isSuccessful()){
+                    Location location=task.getResult();
+                    d("lat",String.valueOf(location.getLatitude()));
+                    d("longi",String.valueOf(location.getLongitude()));
+
+                }else {
+                    d("Failed","");
+                }
+            }
+        });
+    }
     private boolean checkMapServices(){
-//        if(isServicesOK()){
+      //if(isServicesOK()){
             if(isMapsEnabled()){
                 return true;
             }
@@ -224,91 +214,94 @@ String userEmail,userId;
         return true;
     }
 
-//    private void getLocationPermission() {
-//        /*
-//         * Request location permission, so that we can get the location of the
-//         * device. The result of the permission request is handled by a callback,
-//         * onRequestPermissionsResult.
-//         */
-//        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-//                android.Manifest.permission.ACCESS_FINE_LOCATION)
-//                == PackageManager.PERMISSION_GRANTED) {
-//            mLocationPermissionGranted = true;
-////            getChatrooms();
-//            getLastKnowLocation();
-//        } else {
-//            ActivityCompat.requestPermissions(this,
-//                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-//                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-//        }
-//    }
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+//            getChatrooms();
+           // getLastKnowLocation();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
 
-//    public boolean isServicesOK(){
-//        d("map", "isServicesOK: checking google services version");
-//
-//        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
-//
-//        if(available == ConnectionResult.SUCCESS){
-//            //everything is fine and the user can make map requests
-//            d("map", "isServicesOK: Google Play Services is working");
-//            return true;
-//        }
-//        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-//            //an error occured but we can resolve it
-//            d("map", "isServicesOK: an error occured but we can fix it");
-//            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
-//            dialog.show();
-//        }else{
-//            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
-//        }
-//        return false;
-//    }
+    public boolean isServicesOK(){
+        d("map", "isServicesOK: checking google services version");
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           @NonNull String permissions[],
-//                                           @NonNull int[] grantResults) {
-//        mLocationPermissionGranted = false;
-//        switch (requestCode) {
-//            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    mLocationPermissionGranted = true;
-//                }
-//            }
-//        }
-//    }
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        d("map", "onActivityResult: called.");
-//        switch (requestCode) {
-//            case PERMISSION_REQUEST_ENABLE_GPS: {
-//                if(mLocationPermissionGranted){
-////                    getChatrooms();
-//                    getLastKnowLocation();
-//                }
-//                else{
-//                    getLocationPermission();
-//                }
-//            }
-//        }
-//
-//    }
+        if(available == ConnectionResult.SUCCESS){
+            //everything is fine and the user can make map requests
+            d("map", "isServicesOK: Google Play Services is working");
+            return true;
+        }
+        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            //an error occured but we can resolve it
+            d("map", "isServicesOK: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }else{
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        d("map", "onActivityResult: called.");
+        switch (requestCode) {
+            case PERMISSION_REQUEST_ENABLE_GPS: {
+                if(mLocationPermissionGranted){
+//                    getChatrooms();
+                   // getLastKnowLocation();
+                }
+                else{
+                    getLocationPermission();
+                }
+            }
+        }
+
+    }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(checkMapServices()){
+      
+//        if(checkMapServices()){
 //            if(mLocationPermissionGranted){
 //
-//            }else {
+//            }
+//
+//        }else {
 //                getLocationPermission();
 //            }
-        }    }
+        }
 
     @Override
     public void onBackPressed() {

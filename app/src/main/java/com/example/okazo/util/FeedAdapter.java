@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,15 +27,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
-ArrayList<String> eventTitle,eventProfile,postDetail,postCreatedDate;
+ArrayList<String> eventTitle,eventProfile,postDetail,postCreatedDate,postId,postLikes,userPostLike,eventId;
 Context context;
-public FeedAdapter(ArrayList<String> eventTitle,ArrayList<String> eventProfile,
-                   ArrayList<String> postDetail,ArrayList<String> postCreatedDate,Context context){
+public FeedAdapter.OnLikeClickListener onLikeClickListener;
+public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
+                   ArrayList<String> postDetail, ArrayList<String> postCreatedDate, Context context,
+                   ArrayList<String> postId,ArrayList<String> postLikes,ArrayList<String> userPostLike,ArrayList<String> eventId){
     this.eventTitle=eventTitle;
     this.eventProfile=eventProfile;
     this.postCreatedDate=postCreatedDate;
     this.postDetail=postDetail;
     this.context=context;
+    this.postId=postId;
+    this.postLikes=postLikes;
+    this.userPostLike=userPostLike;
+    this.eventId=eventId;
 }
     @NonNull
     @Override
@@ -48,7 +55,12 @@ public FeedAdapter(ArrayList<String> eventTitle,ArrayList<String> eventProfile,
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.textViewTitle.setText(eventTitle.get(position));
         holder.textViewDescription.setText(postDetail.get(position));
-
+       holder.textViewTotalLike.setText(postLikes.get(position)+" Like");
+        if(userPostLike.get(position).equals("1")){
+            holder.imageViewLike.setImageResource(R.drawable.ic_like_red);
+        }else {
+            holder.imageViewLike.setImageResource(R.drawable.ic_like_black);
+        }
        String date=postCreatedDate.get(position);
         SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date1=null;
@@ -77,9 +89,17 @@ public FeedAdapter(ArrayList<String> eventTitle,ArrayList<String> eventProfile,
         return eventTitle.size();
     }
 
+    public interface OnLikeClickListener{
+            void OnLikeClick(int position);
+    }
+    public void setOnLikeClickListener(OnLikeClickListener onLikeClickListener){
+    this.onLikeClickListener=onLikeClickListener;
+    }
     class MyViewHolder extends RecyclerView.ViewHolder{
         TextView textViewTitle,textViewDate,textViewDescription,textViewTotalLike,textViewTotalComment;
         CircleImageView imageViewProfile;
+        ImageView imageViewLike;
+        LinearLayout linearLayout;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewProfile=itemView.findViewById(R.id.card_feed_profile_image);
@@ -88,6 +108,17 @@ public FeedAdapter(ArrayList<String> eventTitle,ArrayList<String> eventProfile,
             textViewTotalLike=itemView.findViewById(R.id.card_feed_total_like);
             textViewTotalComment=itemView.findViewById(R.id.card_feed_total_comment);
             textViewTitle=itemView.findViewById(R.id.card_feed_title);
+            imageViewLike=itemView.findViewById(R.id.card_feed_post_like_black);
+            linearLayout=itemView.findViewById(R.id.card_feed_post_like_layout);
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position=getAdapterPosition();
+                    if(position!=RecyclerView.NO_POSITION && onLikeClickListener!=null){
+                        onLikeClickListener.OnLikeClick(position);
+                    }
+                }
+            });
         }
     }
 }

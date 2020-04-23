@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment {
         if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
             HomeFragment.ViewPagerAdapter viewPagerAdapter=new HomeFragment.ViewPagerAdapter(getChildFragmentManager());
             viewPagerAdapter.addFragment(new FeedFragment() ,"Feed");
-            viewPagerAdapter.addFragment(new FeedFragment(),"map");
+            viewPagerAdapter.addFragment(new EventLocationFragment(),"map");
             viewPager.setAdapter(viewPagerAdapter);
             tabLayout.setupWithViewPager(viewPager);
 
