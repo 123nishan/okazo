@@ -52,6 +52,12 @@ public interface ApiInterface {
     @GET("geofence/activate_geofence.php")
     Call<ArrayList<Geofence>> getGeofenceStatus();
 
+    @GET("map/event_location.php")
+    Call<ArrayList<EventDetail>> getEventLocation();
+
+    @GET("map/event_type.php")
+    Call<ArrayList<EventDetail>> getMapEventType();
+
     @FormUrlEncoded
     @POST("save.php")
     Call<Note> saveNote(

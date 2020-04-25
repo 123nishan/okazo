@@ -10,13 +10,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Required if your app targets Android 10 (API level 29) or higher -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
-    <uses-permission android:name="ANDROID.PERMISSION.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature android:name="android.hardware.camera.flash" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="ANDROID.PERMISSION.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+    <!-- <uses-feature android:name="android.hardware.camera" /> -->
+    <!-- <uses-feature android:name="android.hardware.camera.autofocus" /> -->
+    <!-- <uses-feature android:name="android.hardware.camera.flash" /> -->
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -25,17 +24,14 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_okazo_logo"
         android:label="@string/app_name"
-
         android:roundIcon="@mipmap/ic_okazo_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
-
-
-
-        <activity android:name=".EventDetailPreviewActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ForeLocationActivity" />
+        <activity
+            android:name=".EventDetailPreviewActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".TicketDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -90,6 +86,11 @@
             android:name=".util.GeofenceTransitionsJobIntentService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".util.LocationUpdatesService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>

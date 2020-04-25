@@ -46,10 +46,11 @@ public class EventTypeAdapter extends RecyclerView.Adapter<EventTypeAdapter.MyVi
         holder.textViewEventType.setText(detail.getEventType());
 
 
-        if(parentClass.equals("preview")){
+        if(parentClass.equals("preview") || parentClass.equals("eventFragment")){
             holder.removeEventType.setVisibility(View.GONE);
 
-        }else {
+        }
+        else {
             holder.removeEventType.setVisibility(View.VISIBLE);
 
         }

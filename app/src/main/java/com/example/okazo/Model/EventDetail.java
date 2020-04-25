@@ -26,6 +26,14 @@ public class EventDetail implements Serializable {
     @Expose
     private String startTime;
 
+    @SerializedName("event_type_image")
+    @Expose
+    private String eventTypeImage;
+
+    public String getEventTypeImage() {
+        return eventTypeImage;
+    }
+
     @SerializedName("end_time")
     @Expose
     private String endTime;

@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
     defaultConfig {
         applicationId "com.example.okazo"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -82,6 +82,9 @@ dependencies {
     implementation 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+
+//for distance computing
+    implementation 'com.google.maps.android:android-maps-utils:0.6.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

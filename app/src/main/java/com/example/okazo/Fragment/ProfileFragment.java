@@ -2,6 +2,7 @@ package com.example.okazo.Fragment;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,20 +55,22 @@ public class ProfileFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String latitude=editTextLatitude.getText().toString();
-                String longitude=editTextLongitude.getText().toString();
-                String name=editTextName.getText().toString().trim();
-
-                if(latitude.isEmpty()){
-                    editTextLatitude.setError("please enter");
-                }else if(longitude.isEmpty()){
-                    editTextLongitude.setError("please enter");
-                }else if(name.isEmpty()){
-                    editTextName.setError("please enter");
-
-                }else {
-                    saveDetail(latitude,longitude,name);
-                }
+//                Intent intent=new Intent(getActivity().getApplicationContext(), MapBox.class);
+//                startActivity(intent);
+//                String latitude=editTextLatitude.getText().toString();
+//                String longitude=editTextLongitude.getText().toString();
+//                String name=editTextName.getText().toString().trim();
+//
+//                if(latitude.isEmpty()){
+//                    editTextLatitude.setError("please enter");
+//                }else if(longitude.isEmpty()){
+//                    editTextLongitude.setError("please enter");
+//                }else if(name.isEmpty()){
+//                    editTextName.setError("please enter");
+//
+//                }else {
+//                    saveDetail(latitude,longitude,name);
+//                }
             }
         });
         return v;
