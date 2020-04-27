@@ -5,12 +5,16 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.PointF;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.cardview.widget.CardView;
+import androidx.collection.LongSparseArray;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -24,20 +28,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
+import com.example.okazo.EventDetailPreviewActivity;
 import com.example.okazo.MainActivity;
 import com.example.okazo.Map;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Note;
 import com.example.okazo.R;
+
 import com.example.okazo.util.EventTypeAdapter;
 import com.example.okazo.util.MapEventTypeAdapter;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.karumi.dexter.listener.single.PermissionListener;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
@@ -61,6 +71,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.maps.SupportMapFragment;
 import com.mapbox.mapboxsdk.maps.UiSettings;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
@@ -73,12 +84,16 @@ import com.mapbox.mapboxsdk.style.sources.VectorSource;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -90,7 +105,7 @@ import static com.mapbox.mapboxsdk.maps.Style.OUTDOORS;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventFragment extends Fragment implements  PermissionsListener,OnMapReadyCallback {
+public class EventFragment extends Fragment implements  PermissionsListener,OnMapReadyCallback, MapboxMap.OnMapClickListener {
 
 
     public EventFragment() {
@@ -105,11 +120,23 @@ public class EventFragment extends Fragment implements  PermissionsListener,OnMa
     public ArrayList<Double> lat=new ArrayList<>();
     public ArrayList<Double> lng=new ArrayList<>();
     private MapView mapView;
+    private CardView cardView;
+    private  TextView textViewTitle,textViewStartDate,textViewStartTime,textViewLocation,textViewMore;
+    private CircleImageView imageView;
 
     private static final String SOURCE_ID = "SOURCE_ID";
     private static final String ICON_ID = "ICON_ID";
     private static final String LAYER_ID = "LAYER_ID";
 
+    private FeatureCollection featureCollection;
+    private HashMap<String,String> hashMap=new HashMap<String,String>();
+
+    private    SymbolManager symbolManager;
+
+private  List<Symbol> symbolList=new ArrayList<>();
+    ArrayList<String>eventType=new ArrayList<>();
+    ArrayList<String>eventTypeImage=new ArrayList<>();
+    private String selectedEventId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,6 +145,25 @@ public class EventFragment extends Fragment implements  PermissionsListener,OnMa
         View v = inflater.inflate(R.layout.fragment_event, container, false);
         SupportMapFragment mapFragment;
         apiInterface=ApiClient.getApiClient().create(ApiInterface.class);
+        cardView=v.findViewById(R.id.event_fragment_card);
+        cardView.setVisibility(View.GONE);
+        textViewTitle=v.findViewById(R.id.event_fragment_card_title);
+        textViewStartDate=v.findViewById(R.id.event_fragment_card_date);
+        textViewStartTime=v.findViewById(R.id.event_fragment_card_time);
+        imageView=v.findViewById(R.id.event_fragment_card_image_view);
+        textViewLocation=v.findViewById(R.id.event_fragment_card_location);
+        textViewMore=v.findViewById(R.id.event_fragment_card_more);
+
+
+
+        hashMap.put("food","fast-food-15");
+        hashMap.put("music","music-15");
+        hashMap.put("dance","pitch-15");
+        hashMap.put("sports","soccer-15");
+        hashMap.put("party","bar-15");
+        hashMap.put("educational","library-15");
+        hashMap.put("automobile","car-15");
+
         MainActivity mainActivity= (MainActivity) this.getActivity();
         ActionBar bar=mainActivity.getSupportActionBar();
         bar.hide();
@@ -162,8 +208,7 @@ public class EventFragment extends Fragment implements  PermissionsListener,OnMa
             @Override
             public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
                 ArrayList<EventDetail> eventDetail=response.body();
-                ArrayList<String>eventType=new ArrayList<>();
-                ArrayList<String>eventTypeImage=new ArrayList<>();
+
                 for (EventDetail value : eventDetail
                 ){
                  eventType.add(value.getEventType());
@@ -171,21 +216,7 @@ public class EventFragment extends Fragment implements  PermissionsListener,OnMa
                 }
                 eventType.add("More");
                 eventTypeImage.add("okazo/util_image/more.png");
-                RecyclerView recyclerView=v.findViewById(R.id.event_fragment_recycler_view);
-                String parentClass="eventFragment";
-                Context context=getActivity().getApplicationContext();
-                adapter=new MapEventTypeAdapter(eventType,eventTypeImage,context);
-                LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
-                linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                recyclerView.setLayoutManager(linearLayoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.setAdapter(adapter);
-                adapter.setOnClickListener(new MapEventTypeAdapter.OnClickListener() {
-                    @Override
-                    public void OnClick(int position, ArrayList<String> eventDetail) {
-                        Toast.makeText(context, "it is "+eventDetail.get(position), Toast.LENGTH_SHORT).show();
-                    }
-                });
+
             }
 
             @Override
@@ -255,7 +286,7 @@ public class EventFragment extends Fragment implements  PermissionsListener,OnMa
             @Override
             public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
                 ArrayList<EventDetail> eventDetail=response.body();
-                List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
+                //List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
                 for (EventDetail value: eventDetail
                 ) {
 
@@ -271,29 +302,165 @@ public class EventFragment extends Fragment implements  PermissionsListener,OnMa
 //            }
 
 
-                        symbolLayerIconFeatureList.add(Feature.fromGeometry(
-                Point.fromLngLat(-57.225365, -33.213144)));
-                symbolLayerIconFeatureList.add(Feature.fromGeometry(
-                        Point.fromLngLat(39.551276, 93.244850)));
-                        symbolLayerIconFeatureList.add(Feature.fromGeometry(
-                Point.fromLngLat(85.312736, 27.69939)));
+//                        symbolLayerIconFeatureList.add(Feature.fromGeometry(
+//                Point.fromLngLat(-57.225365, -33.213144)));
+//                symbolLayerIconFeatureList.add(Feature.fromGeometry(
+//                        Point.fromLngLat(39.551276, 93.244850)));
+//                        symbolLayerIconFeatureList.add(Feature.fromGeometry(
+//                Point.fromLngLat(85.312736, 27.69939)));
+//                        featureCollection=FeatureCollection.fromFeatures(symbolLayerIconFeatureList);
 
-                mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41").withImage(ICON_ID,BitmapFactory.decodeResource(getResources(),R.drawable.mapbox_marker_icon_default))
-                        .withSource(new GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeatures(symbolLayerIconFeatureList)))
-                        .withLayer(new SymbolLayer(LAYER_ID,SOURCE_ID)
-                                .withProperties(
-                                        iconImage(ICON_ID),
-                                        iconAllowOverlap(true),
-                                        iconIgnorePlacement(true),
-                                        iconOffset(new Float[]{0f,-9f})
-                                )), new Style.OnStyleLoaded() {
+//                mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41").withImage(ICON_ID,BitmapFactory.decodeResource(getResources(),R.drawable.mapbox_marker_icon_default))
+//                        .withSource(new GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeatures(symbolLayerIconFeatureList)))
+//                        .withLayer(new SymbolLayer(LAYER_ID,SOURCE_ID)
+//                                .withProperties(
+//                                        iconImage(ICON_ID),
+//                                        iconAllowOverlap(true),
+//                                        iconIgnorePlacement(true),
+//                                        iconOffset(new Float[]{0f,-9f})
+//                                ))
+                          mapboxMap.setStyle(Style.DARK, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
                         enableLocationComponent(style);
+                       // HashMap <String,Symbol> symbolHashMap=new HashMap<>();
+
+
+                        mapboxMap.addOnMapClickListener(EventFragment.this::onMapClick);
                         UiSettings uiSettings=mapboxMap.getUiSettings();
                         uiSettings.setLogoEnabled(false);
                         uiSettings.setCompassEnabled(false);
-                        
+
+                        List<SymbolOptions> symbolOptions=new ArrayList<>();
+                       for(int i=0;i<lat.size();i++){
+                           int counter=i;
+                         symbolManager=new SymbolManager(mapView,mapboxMap,style);
+                           symbolManager.setIconAllowOverlap(true);
+                           symbolManager.setIconIgnorePlacement(true);
+                           if(eventDetail.get(i).getStatus().equals("1")) {
+
+
+                               if (eventDetail.get(i).getTagCount() > 1) {
+//                                   symbolManager.create(new SymbolOptions()
+//                                           .withLatLng(new LatLng(lat.get(i), lng.get(i)))
+//                                           .withIconImage("town-hall-15")
+//                                           .withIconSize(2.0f)
+//
+//                                   );
+                                   symbolOptions.add(new SymbolOptions()
+                                           .withLatLng(new LatLng(lat.get(i), lng.get(i)))
+                                           .withIconImage("town-hall-15")
+                                           .withIconSize(2.0f));
+                                  //symbolHashMap.put(eventDetail.get(i).getId(),symbolManager.getAnnotations());
+
+
+                               } else {
+
+                                   String eventType = (eventDetail.get(i).getTags()).toLowerCase();
+                                   String value = hashMap.get(eventType);
+//                                   symbolManager.create(new SymbolOptions()
+//                                           .withLatLng(new LatLng(lat.get(i), lng.get(i)))
+//                                           .withIconImage(value)
+//                                           .withIconSize(2.0f)
+                                  // );
+                                   symbolOptions.add(new SymbolOptions()
+                                           .withLatLng(new LatLng(lat.get(i), lng.get(i)))
+                                           .withIconImage(value)
+                                           .withIconSize(2.0f));
+                               }
+
+//                               LongSparseArray<Symbol> sparseArray;
+//                               sparseArray=symbolManager.getAnnotations();
+//
+//                               symbolList.add(sparseArray.get(0));
+
+
+//                               symbolManager.addClickListener(new OnSymbolClickListener() {
+//                                   @Override
+//                                   public void onAnnotationClick(Symbol symbol) {
+//                                       cardView.setVisibility(View.VISIBLE);
+//                                       textViewTitle.setText(eventDetail.get(counter).getTitle());
+//                                        textViewStartDate.setText(eventDetail.get(counter).getStartDate());
+//                                        textViewStartTime.setText(eventDetail.get(counter).getStartTime());
+//                                        textViewLocation.setText(eventDetail.get(counter).getPlace());
+//                                       String imagePath=KEY_IMAGE_ADDRESS+(eventDetail.get(counter).getImage());
+//                                       Glide.with(getActivity().getApplicationContext())
+//                                               .load(Uri.parse(imagePath))
+//                                               .placeholder(R.drawable.ic_place_holder_background)
+//                                               //.error(R.drawable.ic_image_not_found_background)
+//                                               .centerCrop()
+//                                               .into(imageView);
+//
+//
+//
+//
+//
+//                                   }
+//                               });
+                               cardView.setOnClickListener(new View.OnClickListener() {
+                                   @Override
+                                   public void onClick(View view) {
+
+
+
+                                       Toast.makeText(getActivity(), "check" + eventDetail.get(counter).getTagCount()+ "/"+symbolList.size(), Toast.LENGTH_SHORT).show();
+                                   }
+                               });
+                           }
+                       }
+                       symbolManager.create(symbolOptions);
+                       symbolManager.addClickListener(new OnSymbolClickListener() {
+                           @Override
+                           public void onAnnotationClick(Symbol symbol) {
+                               int latLen,lngLen;
+                               String selectedLat= String.valueOf(symbol.getLatLng().getLatitude());
+                               String selectedLng= String.valueOf(symbol.getLatLng().getLongitude());
+                               latLen=selectedLat.length();
+                               lngLen=selectedLng.length();
+
+                            if(latLen<9){
+                                selectedLat=selectedLng+0;
+
+                            }
+                            if(lngLen<9){
+
+                                selectedLng=selectedLng+0;
+                            }
+
+                               for (EventDetail val:eventDetail
+                                    ) {
+                                   String lat=val.getLatitude();
+                                   String lng=val.getLongitude();
+                                   if(selectedLat.equals(lat) && selectedLng.equals(lng)){
+
+                                       break;
+                                   }
+                               }
+
+                           }
+                       });
+                        RecyclerView recyclerView=getView().findViewById(R.id.event_fragment_recycler_view);
+                        String parentClass="eventFragment";
+                        Context context=getActivity().getApplicationContext();
+                        adapter=new MapEventTypeAdapter(eventType,eventTypeImage,context);
+                        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
+                        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        recyclerView.setItemAnimator(new DefaultItemAnimator());
+                        recyclerView.setAdapter(adapter);
+                        adapter.setOnClickListener(new MapEventTypeAdapter.OnClickListener() {
+                            @Override
+                            public void OnClick(int position, ArrayList<String> eventDetail) {
+                      symbolOptions.clear();
+                      symbolManager.deleteAll();
+                      //symbolManager.create(symbolOptions);
+////                        Toast.makeText(context, "a"+position, Toast.LENGTH_SHORT).show();
+//                        Log.d("omen",symbolList.get(0)+" a");
+//                       // cardView.setVisibility(View.VISIBLE);
+
+                            }
+                        });
+                    //    Log.d("nishan",eventType.get(0));
 //                        SymbolManager symbolManager=new SymbolManager(mapView,mapboxMap,style);
 //                        symbolManager.setIconAllowOverlap(true);
 //                        symbolManager.setIconIgnorePlacement(true);
@@ -306,7 +473,10 @@ public class EventFragment extends Fragment implements  PermissionsListener,OnMa
 //
 //                           MarkerView markerView=new MarkerView(new LatLng(27.699933,85.312736),);
                     }
+
                 });
+//
+
                 //Toast.makeText(getActivity(), "here", Toast.LENGTH_SHORT).show();
             }
 
@@ -316,22 +486,9 @@ public class EventFragment extends Fragment implements  PermissionsListener,OnMa
             }
         });
 
-//        for (int i=0;i<lat.size();i++){
-//            symbolLayerIconFeatureList.add(Feature.fromGeometry(
-//                    Point.fromLngLat(lat.get(i),lng.get(i))
-//            ));
-
-       // }
-
-
-//        symbolLayerIconFeatureList.add(Feature.fromGeometry(
-//                Point.fromLngLat(-54.14164, -33.981818)));
-//        symbolLayerIconFeatureList.add(Feature.fromGeometry(
-//                Point.fromLngLat(-56.990533, -30.583266)));
-
-
-
+        
     }
+
 
     @Override
     public void onResume() {
@@ -374,6 +531,13 @@ public class EventFragment extends Fragment implements  PermissionsListener,OnMa
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
+    }
+
+
+    @Override
+    public boolean onMapClick(@NonNull LatLng point) {
+        cardView.setVisibility(View.GONE);
+        return false;
     }
 }
 

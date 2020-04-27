@@ -26,6 +26,14 @@ public class EventDetail implements Serializable {
     @Expose
     private String startTime;
 
+    @SerializedName("tag_count")
+    @Expose
+    private int tagCount;
+
+    public int getTagCount() {
+        return tagCount;
+    }
+
     @SerializedName("event_type_image")
     @Expose
     private String eventTypeImage;

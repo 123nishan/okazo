@@ -97,6 +97,7 @@ public class HomeFragment extends Fragment {
         MainActivity mainActivity= (MainActivity) this.getActivity();
         ActionBar bar=mainActivity.getSupportActionBar();
         bar.hide();
+       // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
             HomeFragment.ViewPagerAdapter viewPagerAdapter=new HomeFragment.ViewPagerAdapter(getChildFragmentManager());

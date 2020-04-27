@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
+import com.example.okazo.EventActivity;
 import com.example.okazo.Model.Note;
 import com.example.okazo.R;
 
@@ -46,7 +47,7 @@ public class ProfileFragment extends Fragment {
 
         View v=inflater.inflate(R.layout.fragment_profile, container, false);
         editTextLatitude=v.findViewById(R.id.latitude);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+      // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         editTextLongitude=v.findViewById(R.id.longitude);
         editTextName=v.findViewById(R.id.name);
         submit=v.findViewById(R.id.form_submit);
@@ -55,8 +56,9 @@ public class ProfileFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent=new Intent(getActivity().getApplicationContext(), MapBox.class);
-//                startActivity(intent);
+
+                Intent intent=new Intent(getActivity().getApplicationContext(), EventActivity.class);
+                startActivity(intent);
 //                String latitude=editTextLatitude.getText().toString();
 //                String longitude=editTextLongitude.getText().toString();
 //                String name=editTextName.getText().toString().trim();
