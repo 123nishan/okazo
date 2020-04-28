@@ -41,4 +41,7 @@ public class constants {
     public static final String KEY_TICKET_TYPE_NUMBER_LIST="ticketTypeNumberList";
     //public static final String KYE_EVENT_SELECTED_COUNTRY=""
 
+    public static final String KEY_USER_ID="userId";
+    public static final String KEY_EVENT_DETAIL="eventDetail";
+
 }

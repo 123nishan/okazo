@@ -3,6 +3,8 @@ package com.example.okazo.Fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -36,7 +38,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
+import com.example.okazo.EventActivity;
 import com.example.okazo.EventDetailPreviewActivity;
+import com.example.okazo.LoginActivity;
 import com.example.okazo.MainActivity;
 import com.example.okazo.Map;
 import com.example.okazo.Model.EventDetail;
@@ -81,6 +85,7 @@ import com.mapbox.mapboxsdk.plugins.markerview.MarkerViewManager;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -93,7 +98,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
+import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
+import static com.example.okazo.util.constants.KEY_USER_ID;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -121,7 +130,7 @@ public class EventFragment extends Fragment implements  PermissionsListener,OnMa
     public ArrayList<Double> lng=new ArrayList<>();
     private MapView mapView;
     private CardView cardView;
-    private  TextView textViewTitle,textViewStartDate,textViewStartTime,textViewLocation,textViewMore;
+    private  TextView textViewTitle,textViewStartDate,textViewStartTime,textViewLocation,textViewMore,textViewHost;
     private CircleImageView imageView;
 
     private static final String SOURCE_ID = "SOURCE_ID";
@@ -137,6 +146,9 @@ private  List<Symbol> symbolList=new ArrayList<>();
     ArrayList<String>eventType=new ArrayList<>();
     ArrayList<String>eventTypeImage=new ArrayList<>();
     private String selectedEventId;
+    private String userId;
+    private EventDetail eventDetailIntent;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -147,15 +159,27 @@ private  List<Symbol> symbolList=new ArrayList<>();
         apiInterface=ApiClient.getApiClient().create(ApiInterface.class);
         cardView=v.findViewById(R.id.event_fragment_card);
         cardView.setVisibility(View.GONE);
+
         textViewTitle=v.findViewById(R.id.event_fragment_card_title);
         textViewStartDate=v.findViewById(R.id.event_fragment_card_date);
         textViewStartTime=v.findViewById(R.id.event_fragment_card_time);
         imageView=v.findViewById(R.id.event_fragment_card_image_view);
         textViewLocation=v.findViewById(R.id.event_fragment_card_location);
         textViewMore=v.findViewById(R.id.event_fragment_card_more);
+        textViewHost=v.findViewById(R.id.event_fragment_card_host);
 
+        SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
+        if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
+            userId=sharedPreferences.getString("user_id","");
 
-
+        }else {
+            DynamicToast.makeError(getActivity().getApplicationContext(),"Something went wrong").show();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("user_email","");
+            editor.putString("user_id","");
+            Intent intent=new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+        }
         hashMap.put("food","fast-food-15");
         hashMap.put("music","music-15");
         hashMap.put("dance","pitch-15");
@@ -282,7 +306,7 @@ private  List<Symbol> symbolList=new ArrayList<>();
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
      this.mapboxMap = mapboxMap;
 
-        apiInterface.getEventLocation().enqueue(new Callback<ArrayList<EventDetail>>() {
+        apiInterface.getEventLocation(userId).enqueue(new Callback<ArrayList<EventDetail>>() {
             @Override
             public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
                 ArrayList<EventDetail> eventDetail=response.body();
@@ -400,10 +424,13 @@ private  List<Symbol> symbolList=new ArrayList<>();
                                cardView.setOnClickListener(new View.OnClickListener() {
                                    @Override
                                    public void onClick(View view) {
+                                        Intent intent=new Intent(getActivity().getApplicationContext(), EventActivity.class);
+                                        intent.putExtra(KEY_EVENT_DETAIL,eventDetailIntent);
+                                        intent.putExtra(KEY_USER_ID,userId);
+                                        startActivity(intent);
+                                       //Toast.makeText(getActivity(), "check"+eventDetailIntent.getTitle(), Toast.LENGTH_SHORT).show();
 
-
-
-                                       Toast.makeText(getActivity(), "check" + eventDetail.get(counter).getTagCount()+ "/"+symbolList.size(), Toast.LENGTH_SHORT).show();
+                                      // Toast.makeText(getActivity(), "check" + eventDetail.get(counter).getTagCount()+ "/"+symbolList.size(), Toast.LENGTH_SHORT).show();
                                    }
                                });
                            }
@@ -432,6 +459,20 @@ private  List<Symbol> symbolList=new ArrayList<>();
                                    String lat=val.getLatitude();
                                    String lng=val.getLongitude();
                                    if(selectedLat.equals(lat) && selectedLng.equals(lng)){
+                                       eventDetailIntent=val;
+                                            cardView.setVisibility(View.VISIBLE);
+                                            textViewTitle.setText(val.getTitle());
+                                            textViewStartDate.setText(val.getStartDate());
+                                            textViewStartTime.setText(val.getStartTime());
+                                            textViewLocation.setText(val.getPlace());
+                                            textViewHost.setText(val.getHostName());
+                                       String imagePath=KEY_IMAGE_ADDRESS+(val.getImage());
+                                       Glide.with(getActivity().getApplicationContext())
+                                               .load(Uri.parse(imagePath))
+                                               .placeholder(R.drawable.ic_place_holder_background)
+                                               //.error(R.drawable.ic_image_not_found_background)
+                                               .centerCrop()
+                                               .into(imageView);
 
                                        break;
                                    }
@@ -451,8 +492,9 @@ private  List<Symbol> symbolList=new ArrayList<>();
                         adapter.setOnClickListener(new MapEventTypeAdapter.OnClickListener() {
                             @Override
                             public void OnClick(int position, ArrayList<String> eventDetail) {
-                      symbolOptions.clear();
-                      symbolManager.deleteAll();
+                                    cardView.setVisibility(View.GONE);
+                                  symbolOptions.clear();
+                                  symbolManager.deleteAll();
                       //symbolManager.create(symbolOptions);
 ////                        Toast.makeText(context, "a"+position, Toast.LENGTH_SHORT).show();
 //                        Log.d("omen",symbolList.get(0)+" a");

@@ -127,6 +127,12 @@
 
             </LinearLayout>
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Host"
+                android:id="@+id/event_fragment_card_host"
+                android:textSize="15dp"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="SHOW MORE"

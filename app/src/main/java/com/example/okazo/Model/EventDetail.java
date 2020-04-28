@@ -87,6 +87,30 @@ public class EventDetail implements Serializable {
     @Expose
     private String tags;
 
+    @SerializedName("host_name")
+    @Expose
+    private String hostName;
+
+    @SerializedName("response")
+    @Expose
+    private String response;
+
+    @SerializedName("following")
+    @Expose
+    private String following;
+
+    public String getFollowing() {
+        return following;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
     public String getId() {
         return id;
     }

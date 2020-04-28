@@ -52,8 +52,11 @@ public interface ApiInterface {
     @GET("geofence/activate_geofence.php")
     Call<ArrayList<Geofence>> getGeofenceStatus();
 
-    @GET("map/event_location.php")
-    Call<ArrayList<EventDetail>> getEventLocation();
+    @FormUrlEncoded
+    @POST("map/event_location.php")
+    Call<ArrayList<EventDetail>> getEventLocation(
+            @Field("user_id") String userId
+    );
 
     @GET("map/event_type.php")
     Call<ArrayList<EventDetail>> getMapEventType();
@@ -104,6 +107,23 @@ Call<APIResponse> getUserName(
 Call<APIResponse> getFeed(
         @Field("user_id") String userId
 );
+
+@FormUrlEncoded
+@POST("user/event_response.php")
+Call<APIResponse> setEventResponse(
+        @Field("user_id") String userId,
+        @Field("event_id") String eventId,
+        @Field("response") String response
+);
+
+
+    @FormUrlEncoded
+    @POST("user/event_info.php")
+    Call<APIResponse> getFollowing(
+            @Field("user_id") String userId,
+            @Field("event_id") String eventId
+    );
+
 @FormUrlEncoded
 @POST("user/like.php")
 Call<APIResponse> setLike(

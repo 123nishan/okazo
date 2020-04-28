@@ -1,5 +1,6 @@
 package com.example.okazo.Api;
 
+
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Posts;
 import com.example.okazo.Model.User;
@@ -41,6 +42,8 @@ public class APIResponse {
     @SerializedName("error_msg")
     @Expose
     private String errorMsg;
+
+
 
     public String getMod_Id() {
         return mod_Id;
