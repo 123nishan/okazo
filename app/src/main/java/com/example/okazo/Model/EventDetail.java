@@ -10,6 +10,14 @@ public class EventDetail implements Serializable {
     @Expose
     private String eventType;
 
+    @SerializedName("total_event")
+    @Expose
+    private String totalEvent;
+
+    public String getTotalEvent() {
+        return totalEvent;
+    }
+
     @SerializedName("id")
     @Expose
     private String id;

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,11 +24,14 @@ import com.bumptech.glide.Glide;
 import com.example.okazo.Api.APIResponse;
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
+import com.example.okazo.Model.Comment;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Posts;
 import com.example.okazo.util.FeedAdapter;
+import com.example.okazo.util.PostCommentAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.text.ParseException;
@@ -61,13 +65,15 @@ public class EventActivity extends AppCompatActivity {
     private String following;
     private String eventResponse;
     private String ticketStatus;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewFeed;
     private FeedAdapter adapter;
+    private int feedPosition;
 
     private ArrayList<String>
             arrayListDetail=new ArrayList<>(),arrayListCreatedDate=new ArrayList<>(),arrayListImage=new ArrayList<>(),
             arrayListPostId=new ArrayList<>(),arrayListLikes=new ArrayList<>(),arrayListUserLike=new ArrayList<>(),arrayListComment=new ArrayList<>(),
-            arrayListEventTitle=new ArrayList<>(),arrayListProfileImage=new ArrayList<>();
+            arrayListEventTitle=new ArrayList<>(),arrayListProfileImage=new ArrayList<>(),arrayListCommentDetail=new ArrayList<>(),arrayListCommnetUserImage=new ArrayList<>(),
+            arrayListCommentUserName=new ArrayList<>(),arrayListCommentCreatedDate=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +93,7 @@ public class EventActivity extends AppCompatActivity {
         textViewFirstCard=findViewById(R.id.event_activity_first_card_text);
         textViewTitle=findViewById(R.id.event_activity_title);
         cardViewFirst=findViewById(R.id.event_activity_first_card);
-        recyclerView=findViewById(R.id.event_activity_recycler_view);
+        recyclerViewFeed=findViewById(R.id.event_activity_recycler_view);
         textViewErrorRecyclerView=findViewById(R.id.event_activity_error_recycler_view);
 
         textViewLocation=findViewById(R.id.event_activity_location);
@@ -110,7 +116,7 @@ public class EventActivity extends AppCompatActivity {
             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                 APIResponse apiResponse=response.body();
                 if(!apiResponse.getError()){
-                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerViewFeed.setVisibility(View.VISIBLE);
                     textViewErrorRecyclerView.setVisibility(View.GONE);
                     ArrayList<Posts> postDetail=apiResponse.getPostArray();
                     for (Posts value:postDetail
@@ -132,8 +138,121 @@ public class EventActivity extends AppCompatActivity {
                             EventActivity.this,arrayListPostId,arrayListLikes,arrayListUserLike,null,arrayListComment);
                     LinearLayoutManager linearLayoutManager=new LinearLayoutManager(EventActivity.this);
                     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    recyclerView.setAdapter(adapter);
+                    recyclerViewFeed.setLayoutManager(linearLayoutManager);
+                    recyclerViewFeed.setAdapter(adapter);
+
+                    adapter.setOnCommentClickListener(new FeedAdapter.OnCommentClickListener() {
+                        @Override
+                        public void onCommentClick(int position) {
+                            String postId=arrayListPostId.get(position);
+                            feedPosition=position;
+                            //  Toast.makeText(getActivity().getApplicationContext(), "a"+postId, Toast.LENGTH_SHORT).show();
+                            View dialog=getLayoutInflater().inflate(R.layout.bottom_sheet,null);
+                            BottomSheetDialog sheetDialog=new BottomSheetDialog(EventActivity.this );
+                            sheetDialog.setContentView(dialog);
+                            sheetDialog.show();
+                            if(arrayListCommentDetail.size()>0){
+                                arrayListCommentDetail.clear();
+                                arrayListCommentCreatedDate.clear();
+                                arrayListCommentUserName.clear();
+                                arrayListCommnetUserImage.clear();
+                            }
+                            apiInterface.allComment(postId).enqueue(new Callback<APIResponse>() {
+                                @Override
+                                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                    APIResponse obj=response.body();
+                                    RecyclerView recyclerView=dialog.findViewById(R.id.bottom_sheet_comment_recyclerview);
+                                    TextView textViewError=dialog.findViewById(R.id.bottom_sheet_recyclerview_error);
+                                    if(!obj.getError()){
+                                        PostCommentAdapter commentAdapter;
+                                        ArrayList<Comment> comment=obj.getCommentArray();
+                                        String commentCount=comment.get(0).getCount();
+                                        EditText editTextComment=dialog.findViewById(R.id.bottom_sheet_write_comment);
+                                        ImageView imageView=dialog.findViewById(R.id.bottom_sheet_comment_button);
+                                        imageView.setOnClickListener(new View.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(View view) {
+                                                if(editTextComment.getText().toString()!=null && !editTextComment.getText().toString().equals("")){
+                                                    String writeComment=editTextComment.getText().toString();
+                                                    apiInterface.addComment(userId,postId,writeComment).enqueue(new Callback<APIResponse>() {
+                                                        @Override
+                                                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                                            APIResponse object=response.body();
+                                                            if(!object.getError()){
+                                                                ((TextView)recyclerViewFeed.findViewHolderForAdapterPosition(feedPosition).itemView.findViewById(R.id.card_feed_total_comment)).setText(object.getTotalComment()+" Comments");
+                                                                DynamicToast.makeSuccess(EventActivity.this,"Added Successfully").show();
+                                                            }else {
+                                                                DynamicToast.makeError(EventActivity.this,object.getErrorMsg()).show();
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                                        }
+                                                    });
+                                                }else {
+                                                    DynamicToast.makeError(EventActivity.this,"Please write comment").show();
+                                                }
+                                            }
+                                        });
+
+
+                                        if(commentCount.equals("0")){
+                                            recyclerView.setVisibility(View.GONE);
+                                            textViewError.setVisibility(View.VISIBLE);
+
+                                        }else {
+                                            textViewError.setVisibility(View.GONE);
+
+                                            for (Comment value : comment
+                                            ) {
+                                                arrayListCommentDetail.add(value.getComment());
+                                                arrayListCommentCreatedDate.add(value.getCreatedDate());
+                                                arrayListCommentUserName.add(value.getUser_name());
+                                                arrayListCommnetUserImage.add(value.getUserImage());
+
+                                            }
+                                            recyclerView.setVisibility(View.VISIBLE);
+                                            commentAdapter=new PostCommentAdapter(arrayListCommentDetail,arrayListCommentUserName,arrayListCommnetUserImage,arrayListCommentCreatedDate,dialog.getContext());
+                                            LinearLayoutManager linearLayoutManager1=new LinearLayoutManager(dialog.getContext());
+                                            linearLayoutManager1.setOrientation(LinearLayoutManager.VERTICAL);
+
+                                            recyclerView.setLayoutManager(linearLayoutManager1);
+
+                                            recyclerView.setAdapter(commentAdapter);
+
+
+                                        }
+
+                                    }else {
+                                        DynamicToast.makeError(EventActivity.this,obj.getErrorMsg()).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<APIResponse> call, Throwable t) {
+                                    DynamicToast.makeError(EventActivity.this,t.getLocalizedMessage()).show();
+                                }
+                            });
+
+
+
+
+//                               LinearLayout linearLayout=getView().findViewById(R.id.bottom_sheet);
+//                               BottomSheetBehavior sheetBehavior=BottomSheetBehavior.from(linearLayout);
+//                           if(sheetBehavior.getState()!=BottomSheetBehavior.STATE_EXPANDED){
+//                               sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//
+//                           }else {
+//                               sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//                           }
+//                               BottomSheetFragment bottomSheetFragment=new BottomSheetFragment();
+//                               bottomSheetFragment.show(getFragmentManager(), bottomSheetFragment.getTag());
+                        }
+                    });
+
 
                     adapter.setOnLikeClickListener(new FeedAdapter.OnLikeClickListener() {
                         @Override
@@ -149,16 +268,16 @@ public class EventActivity extends AppCompatActivity {
 
                                         if(apiResponse1.getErrorMsg().equals("LIKED")){
 
-                                            ImageView imageView=((ImageView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black));
+                                            ImageView imageView=((ImageView)recyclerViewFeed.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black));
 
                                             animation(EventActivity.this,imageView,R.drawable.ic_like_red);
-                                            ((TextView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_total_like)).setText(apiResponse1.getTotalLike());
+                                            ((TextView)recyclerViewFeed.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_total_like)).setText(apiResponse1.getTotalLike());
 
                                         }else {
 
-                                            ImageView imageView=((ImageView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black));
+                                            ImageView imageView=((ImageView)recyclerViewFeed.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black));
                                             animation(EventActivity.this,imageView,R.drawable.ic_like_black);
-                                            ((TextView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_total_like)).setText(apiResponse1.getTotalLike());
+                                            ((TextView)recyclerViewFeed.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_total_like)).setText(apiResponse1.getTotalLike());
                                             // ((ImageView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black)).setImageResource(R.drawable.ic_like_black);
                                         }
 

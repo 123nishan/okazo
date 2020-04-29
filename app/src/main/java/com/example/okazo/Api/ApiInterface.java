@@ -55,7 +55,15 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("map/event_location.php")
     Call<ArrayList<EventDetail>> getEventLocation(
-            @Field("user_id") String userId
+            @Field("user_id") String userId,
+            @Field("type") String type
+    );
+
+    @FormUrlEncoded
+    @POST("map/check_event_type.php")
+    Call<APIResponse> checkEventType(
+
+            @Field("type") String type
     );
 
     @GET("map/event_type.php")
