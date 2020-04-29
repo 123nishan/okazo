@@ -76,6 +76,25 @@ public interface ApiInterface {
 
     );
 
+    @FormUrlEncoded
+    @POST("eventDetail/all_comment.php")
+    Call<APIResponse> allComment(
+
+            @Field("post_id") String postId
+
+
+    );
+
+    @FormUrlEncoded
+    @POST("user/comment.php")
+    Call<APIResponse> addComment(
+            @Field("user_id") String userId,
+            @Field("post_id") String postId,
+            @Field("comment") String comment
+
+    );
+
+
 
     @FormUrlEncoded
     @POST("eventDetail/event_post.php")

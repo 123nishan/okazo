@@ -1,6 +1,7 @@
 package com.example.okazo.Api;
 
 
+import com.example.okazo.Model.Comment;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Posts;
 import com.example.okazo.Model.User;
@@ -29,6 +30,19 @@ public class APIResponse {
     @Expose
     private ArrayList<Posts> postArray;
 
+    @SerializedName("comment")
+    @Expose
+    private Comment comment;
+
+
+    @SerializedName("commentArray")
+    @Expose
+    private ArrayList<Comment> commentArray;
+
+    public ArrayList<Comment> getCommentArray() {
+        return commentArray;
+    }
+
     public EventDetail getEvent() {
         return event;
     }
@@ -39,10 +53,21 @@ public class APIResponse {
     @Expose
     private EventDetail event;
 
+    public Comment getComment() {
+        return comment;
+    }
+
+    public String getTotalComment() {
+        return totalComment;
+    }
+
     @SerializedName("error_msg")
     @Expose
     private String errorMsg;
 
+    @SerializedName("total_comment")
+    @Expose
+    private String totalComment;
 
 
     public String getMod_Id() {

@@ -30,6 +30,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 ArrayList<String> eventTitle,eventProfile,postDetail,postCreatedDate,postId,postLikes,userPostLike,eventId,postComment;
 Context context;
 public FeedAdapter.OnLikeClickListener onLikeClickListener;
+private FeedAdapter.OnCommentClickListener onCommentClickListener;
 public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
                    ArrayList<String> postDetail, ArrayList<String> postCreatedDate, Context context,
                    ArrayList<String> postId,ArrayList<String> postLikes,ArrayList<String> userPostLike,ArrayList<String> eventId,ArrayList<String> postComment){
@@ -94,14 +95,22 @@ public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
     public interface OnLikeClickListener{
             void OnLikeClick(int position);
     }
+
     public void setOnLikeClickListener(OnLikeClickListener onLikeClickListener){
     this.onLikeClickListener=onLikeClickListener;
+    }
+
+    public interface OnCommentClickListener{
+         void onCommentClick(int position);
+    }
+    public void setOnCommentClickListener(OnCommentClickListener onCommentClickListener){
+    this.onCommentClickListener=onCommentClickListener;
     }
     class MyViewHolder extends RecyclerView.ViewHolder{
         TextView textViewTitle,textViewDate,textViewDescription,textViewTotalLike,textViewTotalComment;
         CircleImageView imageViewProfile;
         ImageView imageViewLike;
-        LinearLayout linearLayout;
+        LinearLayout linearLayout,linearLayoutCommnet;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewProfile=itemView.findViewById(R.id.card_feed_profile_image);
@@ -112,6 +121,16 @@ public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
             textViewTitle=itemView.findViewById(R.id.card_feed_title);
             imageViewLike=itemView.findViewById(R.id.card_feed_post_like_black);
             linearLayout=itemView.findViewById(R.id.card_feed_post_like_layout);
+            linearLayoutCommnet=itemView.findViewById(R.id.card_feed_post_comment_layout);
+            linearLayoutCommnet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=getAdapterPosition();
+                    if(position!=RecyclerView.NO_POSITION && onCommentClickListener!=null){
+                        onCommentClickListener.onCommentClick(position);
+                    }
+                }
+            });
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
