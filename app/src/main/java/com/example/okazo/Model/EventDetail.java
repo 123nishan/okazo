@@ -14,6 +14,22 @@ public class EventDetail implements Serializable {
     @Expose
     private String id;
 
+    @SerializedName("going_count")
+    @Expose
+    private String goingCount;
+
+    @SerializedName("interested_count")
+    @Expose
+    private String interestedCount;
+
+    public String getGoingCount() {
+        return goingCount;
+    }
+
+    public String getInterestedCount() {
+        return interestedCount;
+    }
+
     @SerializedName("title")
     @Expose
     private String title;
@@ -25,6 +41,13 @@ public class EventDetail implements Serializable {
     @SerializedName("start_time")
     @Expose
     private String startTime;
+    @SerializedName("host_phone")
+    @Expose
+    private String hostPhone;
+
+    public String getHostPhone() {
+        return hostPhone;
+    }
 
     @SerializedName("tag_count")
     @Expose

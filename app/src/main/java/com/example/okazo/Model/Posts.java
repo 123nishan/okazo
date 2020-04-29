@@ -25,6 +25,14 @@ public class Posts {
     @Expose
     private String detail;
 
+    @SerializedName("comment")
+    @Expose
+    private String comment;
+
+    public String getComment() {
+        return comment;
+    }
+
     @SerializedName("userLike")
     @Expose
     private String userLike;

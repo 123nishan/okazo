@@ -68,6 +68,23 @@ public interface ApiInterface {
             @Field("longitude") Double longitude,
             @Field("name") String name
     );
+
+    @FormUrlEncoded
+    @POST("eventDetail/event_response_count.php")
+    Call<APIResponse> getResponseCount(
+            @Field("event_id") String eventId
+
+    );
+
+
+    @FormUrlEncoded
+    @POST("eventDetail/event_post.php")
+    Call<APIResponse> getEventPost(
+            @Field("event_id") String eventId,
+            @Field("user_id") String userId
+
+    );
+
     @FormUrlEncoded
     @POST("otp.php")
     Call<APIResponse> otp(

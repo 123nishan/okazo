@@ -52,8 +52,9 @@ private RecyclerView recyclerView;
         private String userId;
         private TextView textViewTest;
         private ArrayList<String> arrayListEventTitle=new ArrayList<>(),arrayListProfileImage=new ArrayList<>(),
-                arrayListDetail=new ArrayList<>(),arrayListCreatedDate=new ArrayList<>(),
-                arrayListPostId=new ArrayList<>(),arrayListLikes=new ArrayList<>(),arrayListUserLike=new ArrayList<>(),arrayListEventId=new ArrayList<>();
+                arrayListDetail=new ArrayList<>(),arrayListCreatedDate=new ArrayList<>(),arrayListImage=new ArrayList<>(),
+                arrayListPostId=new ArrayList<>(),arrayListLikes=new ArrayList<>(),arrayListUserLike=new ArrayList<>(),arrayListEventId=new ArrayList<>()
+                ,arrayListComment=new ArrayList<>();
         private FeedAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,11 +89,13 @@ private RecyclerView recyclerView;
                             arrayListLikes.add(value.getLikes());
                             arrayListUserLike.add(value.getUserLike());
                             arrayListEventId.add(value.getId());
+                            arrayListComment.add(value.getComment());
+                            //TODO left for image on post
 
                        }
                      //  Log.d("title",arrayListEventTitle.size()+"=="+apiResponse.getEventArray().size());
                        adapter=new FeedAdapter(arrayListEventTitle,arrayListProfileImage,arrayListDetail,arrayListCreatedDate,
-                               getActivity().getApplicationContext(),arrayListPostId,arrayListLikes,arrayListUserLike,arrayListEventId);
+                               getActivity().getApplicationContext(),arrayListPostId,arrayListLikes,arrayListUserLike,arrayListEventId,arrayListComment);
                        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity().getApplicationContext());
                        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                        recyclerView.setLayoutManager(linearLayoutManager);

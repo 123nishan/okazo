@@ -75,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:text="TITLE"
                 android:textSize="22dp"
+                android:id="@+id/event_activity_title"
                 android:layout_below="@+id/event_activity_countdown"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"/>
@@ -275,28 +276,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:textSize="15dp"
+                            android:id="@+id/event_activity_location"
                             android:layout_toRightOf="@+id/location"
                             android:text="Event Location"/>
 
                     </RelativeLayout>
-        <RelativeLayout
-                android:layout_marginTop="4dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_people_group"
-                android:id="@+id/people_group"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:textSize="15dp"
-                android:layout_toRightOf="@+id/people_group"
-                android:text="USER Details"/>
 
-        </RelativeLayout>
 
 
                     <RelativeLayout
@@ -313,6 +298,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:textSize="15dp"
+                            android:id="@+id/event_activity_host"
                             android:layout_toRightOf="@+id/people"
                             android:text="Hosted by " />
 
@@ -333,12 +319,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:textSize="15dp"
+                            android:id="@+id/event_activity_date"
                             android:layout_toRightOf="@+id/start_date"
                             android:text="Event Date " />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/start_date"
+                            android:id="@+id/event_activity_time"
                             android:layout_marginLeft="32dp"
                             android:text="Time"
                             android:textSize="15dp"/>
@@ -359,8 +347,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:textSize="15dp"
+                            android:id="@+id/event_activity_phone"
                             android:layout_toRightOf="@+id/phone"
-                            android:text="Call On " />
+                            android:text="Call On" />
 
 
                     </RelativeLayout>
@@ -379,11 +368,68 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
                             android:textSize="15dp"
+                            android:id="@+id/event_activity_ticket"
                             android:layout_toRightOf="@+id/ticket"
                             android:text=" Tickets " />
 
 
                     </RelativeLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="  Responses"
+                        android:textStyle="bold"
+                        android:textSize="18dp"
+                        android:drawableLeft="@drawable/ic_people_group"/>
+
+                    <LinearLayout
+                        android:layout_marginTop="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="2"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:textStyle="bold"
+                                android:text="Going"
+                                android:gravity="center"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                            android:id="@+id/event_activity_going"
+                                android:text="NUMBER GOING"
+                                android:gravity="center"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:textStyle="bold"
+                                android:text="Interested"
+                                android:gravity="center"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                               android:id="@+id/event_activity_interested"
+                                android:text="NUMBER Interested"
+                                android:gravity="center"/>
+                        </LinearLayout>
+                    </LinearLayout>
                     <TextView
                         android:layout_marginTop="4dp"
                         android:layout_width="wrap_content"
@@ -396,6 +442,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="15dp"
+                        android:id="@+id/event_activity_detail"
                         android:text="DETAIL HERE"/>
 
                 </LinearLayout>
@@ -407,9 +454,19 @@
                 app:cardCornerRadius="3dp"
 
                 android:elevation="3dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NO POST YET"
+                    android:id="@+id/event_activity_error_recycler_view"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/event_activity_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_marginLeft="3dp"
+                    android:visibility="gone"
                     android:layout_marginRight="3dp"
                     android:layout_height="match_parent"/>
             </androidx.cardview.widget.CardView>

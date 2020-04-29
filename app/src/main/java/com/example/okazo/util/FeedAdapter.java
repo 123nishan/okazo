@@ -27,12 +27,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
-ArrayList<String> eventTitle,eventProfile,postDetail,postCreatedDate,postId,postLikes,userPostLike,eventId;
+ArrayList<String> eventTitle,eventProfile,postDetail,postCreatedDate,postId,postLikes,userPostLike,eventId,postComment;
 Context context;
 public FeedAdapter.OnLikeClickListener onLikeClickListener;
 public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
                    ArrayList<String> postDetail, ArrayList<String> postCreatedDate, Context context,
-                   ArrayList<String> postId,ArrayList<String> postLikes,ArrayList<String> userPostLike,ArrayList<String> eventId){
+                   ArrayList<String> postId,ArrayList<String> postLikes,ArrayList<String> userPostLike,ArrayList<String> eventId,ArrayList<String> postComment){
     this.eventTitle=eventTitle;
     this.eventProfile=eventProfile;
     this.postCreatedDate=postCreatedDate;
@@ -42,6 +42,7 @@ public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
     this.postLikes=postLikes;
     this.userPostLike=userPostLike;
     this.eventId=eventId;
+    this.postComment=postComment;
 }
     @NonNull
     @Override
@@ -55,7 +56,8 @@ public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.textViewTitle.setText(eventTitle.get(position));
         holder.textViewDescription.setText(postDetail.get(position));
-       holder.textViewTotalLike.setText(postLikes.get(position)+" Like");
+       holder.textViewTotalLike.setText(postLikes.get(position)+" Likes");
+       holder.textViewTotalComment.setText(postComment.get(position)+" Comments");
         if(userPostLike.get(position).equals("1")){
             holder.imageViewLike.setImageResource(R.drawable.ic_like_red);
         }else {
