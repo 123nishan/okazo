@@ -26,6 +26,9 @@ public class EventDetail implements Serializable {
     @Expose
     private String goingCount;
 
+
+
+
     @SerializedName("interested_count")
     @Expose
     private String interestedCount;

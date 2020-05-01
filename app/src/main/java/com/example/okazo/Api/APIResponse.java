@@ -3,6 +3,7 @@ package com.example.okazo.Api;
 
 import com.example.okazo.Model.Comment;
 import com.example.okazo.Model.EventDetail;
+import com.example.okazo.Model.Moderator;
 import com.example.okazo.Model.Posts;
 import com.example.okazo.Model.User;
 import com.google.gson.annotations.Expose;
@@ -21,6 +22,14 @@ public class APIResponse {
     @SerializedName("user")
     @Expose
     private User user;
+
+    @SerializedName("moderator")
+    @Expose
+    private Moderator moderator;
+
+    public Moderator getModerator() {
+        return moderator;
+    }
 
     public ArrayList<Posts> getPostArray() {
         return postArray;

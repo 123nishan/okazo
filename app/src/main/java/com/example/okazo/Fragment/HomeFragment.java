@@ -39,6 +39,7 @@ import com.example.okazo.LoginActivity;
 import com.example.okazo.MainActivity;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.R;
+import com.example.okazo.RegisterActivity;
 import com.example.okazo.TicketDetailActivity;
 import com.example.okazo.eventDetail;
 import com.example.okazo.util.constants;
@@ -105,6 +106,7 @@ public class HomeFragment extends Fragment {
             viewPagerAdapter.addFragment(new ProfileFragment(),"Events");
             viewPager.setAdapter(viewPagerAdapter);
             tabLayout.setupWithViewPager(viewPager);
+            tabLayout.setupWithViewPager(viewPager);
 
             userId=sharedPreferences.getString("user_id","");
 
@@ -120,9 +122,12 @@ public class HomeFragment extends Fragment {
                     }else {
                        DynamicToast.makeError(getActivity().getApplicationContext(),apiResponse.getErrorMsg()).show();
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("user_email","");
-                        editor.putString("user_id","");
-                        Intent intent=new Intent(getActivity().getApplicationContext(),LoginActivity.class);
+                        editor.remove("user_email");
+                        editor.remove("user_id");
+                        editor.commit();
+//                        editor.putString("user_email","");
+//                        editor.putString("user_id","");
+                        Intent intent=new Intent(getActivity().getApplicationContext(), LoginActivity.class);
                         startActivity(intent);
                     }
                 }
@@ -151,7 +156,7 @@ public class HomeFragment extends Fragment {
                         textViewFirst.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(getActivity().getApplicationContext(), "here "+apiResponse.getEvent().getLatitude(), Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getActivity().getApplicationContext(), "here "+apiResponse.getEvent().getLatitude(), Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -187,8 +192,11 @@ public class HomeFragment extends Fragment {
         }else {
             DynamicToast.makeError(getActivity().getApplicationContext(),"Something went wrong").show();
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("user_email","");
-            editor.putString("user_id","");
+//            editor.putString("user_email","");
+//            editor.putString("user_id","");
+            editor.remove("user_email");
+            editor.remove("user_id");
+            editor.commit();
             Intent intent=new Intent(getActivity().getApplicationContext(),LoginActivity.class);
             startActivity(intent);
         }
@@ -244,8 +252,8 @@ public class HomeFragment extends Fragment {
                 DynamicToast.makeWarning(getActivity(),"Logging Out").show();
                 SharedPreferences pref = getActivity().getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
-                editor.putString("user_email","");
-                editor.putString("user_id","");
+                editor.remove("user_email");
+                editor.remove("user_id");
                 editor.commit();
 
                 Intent intent=new Intent(getActivity(), LoginActivity.class);

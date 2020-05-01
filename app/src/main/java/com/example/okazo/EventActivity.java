@@ -1,5 +1,6 @@
 package com.example.okazo;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,18 +8,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.okazo.Api.APIResponse;
@@ -27,6 +41,7 @@ import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Model.Comment;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Posts;
+import com.example.okazo.util.ConfirmationDialog;
 import com.example.okazo.util.FeedAdapter;
 import com.example.okazo.util.PostCommentAdapter;
 import com.google.android.material.appbar.AppBarLayout;
@@ -45,18 +60,19 @@ import retrofit2.Response;
 
 import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
+import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
 import static com.example.okazo.util.constants.KEY_USER_ID;
 
-public class EventActivity extends AppCompatActivity {
+public class EventActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener,ConfirmationDialog.orderConfirmationListener {
 
     private CollapsingToolbarLayout collapsingToolbarLayout;
    private ImageView imageView,imageViewFirstCard;
    private TextView textViewFirstCard,textViewCountDown,textViewTitle, textViewGoing,
            textViewInterested,textViewLocation,textViewHost,textViewDate,textViewtime,textViewErrorRecyclerView,
-    textViewPhone,textViewTicket,textViewDetail;
+    textViewPhone,textViewTicket,textViewDetail,textViewEventClosed,textViewEventClosedAdmin;
     private  AppBarLayout appBarLayout;
     private  Button buttonFollow,buttonFollowing;
-    private CardView cardViewFirst,cardViewFirstInterested,cardViewSecondInterested,cardViewSecondTicket;
+    private CardView cardViewFirst,cardViewFirstInterested,cardViewSecondInterested,cardViewSecondTicket,cardViewMessage;
     private Boolean going,interested;
     private EventDetail eventDetail;
     private String userId;
@@ -68,13 +84,22 @@ public class EventActivity extends AppCompatActivity {
     private RecyclerView recyclerViewFeed;
     private FeedAdapter adapter;
     private int feedPosition;
-
+    private String eventStatus,path;
+    private Uri uriProfileImage;
+private LinearLayout linearLayout,linearLayoutResponseLayout;
+    private static final int CHOOSE_IMAGE = 505;
     private ArrayList<String>
             arrayListDetail=new ArrayList<>(),arrayListCreatedDate=new ArrayList<>(),arrayListImage=new ArrayList<>(),
             arrayListPostId=new ArrayList<>(),arrayListLikes=new ArrayList<>(),arrayListUserLike=new ArrayList<>(),arrayListComment=new ArrayList<>(),
             arrayListEventTitle=new ArrayList<>(),arrayListProfileImage=new ArrayList<>(),arrayListCommentDetail=new ArrayList<>(),arrayListCommnetUserImage=new ArrayList<>(),
             arrayListCommentUserName=new ArrayList<>(),arrayListCommentCreatedDate=new ArrayList<>();
-
+// for admin side and moderator
+    private String userRole;
+    private EditText editTextPostDetail;
+    private ImageView imageViewPost,imageViewMenu,imageViewBack;
+    private Button buttonPost;
+    private CardView cardViewPost;
+    private String moderatorId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +120,8 @@ public class EventActivity extends AppCompatActivity {
         cardViewFirst=findViewById(R.id.event_activity_first_card);
         recyclerViewFeed=findViewById(R.id.event_activity_recycler_view);
         textViewErrorRecyclerView=findViewById(R.id.event_activity_error_recycler_view);
-
+        linearLayout=findViewById(R.id.event_activity_about_layout);
+        textViewEventClosed=findViewById(R.id.event_activity_event_closed);
         textViewLocation=findViewById(R.id.event_activity_location);
         textViewHost=findViewById(R.id.event_activity_host);
         textViewDate=findViewById(R.id.event_activity_date);
@@ -105,10 +131,177 @@ public class EventActivity extends AppCompatActivity {
         textViewGoing=findViewById(R.id.event_activity_going);
         textViewInterested=findViewById(R.id.event_activity_interested);
         textViewDetail=findViewById(R.id.event_activity_detail);
-
+        cardViewMessage=findViewById(R.id.event_activity_third_card);
+        textViewEventClosedAdmin=findViewById(R.id.event_activity_event_closed_admin);
+        linearLayoutResponseLayout=findViewById(R.id.event_activity_response_button_layout);
+        imageViewMenu=findViewById(R.id.event_activity_menu_admin);
+        imageViewBack=findViewById(R.id.event_activity_back);
          eventDetail= (EventDetail) getIntent().getSerializableExtra(KEY_EVENT_DETAIL);
         userId=getIntent().getExtras().getString(KEY_USER_ID);
         eventId=eventDetail.getId();
+
+    //for admin side and moderator
+        cardViewPost=findViewById(R.id.event_activity_create_post_card);
+        editTextPostDetail=findViewById(R.id.event_activity_create_post_detail);
+        buttonPost=findViewById(R.id.event_activity_create_post_button);
+        imageViewPost=findViewById(R.id.event_activity_create_post_image);
+
+    imageViewBack.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            finish();
+        }
+    });
+
+
+        SharedPreferences sharedPreferences = EventActivity.this.getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
+        apiInterface.getModerator(userId,eventId).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse=response.body();
+                if(!apiResponse.getError()){
+                   String status=apiResponse.getModerator().getStatus();
+                   String role=apiResponse.getModerator().getRole();
+                   moderatorId=apiResponse.getModerator().getId();
+                   if(status.equals("Accepted")){
+                       buttonFollowing.setVisibility(View.GONE);
+                       buttonFollow.setVisibility(View.GONE);
+                      //userRole="Moderator";
+                      imageViewMenu.setVisibility(View.VISIBLE);
+                      imageViewMenu.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                          public void onClick(View view) {
+                              PopupMenu menu=new PopupMenu(EventActivity.this,view);
+                              MenuInflater inflater=menu.getMenuInflater();
+                              inflater.inflate(R.menu.event_setting,menu.getMenu());
+                              menu.setOnMenuItemClickListener(EventActivity.this::onMenuItemClick);
+                              menu.show();
+                          }
+                      });
+                       if(role.equals("Admin")){
+                           userRole="Admin";
+                            apiInterface.getEventStatus(eventId).enqueue(new Callback<APIResponse>() {
+                                @Override
+                                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                    APIResponse apiResponse=response.body();
+                                    if(!apiResponse.getError()){
+                                        String statusCheck=apiResponse.getEvent().getStatus();
+                                        if(statusCheck.equals("2")){
+                                            textViewEventClosedAdmin.setVisibility(View.VISIBLE);
+                                        }else if(statusCheck.equals("4")) {
+                                                linearLayout.setVisibility(View.GONE);
+                                                textViewEventClosed.setText("Your event was removed due to false information,please contact service");
+                                        }else {
+                                            //if admin and all status is fine
+                                            cardViewPost.setVisibility(View.VISIBLE);
+                                            buttonPost.setVisibility(View.GONE);
+                                           editTextPostDetail.addTextChangedListener(new TextWatcher() {
+                                               @Override
+                                               public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                                               }
+
+                                               @Override
+                                               public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                                    if(charSequence.length()>10){
+                                                        buttonPost.setVisibility(View.VISIBLE);
+                                                    }else {
+                                                        buttonPost.setVisibility(View.GONE);
+                                                    }
+                                               }
+
+                                               @Override
+                                               public void afterTextChanged(Editable editable) {
+
+                                               }
+                                           });
+                                           imageViewPost.setOnClickListener(new View.OnClickListener() {
+                                               @Override
+                                               public void onClick(View view) {
+                                                    showImageChooser();
+                                               }
+                                           });
+                                           buttonPost.setOnClickListener(new View.OnClickListener() {
+                                               @Override
+                                               public void onClick(View view) {
+                                                   String postDetail=editTextPostDetail.getText().toString();
+                                                   Log.d("postCheck",postDetail+"||||||"+path);
+                                               }
+                                           });
+                                            linearLayoutResponseLayout.setVisibility(View.GONE);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                }
+                            });
+                           Toast.makeText(EventActivity.this, "You are admin", Toast.LENGTH_SHORT).show();
+                       }
+                   }else {
+                       DynamicToast.makeSuccess(EventActivity.this,"YOu have mode request from this event").show();
+                   }
+                }else {
+                    String message=apiResponse.getErrorMsg();
+                    if(message.equals("banned")){
+                        DynamicToast.makeError(EventActivity.this,"Your account has been compromised").show();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.remove("user_email");
+                        editor.remove("user_id");
+                        editor.commit();
+                        Intent intent=new Intent(EventActivity.this,LoginActivity.class);
+
+                        startActivity(intent);
+                    }else if(message.equals("no moderator")){
+                        userRole="User";
+                        apiInterface.getEventStatus(eventId).enqueue(new Callback<APIResponse>() {
+                            @Override
+                            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                APIResponse apiResponse=response.body();
+                                if(!apiResponse.getError()){
+                                    eventStatus=apiResponse.getEvent().getStatus();
+                                    if(eventStatus.equals("2")){
+
+                                        linearLayout.setVisibility(View.GONE);
+                                        textViewEventClosed.setVisibility(View.VISIBLE);
+                                        buttonFollow.setClickable(false);
+                                        linearLayoutResponseLayout.setVisibility(View.GONE);
+//                                        cardViewFirst.setClickable(false);
+//                                        cardViewFirstInterested.setClickable(false);
+//                                        cardViewSecondInterested.setClickable(false);
+//                                        cardViewSecondTicket.setClickable(false);
+//                                        cardViewMessage.setClickable(false);
+
+                                    }else if(eventStatus.equals("4")){
+                                        DynamicToast.makeError(EventActivity.this,"This event has been removed").show();
+                                        finish();
+                                    }else {
+
+                                    }
+                                }else {
+                                    DynamicToast.makeError(EventActivity.this,"Problem loading event").show();
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                            }
+                        });
+                    }else {
+                        DynamicToast.makeError(EventActivity.this,message).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+                DynamicToast.makeError(EventActivity.this,t.getLocalizedMessage()).show();
+            }
+        });
 
         //post recyclerView
         apiInterface.getEventPost(eventId,userId).enqueue(new Callback<APIResponse>() {
@@ -116,6 +309,7 @@ public class EventActivity extends AppCompatActivity {
             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                 APIResponse apiResponse=response.body();
                 if(!apiResponse.getError()){
+
                     recyclerViewFeed.setVisibility(View.VISIBLE);
                     textViewErrorRecyclerView.setVisibility(View.GONE);
                     ArrayList<Posts> postDetail=apiResponse.getPostArray();
@@ -257,7 +451,7 @@ public class EventActivity extends AppCompatActivity {
                     adapter.setOnLikeClickListener(new FeedAdapter.OnLikeClickListener() {
                         @Override
                         public void OnLikeClick(int position) {
-                            Log.d("nishanCheck",userId+" "+arrayListPostId.get(position));
+                            //Log.d("nishanCheck",userId+" "+arrayListPostId.get(position));
                             apiInterface.setLike(userId,arrayListPostId.get(position)).enqueue(new Callback<APIResponse>() {
                                 @Override
                                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
@@ -294,8 +488,9 @@ public class EventActivity extends AppCompatActivity {
 
                         }
                     });
-                }else {
-                    DynamicToast.makeError(EventActivity.this,"COULD'NT LOAD POSTS").show();
+                }
+                else {
+                    DynamicToast.makeError(EventActivity.this,"There was problem loading content please contact service").show();
                     finish();
                 }
             }
@@ -516,7 +711,10 @@ textViewPhone.setOnClickListener(new View.OnClickListener() {
                     scrollRange=appBarLayout.getTotalScrollRange();
                 }
                 if(scrollRange+verticalOffset==0){
-                    collapsingToolbarLayout.setTitle("Okazo");
+
+
+                    collapsingToolbarLayout.setTitle("");
+
                     imageView.setVisibility(View.GONE);
                 }else {
                     imageView.setVisibility(View.VISIBLE);
@@ -545,5 +743,114 @@ textViewPhone.setOnClickListener(new View.OnClickListener() {
             }
         });
         v.startAnimation(anim_out);
+    }
+    private void showImageChooser() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //intent.setType("image/*");
+        startActivityForResult(intent,CHOOSE_IMAGE);
+        //startActivityForResult(Intent.createChooser(intent, "Select image"), CHOOSE_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOOSE_IMAGE && resultCode == RESULT_OK && data != null
+                && data.getData() != null) {
+            uriProfileImage = data.getData();
+
+            Glide.with(EventActivity.this)
+                    .load(uriProfileImage)
+                    .placeholder(R.drawable.ic_place_holder_background)
+                    //.error(R.drawable.ic_image_not_found_background)
+                    .centerCrop()
+                    .into(imageViewPost);
+            // Bitmap bitmap = null;
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor=getContentResolver().query(uriProfileImage,filePathColumn,null,null,null);
+            assert cursor!=null;
+            cursor.moveToFirst();
+
+            int columnIndex=cursor.getColumnIndex(filePathColumn[0]);
+            path=cursor.getString(columnIndex);
+            cursor.close();
+
+
+
+        }
+    }
+
+
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.event_setting_1:
+
+                break;
+            case R.id.event_setting_2:
+                String message;
+                if(userRole.equals("Admin")){
+                    message="Do you want to leave group?\nAs admin leaving will close the event ";
+                }else {
+                    message="Do you want to leave group?";
+                }
+                ConfirmationDialog confirmationDialog=new ConfirmationDialog(message);
+                confirmationDialog.show(getSupportFragmentManager(),"Confirmation");
+
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public void OnYesClicked() {
+        if(checkConnection()) {
+            apiInterface.leaveEvent(moderatorId,eventId,userRole).enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    APIResponse apiResponse=response.body();
+                    if(!apiResponse.getError()){
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        DynamicToast.makeSuccess(getApplicationContext(),"You left the event").show();
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                    }else{
+                        DynamicToast.makeError(EventActivity.this,apiResponse.getErrorMsg()).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                }
+            });
+
+        }
+        else {
+            DynamicToast.makeWarning(this,"No internet connection").show();
+
+        }
+
+    }
+
+    @Override
+    public void OnNoClicked() {
+
+    }
+    private boolean checkConnection(){
+        boolean connected = false;
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            connected = networkInfo != null && networkInfo.isConnected();
+            return connected;
+        }catch (Exception e){
+
+
+        }
+        return connected;
+
+
+
     }
 }

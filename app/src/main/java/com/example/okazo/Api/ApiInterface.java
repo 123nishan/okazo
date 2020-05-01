@@ -38,6 +38,7 @@ public interface ApiInterface {
 
 
     );
+
     @FormUrlEncoded
     @POST("login.php")
     Call<APIResponse> loginUser(
@@ -45,6 +46,12 @@ public interface ApiInterface {
             @Field("password") String password
     );
 
+    @FormUrlEncoded
+    @POST("moderator/check_moderator.php")
+    Call<APIResponse> getModerator(
+            @Field("user_id") String userId,
+            @Field("event_id") String eventId
+    );
 
     @GET("eventDetail/eventType.php")
     Call<ArrayList<EventDetail>> getEventType();
@@ -64,6 +71,15 @@ public interface ApiInterface {
     Call<APIResponse> checkEventType(
 
             @Field("type") String type
+    );
+
+    @FormUrlEncoded
+    @POST("moderator/leave_event.php")
+    Call<APIResponse> leaveEvent(
+
+            @Field("moderator_id") String moderatorId,
+            @Field("event_id") String eventId,
+            @Field("moderator_type") String moderatorType
     );
 
     @GET("map/event_type.php")
@@ -111,6 +127,15 @@ public interface ApiInterface {
             @Field("user_id") String userId
 
     );
+
+    @FormUrlEncoded
+    @POST("eventDetail/check_event_status.php")
+    Call<APIResponse> getEventStatus(
+            @Field("event_id") String eventId
+
+
+    );
+
 
     @FormUrlEncoded
     @POST("otp.php")

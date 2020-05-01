@@ -285,8 +285,11 @@ private RecyclerView recyclerViewFeed;
         }else {
             DynamicToast.makeError(getActivity().getApplicationContext(),"Something went wrong").show();
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("user_email","");
-            editor.putString("user_id","");
+            editor.remove("user_email");
+            editor.remove("user_id");
+            editor.commit();
+//            editor.putString("user_email","");
+//            editor.putString("user_id","");
             Intent intent=new Intent(getActivity().getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }

@@ -214,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
                                             progressBar.setVisibility(View.INVISIBLE);
                                         } else {
                                             userId=result.getUser().getId();
-                                            Log.d("userOTP","here");
+
                                             if(result.getUser().getVerified().equals("2")){
 
 
@@ -245,7 +245,8 @@ public class LoginActivity extends AppCompatActivity {
                                                             DynamicToast.makeError(getApplicationContext(), t.getLocalizedMessage()).show();
                                                         }
                                                     });
-                                            }else {
+                                            }
+                                            else {
                                                // Log.d("userOTP","there");
                                                 progressBar.setProgress(100);
                                                 Toast.makeText(LoginActivity.this, "userId:"+userId, Toast.LENGTH_SHORT).show();
