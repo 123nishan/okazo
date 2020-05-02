@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:minWidth="130dp"
+    app:cardCornerRadius="10dp"
+    android:elevation="5dp"
+    android:layout_margin="5dp"
+    android:id="@+id/card_event_fragment_card"
+    app:cardBackgroundColor="@color/colorPrimaryLight"
+    android:background="@color/white"
+    android:layout_height="35dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="3dp"
+                    android:id="@+id/card_event_fragment_image"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="asdhjasbd"
+            android:id="@+id/card_event_fragment_event_type"
+            android:textStyle="bold"
+
+            android:textSize="16dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_margin="3dp"
+            android:gravity="center"/>
+
+
+        </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

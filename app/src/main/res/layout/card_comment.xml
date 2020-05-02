@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:padding="5dp"
+    android:layout_height="wrap_content">
+
+<de.hdodenhof.circleimageview.CircleImageView
+    android:id="@+id/card_comment_image"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:layout_gravity="center_vertical"
+    android:background="@mipmap/ic_okazo_logo"
+    />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="5dp"
+        android:id="@+id/card_comment_card"
+        android:backgroundTint="@color/mapbox_plugins_material_grey_200"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_marginLeft="3dp"
+            android:layout_margin="3dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/card_comment_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="USER"/>
+            <TextView
+                android:id="@+id/card_comment_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comment here"/>
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/card_comment_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_comment_card"
+            android:text="2WK"
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="3dp"
+            android:textSize="12dp"/>
+    </RelativeLayout>
+
+    </LinearLayout>

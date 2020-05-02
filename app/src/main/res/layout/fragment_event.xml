@@ -1,23 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+
     tools:context=".Fragment.EventFragment">
 
     <!-- TODO: Update blank fragment layout -->
-
-    <RelativeLayout
+<!--<FrameLayout-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:id="@+id/map_box_frame"/>-->
+    <com.mapbox.mapboxsdk.maps.MapView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="50"
-        android:id="@+id/map_container">
+        mapbox:mapbox_cameraZoom="12"
+        android:id="@+id/event_fragent_map"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
-        <com.google.android.gms.maps.MapView
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/event_fragment_recycler_view"
+/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/event_fragment_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="80dp"
+
+
+        mapbox:cardBackgroundColor="#b0a9ff"
+        mapbox:cardCornerRadius="15dp">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/map_event" />
-    </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="100dp"
+            android:layout_height="70dp"
 
-</FrameLayout>
+            android:id="@+id/event_fragment_card_image_view"
+        />
+        <TextView
+            android:id="@+id/event_fragment_card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TITLE: "
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textSize="22dp" />
+            </LinearLayout>
+            <TextView
+                android:layout_marginTop="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Location:"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="16dp"
+                android:id="@+id/event_fragment_card_location"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_weight="1"
+                   android:orientation="horizontal">
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="EVENT DATE: "
+                       android:textColor="@color/colorPrimary"
+                       android:textStyle="bold"/>
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="EVENT DATE:"
+                       android:id="@+id/event_fragment_card_date"
+                       android:textColor="@color/colorPrimary"
+                       android:textStyle="bold"/>
+               </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="EVENT TIME: "
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="EVENT TIME:"
+                        android:id="@+id/event_fragment_card_time"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Host"
+                android:id="@+id/event_fragment_card_host"
+                android:textSize="15dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SHOW MORE"
+                android:layout_marginTop="3dp"
+                android:textSize="12dp"
+                android:id="@+id/event_fragment_card_more"
+                android:textColor="@color/mdtp_dark_gray"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

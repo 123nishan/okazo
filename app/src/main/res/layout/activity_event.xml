@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".EventActivity">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+
+        android:id="@+id/event_activity_app_bar"
+        android:fitsSystemWindows="true"
+
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        >
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/event_activity_collapsing_tool_bar"
+            app:expandedTitleGravity="top"
+            app:layout_scrollFlags="exitUntilCollapsed|scroll"
+            app:contentScrim="?attr/colorPrimary"
+
+            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginEnd="64dp">
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:id="@+id/event_activity_tool_bar"
+
+                app:popupTheme="@style/AppTheme"
+                app:layout_collapseMode="pin">
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/ic_back"
+                    android:id="@+id/event_activity_back"/>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/ic_menu"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                android:layout_marginRight="10dp"
+                android:id="@+id/event_activity_menu_admin"
+                />
+            </androidx.appcompat.widget.Toolbar>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+
+                android:id="@+id/event_activity_image"/>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This event is closed"
+                android:textSize="18dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:id="@+id/event_activity_event_closed_admin"
+                android:textColor="@color/mdtp_red"
+                android:textStyle="bold"
+                />
+            <RelativeLayout
+                android:layout_marginTop="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WHEN IS EVENT"
+                android:textColor="#E30B0B"
+                android:textStyle="bold"
+                android:textSize="19dp"
+                android:id="@+id/event_activity_countdown"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TITLE"
+                android:textSize="22dp"
+                android:id="@+id/event_activity_title"
+                android:layout_below="@+id/event_activity_countdown"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"/>
+
+               <Button
+                   android:id="@+id/event_activity_follow_button"
+                   android:layout_width="150dp"
+                   android:layout_height="50dp"
+                   android:layout_alignParentEnd="true"
+                   android:layout_centerInParent="true"
+                   android:textStyle="bold"
+                   android:textSize="18dp"
+                   android:background="@drawable/round_button"
+                   android:paddingLeft="20dp"
+                   android:paddingRight="10dp"
+
+                  android:drawableStart="@drawable/ic_add"
+                   android:text="Follow"/>
+
+                <Button
+                    android:id="@+id/event_activity_following_button"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:textStyle="bold"
+                    android:textSize="18dp"
+                    android:background="@drawable/round_button"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="10dp"
+
+                    android:visibility="gone"
+                    android:text="Following"/>
+
+            </RelativeLayout>
+           <HorizontalScrollView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+              android:visibility="gone"
+               android:id="@+id/event_activity_moderator_action_layout">
+               <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+
+                >
+              <Button
+                  android:id="@+id/event_activity_moderator_action_message"
+                  android:layout_width="100dp"
+                  android:layout_height="35dp"
+
+                  android:text="Inbox"
+                  android:drawableLeft="@drawable/ic_message"
+                  android:paddingLeft="8dp"
+                  android:paddingRight="8dp"
+                  android:background="@drawable/round_button"/>
+                <Button
+                    android:id="@+id/event_activity_moderator_action_moderator"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:minWidth="150dp"
+                    android:text="Moderator"
+                    android:drawableLeft="@drawable/ic_add_moderator"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="8dp"
+                    android:background="@drawable/round_button"/>
+
+               <Button
+                   android:id="@+id/event_activity_moderator_action_notification"
+                   android:layout_marginLeft="5dp"
+                   android:layout_width="150dp"
+                   android:layout_height="35dp"
+                   android:minWidth="150dp"
+                   android:text="Notifications"
+                   android:drawableLeft="@drawable/ic_notification"
+                   android:paddingLeft="12dp"
+                   android:paddingRight="8dp"
+                   android:background="@drawable/round_button"/>
+
+                   <Button
+                       android:id="@+id/event_activity_moderator_action_report"
+                       android:layout_marginLeft="5dp"
+                       android:layout_width="150dp"
+                       android:layout_height="35dp"
+                       android:minWidth="150dp"
+                       android:text="Report"
+                       android:drawableLeft="@drawable/ic_report"
+                       android:paddingLeft="12dp"
+                       android:paddingRight="8dp"
+                       android:background="@drawable/round_button"/>
+            </LinearLayout>
+           </HorizontalScrollView>
+
+            <LinearLayout
+              android:id="@+id/event_activity_response_button_layout"
+              android:layout_width="match_parent"
+              android:layout_marginTop="8dp"
+
+              android:orientation="horizontal"
+              android:layout_height="wrap_content">
+             <androidx.cardview.widget.CardView
+                 android:layout_width="220dp"
+                 app:cardCornerRadius="8dp"
+                 android:id="@+id/event_activity_first_card"
+                 app:cardBackgroundColor="@color/colorPrimaryDark"
+                 android:layout_height="wrap_content"
+                 >
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="5dp"
+
+                     android:layout_marginBottom="5dp"
+                     android:gravity="center_horizontal"
+                     android:orientation="horizontal">
+                     <ImageView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center"
+                         android:id="@+id/event_activity_first_card_image"
+                        android:background="@drawable/ic_going_not_filled"/>
+                     <TextView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:textSize="18dp"
+                         android:id="@+id/event_activity_first_card_text"
+                         android:layout_marginLeft="4dp"
+                         android:textStyle="bold"
+                         android:text="Going"/>
+
+                 </LinearLayout>
+             </androidx.cardview.widget.CardView>
+
+
+
+
+
+              <androidx.cardview.widget.CardView
+                  android:layout_width="220dp"
+                  app:cardCornerRadius="8dp"
+                  android:visibility="gone"
+                  android:id="@+id/event_activity_first_card_interested"
+                  app:cardBackgroundColor="@color/colorPrimaryDark"
+                  android:layout_height="wrap_content"
+                  >
+                  <LinearLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="5dp"
+
+                      android:layout_marginBottom="5dp"
+                      android:gravity="center_horizontal"
+                      android:orientation="horizontal">
+                      <ImageView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_gravity="center"
+                          android:id="@+id/event_activity_first_card_onclick_image"
+                          android:background="@drawable/ic_interested"/>
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textSize="18dp"
+                          android:id="@+id/event_activity_first_card_onclick_text"
+                          android:layout_marginLeft="4dp"
+                          android:textStyle="bold"
+                          android:text="Interested"/>
+
+                  </LinearLayout>
+              </androidx.cardview.widget.CardView>
+
+
+              <androidx.cardview.widget.CardView
+                  android:id="@+id/event_activity_second_card_interested"
+                  android:layout_width="55dp"
+                  android:layout_height="33dp"
+                  app:cardCornerRadius="8dp"
+                  android:visibility="gone"
+                  app:cardBackgroundColor="@color/colorPrimaryDark"
+
+                  android:layout_marginLeft="30dp">
+                  <ImageView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                     android:layout_gravity="center"
+
+
+                      android:src="@drawable/ic_intrested_not_filled"/>
+
+              </androidx.cardview.widget.CardView>
+
+              <androidx.cardview.widget.CardView
+                  android:id="@+id/event_activity_second_card_ticket"
+                  android:layout_width="55dp"
+                  android:layout_height="33dp"
+
+                  app:cardCornerRadius="8dp"
+                  app:cardBackgroundColor="@color/colorPrimaryDark"
+
+                  android:layout_marginLeft="30dp">
+              <ImageView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+
+                  android:layout_gravity="center"
+
+                  android:src="@drawable/ic_tickets"/>
+
+              </androidx.cardview.widget.CardView>
+
+              <androidx.cardview.widget.CardView
+                  android:id="@+id/event_activity_third_card"
+                  android:layout_width="50dp"
+                  android:layout_height="33dp"
+                  app:cardCornerRadius="8dp"
+
+                  app:cardBackgroundColor="@color/colorPrimaryDark"
+
+                  android:layout_marginLeft="30dp">
+                  <ImageView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center"
+                      android:src="@drawable/ic_message"/>
+              </androidx.cardview.widget.CardView>
+          </LinearLayout>
+
+
+            <androidx.cardview.widget.CardView
+               android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                app:cardCornerRadius="3dp"
+
+>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="This event is closed"
+                    android:textSize="18dp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:id="@+id/event_activity_event_closed"
+                    android:textColor="@color/mdtp_red"
+                    android:textStyle="bold"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="3dp"
+                    android:id="@+id/event_activity_about_layout"
+                    android:paddingRight="3dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="About"
+                        android:textStyle="bold"
+                        android:textSize="18dp"/>
+
+                    <RelativeLayout
+                    android:layout_marginTop="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_filled_marker"
+                            android:id="@+id/location"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:textSize="15dp"
+                            android:id="@+id/event_activity_location"
+                            android:layout_toRightOf="@+id/location"
+                            android:text="Event Location"/>
+
+                    </RelativeLayout>
+
+
+
+                    <RelativeLayout
+                        android:layout_marginTop="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_person_outline"
+                            android:id="@+id/people"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:textSize="15dp"
+                            android:id="@+id/event_activity_host"
+                            android:layout_toRightOf="@+id/people"
+                            android:text="Hosted by " />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_marginTop="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_clock"
+                            android:id="@+id/start_date"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:textSize="15dp"
+                            android:id="@+id/event_activity_date"
+                            android:layout_toRightOf="@+id/start_date"
+                            android:text="Event Date " />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/start_date"
+                            android:id="@+id/event_activity_time"
+                            android:layout_marginLeft="32dp"
+                            android:text="Time"
+                            android:textSize="15dp"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_marginTop="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_phone"
+                            android:id="@+id/phone"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:textSize="15dp"
+                            android:id="@+id/event_activity_phone"
+                            android:layout_toRightOf="@+id/phone"
+                            android:text="Call On" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_marginTop="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_tickets"
+                            android:id="@+id/ticket"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:textSize="15dp"
+                            android:id="@+id/event_activity_ticket"
+                            android:layout_toRightOf="@+id/ticket"
+                            android:text=" Tickets " />
+
+
+                    </RelativeLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="  Responses"
+                        android:textStyle="bold"
+                        android:textSize="18dp"
+                        android:drawableLeft="@drawable/ic_people_group"/>
+
+                    <LinearLayout
+                        android:layout_marginTop="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="2"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:textStyle="bold"
+                                android:text="Going"
+                                android:gravity="center"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                            android:id="@+id/event_activity_going"
+                                android:text="NUMBER GOING"
+                                android:gravity="center"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                                android:textStyle="bold"
+                                android:text="Interested"
+                                android:gravity="center"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16dp"
+                               android:id="@+id/event_activity_interested"
+                                android:text="NUMBER Interested"
+                                android:gravity="center"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_marginTop="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Details"
+                        android:textSize="18dp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_marginTop="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"
+                        android:id="@+id/event_activity_detail"
+                        android:text="DETAIL HERE"/>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:elevation="5dp"
+                android:visibility="gone"
+                app:cardCornerRadius="8dp"
+                android:id="@+id/event_activity_create_post_card">
+            <RelativeLayout
+                android:padding="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minLines="3"
+                    android:hint="Write post | atleast 10 words"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:inputType="textMultiLine"
+
+                    android:layout_toLeftOf="@+id/event_activity_create_post_image"
+                    android:id="@+id/event_activity_create_post_detail"/>
+              <ImageView
+                  android:layout_marginTop="15dp"
+                  android:id="@+id/event_activity_create_post_image"
+                  android:layout_width="50dp"
+                  android:layout_height="50dp"
+                  android:layout_alignParentRight="true"
+                  android:background="@drawable/ic_add_image"/>
+                <Button
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/round_button"
+                    android:layout_below="@+id/event_activity_create_post_detail"
+                    android:layout_alignParentRight="true"
+                    android:text="Post"
+                    android:id="@+id/event_activity_create_post_button"
+                    />
+            </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent"
+               >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NO POST YET"
+                    android:id="@+id/event_activity_error_recycler_view"
+                    android:textSize="18dp"
+
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/event_activity_recycler_view"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+
+
+                    android:layout_height="match_parent"/>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

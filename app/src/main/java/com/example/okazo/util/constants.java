@@ -9,6 +9,39 @@ public class constants {
     public static final String EMAIL = "nishan.nishan.timalsena@gmail.com";
     //shared preference  constant
     public static final String KEY_SHARED_PREFERENCE="hello";
+    //constant ip for image locaiton
+    public static final String KEY_IMAGE_ADDRESS="http://192.168.0.199/";
     //This is your from email password
     public static final String PASSWORD = "baikuntha";
+    //for event detail
+    public static final String  KEY_EVENT_TITLE="eventTitle";
+    public static final String KEY_EVENT_START_DATE="startDate";
+    public static final String KEY_EVENT_END_DATE="endDate";
+    public static final String KEY_EVENT_START_TIME="startTime";
+    public static final String KEY_EVENT_END_TIME="endTime";
+    public static final String KEY_PAGE_STATUS="pageStatus";
+    public static final String KEY_EVENT_TICKET_STATUS="ticketStatus";
+    public static final String KEY_TAG_ARRAY="eventTags";
+    public static final String KEY_EVENT_SELECTED_LOCATION="selectedLocaiton";
+    public static final String KEY_EVENT_DESCRIPTION="description";
+    public static final String KEY_LATITUDE="latitude";
+    public static final String KEY_LONGITUDE="longitude";
+    //for event ticket
+    public static final String KEY_RADIO_TICKET_CATEGORY="ticketCategory";
+    public static final String KEY_TICKET_TYPE_SINGLE_NAME="ticketTypeSingleName";
+    public static final String KEY_TICKET_TYPE_SINGLE_PRICE="ticketTypeSinglePrice";
+    public static final String KEY_TICKET_TYPE_SINGLE_NUMBER="ticketTypeSingleNumber";
+    public static final String KEY_TICKET_NUMBER="ticketNumber";
+    public static final String KEY_TICKET_PRICE="ticketPrice";
+    public static final String KEY_BUNDLE_EVENT_DETAIL="eventDetailBundle";
+    public static final String KEY_BUNDLE_TICKET_DETAIL="ticketDetailBundle";
+    public static final String KEY_TICKET_TYPE_LIST="ticketTypeList";
+    public static final String KEY_TICKET_TYPE_NAME_LIST="ticketTypeNameList";
+    public static final String KEY_TICKET_TYPE_PRICE_LIST="ticketTypePriceList";
+    public static final String KEY_TICKET_TYPE_NUMBER_LIST="ticketTypeNumberList";
+    //public static final String KYE_EVENT_SELECTED_COUNTRY=""
+
+    public static final String KEY_USER_ID="userId";
+    public static final String KEY_EVENT_DETAIL="eventDetail";
+
 }

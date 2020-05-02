@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:paddingTop="10dp"
+    android:layout_height="match_parent">
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="All ticket types"
+    android:textSize="18dp"
+    android:id="@+id/expand_ticket_status"
+    android:textStyle="bold"/>
+
+
+
+
+
+
+
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical"
+
+       android:id="@+id/expand_ticket_layout_yes">
+
+       <LinearLayout
+           android:layout_marginTop="3dp"
+           android:layout_marginBottom="3dp"
+            android:id="@+id/expand_ticket_single_layout"
+           android:orientation="vertical" android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <!--row 1-->
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:weightSum="3">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1.8"
+                   >
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:text="Ticket Name:"
+                       android:textSize="16dp"
+                       android:textStyle="bold"/>
+               </LinearLayout>
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1.2">
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:text="Gold Pass"
+                       android:textStyle="bold"
+                       android:id="@+id/expand_ticket_type_name"
+                       android:textSize="16dp"/>
+
+               </LinearLayout>
+           </LinearLayout>
+           <!--row 2-->
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:weightSum="3">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1.8"
+                   >
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:text="Ticket Price:"
+                       android:textSize="16dp"
+                       android:textStyle="bold"/>
+               </LinearLayout>
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1.2">
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:text="Gold Pass"
+                       android:textStyle="bold"
+                       android:id="@+id/expand_ticket_type_price"
+                       android:textSize="16dp"/>
+
+               </LinearLayout>
+           </LinearLayout>
+           <!--row 3-->
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:weightSum="3">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1.8"
+                   >
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:text="Ticket Quantity:"
+                       android:textSize="16dp"
+                       android:textStyle="bold"/>
+               </LinearLayout>
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="1.2">
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:text="Gold Pass"
+                       android:textStyle="bold"
+                       android:id="@+id/expand_ticket_type_Number"
+                       android:textSize="16dp"/>
+
+               </LinearLayout>
+           </LinearLayout>
+       </LinearLayout>
+
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="vertical"
+           android:id="@+id/expand_yes_ticket_type">
+           <androidx.recyclerview.widget.RecyclerView
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:id="@+id/expand_ticket_types_recycler_view"/>
+
+
+       </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="3dp"
+        android:weightSum="2"
+        android:id="@+id/expand_no_ticket_type"
+        >
+
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:background="@drawable/ic_tickets"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:orientation="vertical"
+                    >
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+
+
+                        android:layout_height="wrap_content"
+                        >
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:id="@+id/expand_event_total_ticket"
+                            android:hint="Number of ticket"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_price_tag"
+                    android:layout_marginTop="25dp"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+
+
+                        android:layout_height="wrap_content"
+                        >
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clickable="false"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:id="@+id/expand_ticekt_price"
+                            android:hint="Ticket price"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+   </LinearLayout>
+</LinearLayout>

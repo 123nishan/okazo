@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_margin="3dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="8dp"
+    app:cardCornerRadius="15dp"
+
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            >
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+
+            android:id="@+id/card_feed_profile_image"
+            android:background="@mipmap/ic_okazo_logo"/>
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Title"
+    android:layout_marginLeft="5dp"
+    android:gravity="center_vertical"
+    android:layout_toRightOf="@+id/card_feed_profile_image"
+    android:textSize="22dp"
+    android:id="@+id/card_feed_title"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="DATE"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/card_feed_date_time"
+                android:gravity="center_vertical"
+                android:layout_toRightOf="@+id/card_feed_profile_image"
+                android:layout_below="@+id/card_feed_title"/>
+        </RelativeLayout>
+
+     <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:id="@+id/card_feed_description"
+         android:text="nishan \nline break "/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 0 like"
+                android:id="@+id/card_feed_total_like"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 0 Comment"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="5dp"
+                android:id="@+id/card_feed_total_comment"
+                />
+        </RelativeLayout>
+        <ImageView
+            android:layout_marginTop="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/card_feed_post_image"/>
+      <ImageView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="3dp"
+          android:src="@drawable/border"
+         />
+        <!--like for posty-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+
+            android:layout_marginTop="3dp"
+
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:id="@+id/card_feed_post_like_layout"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/card_feed_post_like_black"
+                    android:src="@drawable/ic_like_black"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/card_feed_test"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center"
+                    android:text="LIKE"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/card_feed_post_comment_layout"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/card_feed_post_comment"
+                    android:src="@drawable/ic_comment"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center"
+                    android:text="Commemt"/>
+            </LinearLayout>
+        </LinearLayout>
+        <!--like for posty-->
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

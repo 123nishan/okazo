@@ -2,6 +2,7 @@ package com.example.okazo.Fragment;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
+import com.example.okazo.EventActivity;
 import com.example.okazo.Model.Note;
 import com.example.okazo.R;
 
@@ -45,7 +47,7 @@ public class ProfileFragment extends Fragment {
 
         View v=inflater.inflate(R.layout.fragment_profile, container, false);
         editTextLatitude=v.findViewById(R.id.latitude);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+      // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         editTextLongitude=v.findViewById(R.id.longitude);
         editTextName=v.findViewById(R.id.name);
         submit=v.findViewById(R.id.form_submit);
@@ -54,20 +56,23 @@ public class ProfileFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String latitude=editTextLatitude.getText().toString();
-                String longitude=editTextLongitude.getText().toString();
-                String name=editTextName.getText().toString().trim();
 
-                if(latitude.isEmpty()){
-                    editTextLatitude.setError("please enter");
-                }else if(longitude.isEmpty()){
-                    editTextLongitude.setError("please enter");
-                }else if(name.isEmpty()){
-                    editTextName.setError("please enter");
-
-                }else {
-                    saveDetail(latitude,longitude,name);
-                }
+                Intent intent=new Intent(getActivity().getApplicationContext(), EventActivity.class);
+                startActivity(intent);
+//                String latitude=editTextLatitude.getText().toString();
+//                String longitude=editTextLongitude.getText().toString();
+//                String name=editTextName.getText().toString().trim();
+//
+//                if(latitude.isEmpty()){
+//                    editTextLatitude.setError("please enter");
+//                }else if(longitude.isEmpty()){
+//                    editTextLongitude.setError("please enter");
+//                }else if(name.isEmpty()){
+//                    editTextName.setError("please enter");
+//
+//                }else {
+//                    saveDetail(latitude,longitude,name);
+//                }
             }
         });
         return v;

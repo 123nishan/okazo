@@ -33,6 +33,7 @@ public class OtpActivity extends AppCompatActivity {
     ProgressBar progressBar;
     TextView textViewOtpTimer,textViewOtpResend;
     int counter=1;
+    CountDownTimer countDownTimer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +49,7 @@ public class OtpActivity extends AppCompatActivity {
 //        String name=getIntent().getExtras().getString("name");
 //        String phone=getIntent().getExtras().getString("phone");
         progressBar=findViewById(R.id.otp_progress_bar);
-        new CountDownTimer(60000,1000){
+        new  CountDownTimer(60000,1000){
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -83,7 +84,7 @@ public class OtpActivity extends AppCompatActivity {
                 apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
 
 
-                        String verified="non-verified";
+                        String verified="2";
 
                         apiInterface.otpVerification(email,verified).enqueue(new Callback<APIResponse>() {
                             @Override
@@ -95,7 +96,7 @@ public class OtpActivity extends AppCompatActivity {
                                     String code = result.getUser().getCode();
 
                                    if (editTextOtp.getText().toString().equals(code)) {
-                                         String verified="verified";
+                                         String verified="1";
                                          apiInterface.otpVerification(email,verified).enqueue(new Callback<APIResponse>() {
                                              @Override
                                              public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
