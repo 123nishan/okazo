@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,9 +44,13 @@ import com.example.okazo.RegisterActivity;
 import com.example.okazo.TicketDetailActivity;
 import com.example.okazo.eventDetail;
 import com.example.okazo.util.constants;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.ArrayList;
@@ -101,6 +106,11 @@ public class HomeFragment extends Fragment {
        // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
+
+
+
+
+
             HomeFragment.ViewPagerAdapter viewPagerAdapter=new HomeFragment.ViewPagerAdapter(getChildFragmentManager());
             viewPagerAdapter.addFragment(new FeedFragment() ,"Feed");
             viewPagerAdapter.addFragment(new ProfileFragment(),"Events");

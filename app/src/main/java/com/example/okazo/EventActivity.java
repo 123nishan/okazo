@@ -27,6 +27,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -97,9 +98,11 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
     private String userRole;
     private EditText editTextPostDetail;
     private ImageView imageViewPost,imageViewMenu,imageViewBack;
-    private Button buttonPost;
+    private Button buttonPost,buttonMessage,buttonModerator,buttonNotification,buttonReport;
     private CardView cardViewPost;
     private String moderatorId;
+    private Boolean followButtonFlag=false;
+    private HorizontalScrollView horizontalScrollView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,12 +142,17 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
          eventDetail= (EventDetail) getIntent().getSerializableExtra(KEY_EVENT_DETAIL);
         userId=getIntent().getExtras().getString(KEY_USER_ID);
         eventId=eventDetail.getId();
-
+        horizontalScrollView=findViewById(R.id.event_activity_moderator_action_layout);
+        buttonMessage=findViewById(R.id.event_activity_moderator_action_message);
+        buttonModerator=findViewById(R.id.event_activity_moderator_action_moderator);
+        buttonNotification=findViewById(R.id.event_activity_moderator_action_notification);
+        ticketStatus=eventDetail.getTicketStatus();
     //for admin side and moderator
         cardViewPost=findViewById(R.id.event_activity_create_post_card);
         editTextPostDetail=findViewById(R.id.event_activity_create_post_detail);
         buttonPost=findViewById(R.id.event_activity_create_post_button);
         imageViewPost=findViewById(R.id.event_activity_create_post_image);
+        buttonReport=findViewById(R.id.event_activity_moderator_action_report);
 
     imageViewBack.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -163,7 +171,18 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                    String status=apiResponse.getModerator().getStatus();
                    String role=apiResponse.getModerator().getRole();
                    moderatorId=apiResponse.getModerator().getId();
+
                    if(status.equals("Accepted")){
+                       horizontalScrollView.setVisibility(View.VISIBLE);
+                       linearLayoutResponseLayout.setVisibility(View.GONE);
+                       if(ticketStatus.equals("1")){
+                           textViewTicket.setText("Click for ticket");
+                           textViewTicket.setTextColor(getColor(R.color.colorPrimary));
+
+                       }else {
+                           textViewTicket.setText("Free Entry");
+                       }
+                       followButtonFlag=true;
                        buttonFollowing.setVisibility(View.GONE);
                        buttonFollow.setVisibility(View.GONE);
                       //userRole="Moderator";
@@ -178,70 +197,36 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                               menu.show();
                           }
                       });
+                      //for admin only
                        if(role.equals("Admin")){
+                           buttonMessage.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View view) {
+                                   Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
+                                   startActivity(intent);
+                               }
+                           });
                            userRole="Admin";
-                            apiInterface.getEventStatus(eventId).enqueue(new Callback<APIResponse>() {
-                                @Override
-                                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                    APIResponse apiResponse=response.body();
-                                    if(!apiResponse.getError()){
-                                        String statusCheck=apiResponse.getEvent().getStatus();
-                                        if(statusCheck.equals("2")){
-                                            textViewEventClosedAdmin.setVisibility(View.VISIBLE);
-                                        }else if(statusCheck.equals("4")) {
-                                                linearLayout.setVisibility(View.GONE);
-                                                textViewEventClosed.setText("Your event was removed due to false information,please contact service");
-                                        }else {
-                                            //if admin and all status is fine
-                                            cardViewPost.setVisibility(View.VISIBLE);
-                                            buttonPost.setVisibility(View.GONE);
-                                           editTextPostDetail.addTextChangedListener(new TextWatcher() {
-                                               @Override
-                                               public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                           checkeventStatus();
 
-                                               }
-
-                                               @Override
-                                               public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                                                    if(charSequence.length()>10){
-                                                        buttonPost.setVisibility(View.VISIBLE);
-                                                    }else {
-                                                        buttonPost.setVisibility(View.GONE);
-                                                    }
-                                               }
-
-                                               @Override
-                                               public void afterTextChanged(Editable editable) {
-
-                                               }
-                                           });
-                                           imageViewPost.setOnClickListener(new View.OnClickListener() {
-                                               @Override
-                                               public void onClick(View view) {
-                                                    showImageChooser();
-                                               }
-                                           });
-                                           buttonPost.setOnClickListener(new View.OnClickListener() {
-                                               @Override
-                                               public void onClick(View view) {
-                                                   String postDetail=editTextPostDetail.getText().toString();
-                                                   Log.d("postCheck",postDetail+"||||||"+path);
-                                               }
-                                           });
-                                            linearLayoutResponseLayout.setVisibility(View.GONE);
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<APIResponse> call, Throwable t) {
-
-                                }
-                            });
-                           Toast.makeText(EventActivity.this, "You are admin", Toast.LENGTH_SHORT).show();
                        }
+                       else if(role.equals("Editor")){
+                           userRole="Editor";
+                           checkeventStatus();
+                           Toast.makeText(EventActivity.this, "Editor", Toast.LENGTH_SHORT).show();
+                       }else {
+                           userRole="Moderator";
+                           checkeventStatus();
+                            buttonReport.setClickable(false);
+                           buttonReport.setBackground(getDrawable(R.drawable.disable_round_button));
+                           buttonModerator.setClickable(false);
+                           buttonModerator.setBackground(getDrawable(R.drawable.disable_round_button));
+
+                       }
+                       //for non admin moderator only
                    }else {
-                       DynamicToast.makeSuccess(EventActivity.this,"YOu have mode request from this event").show();
+                       NoModerator();
+                       DynamicToast.makeSuccess(EventActivity.this,"YOu have moderator request from this event").show();
                    }
                 }else {
                     String message=apiResponse.getErrorMsg();
@@ -255,42 +240,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
 
                         startActivity(intent);
                     }else if(message.equals("no moderator")){
-                        userRole="User";
-                        apiInterface.getEventStatus(eventId).enqueue(new Callback<APIResponse>() {
-                            @Override
-                            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                APIResponse apiResponse=response.body();
-                                if(!apiResponse.getError()){
-                                    eventStatus=apiResponse.getEvent().getStatus();
-                                    if(eventStatus.equals("2")){
-
-                                        linearLayout.setVisibility(View.GONE);
-                                        textViewEventClosed.setVisibility(View.VISIBLE);
-                                        buttonFollow.setClickable(false);
-                                        linearLayoutResponseLayout.setVisibility(View.GONE);
-//                                        cardViewFirst.setClickable(false);
-//                                        cardViewFirstInterested.setClickable(false);
-//                                        cardViewSecondInterested.setClickable(false);
-//                                        cardViewSecondTicket.setClickable(false);
-//                                        cardViewMessage.setClickable(false);
-
-                                    }else if(eventStatus.equals("4")){
-                                        DynamicToast.makeError(EventActivity.this,"This event has been removed").show();
-                                        finish();
-                                    }else {
-
-                                    }
-                                }else {
-                                    DynamicToast.makeError(EventActivity.this,"Problem loading event").show();
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<APIResponse> call, Throwable t) {
-
-                            }
-                        });
+                        NoModerator();
                     }else {
                         DynamicToast.makeError(EventActivity.this,message).show();
                     }
@@ -547,13 +497,8 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
         textViewtime.setText(eventDetail.getStartTime()+" - "+eventDetail.getEndTime() );
         textViewPhone.setTextColor(getColor(R.color.colorPrimary));
         textViewPhone.setText(eventDetail.getHostPhone());
-        ticketStatus=eventDetail.getTicketStatus();
-        if(ticketStatus.equals("1")){
-            textViewTicket.setText("Click for ticket");
-            textViewTicket.setTextColor(getColor(R.color.colorPrimary));
-        }else {
-            textViewTicket.setText("Free Entry");
-        }
+
+
         textViewDetail.setText(eventDetail.getDescription());
     apiInterface.getResponseCount(eventId).enqueue(new Callback<APIResponse>() {
         @Override
@@ -585,65 +530,19 @@ textViewPhone.setOnClickListener(new View.OnClickListener() {
     }
 });
 
-
-        apiInterface.getFollowing(userId,eventId).enqueue(new Callback<APIResponse>() {
-            @Override
-            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                APIResponse apiResponse=response.body();
-                if(!apiResponse.getError()){
-                  // following=apiResponse.getCollection().getFollowing();
-                    following=apiResponse.getEvent().getFollowing();
-                    eventResponse=apiResponse.getEvent().getResponse();
-                    if(following.equals("1")){
-                        buttonFollow.setVisibility(View.GONE);
-                        buttonFollowing.setVisibility(View.VISIBLE);
-                    }else {
-                        buttonFollow.setVisibility(View.GONE);
-                        buttonFollowing.setVisibility(View.VISIBLE);
-                    }
-
-                    if(eventResponse.equals("3")){
-                        cardViewFirst.setVisibility(View.VISIBLE);
-                        cardViewFirstInterested.setVisibility(View.GONE);
-                        cardViewSecondInterested.setVisibility(View.VISIBLE);
-                        cardViewSecondTicket.setVisibility(View.GONE);
-
-                    }else if(eventResponse.equals("1")){
-
-                        cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
-                        imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going));
-                        cardViewSecondInterested.setVisibility(View.GONE);
-                        cardViewSecondTicket.setVisibility(View.VISIBLE);
-                    }else {
-                        cardViewFirst.setVisibility(View.GONE);
-                        cardViewFirstInterested.setVisibility(View.VISIBLE);
-                        cardViewSecondInterested.setVisibility(View.GONE);
-                        cardViewSecondTicket.setVisibility(View.VISIBLE);
-                    }
-                   // Toast.makeText(EventActivity.this, "c"+" "+apiResponse.getCollection().getFollowing(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<APIResponse> call, Throwable t) {
-                DynamicToast.makeError(EventActivity.this,"There was an error").show();
-                finish();
-            }
-        });
-
-
-
-
-//
-//       if(going){
-//           cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
-//           imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going));
-//
-//           cardViewSecondInterested.setVisibility(View.GONE);
-//           cardViewSecondTicket.setVisibility(View.VISIBLE);
+//        if(!followButtonFlag){
 //
 //
-//       }
+//
+//        }else {
+//            buttonFollow.setVisibility(View.GONE);
+//            buttonFollowing.setVisibility(View.GONE);
+//        }
+
+
+
+
+
         cardViewFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -724,6 +623,100 @@ textViewPhone.setOnClickListener(new View.OnClickListener() {
             }
         });
     }
+
+    private void NoModerator() {
+        if(ticketStatus.equals("1")){
+            textViewTicket.setText("Click for ticket");
+            textViewTicket.setTextColor(getColor(R.color.colorPrimary));
+
+        }else {
+            textViewTicket.setText("Free Entry");
+        }
+
+        apiInterface.getFollowing(userId,eventId).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse=response.body();
+                if(!apiResponse.getError()){
+                    // following=apiResponse.getCollection().getFollowing();
+                    following=apiResponse.getEvent().getFollowing();
+                    eventResponse=apiResponse.getEvent().getResponse();
+                    if(following.equals("1")){
+
+                        buttonFollow.setVisibility(View.GONE);
+                        buttonFollowing.setVisibility(View.VISIBLE);
+                    }else {
+                        buttonFollow.setVisibility(View.GONE);
+                        buttonFollowing.setVisibility(View.VISIBLE);
+                    }
+
+                    if(eventResponse.equals("3")){
+                        cardViewFirst.setVisibility(View.VISIBLE);
+                        cardViewFirstInterested.setVisibility(View.GONE);
+                        cardViewSecondInterested.setVisibility(View.VISIBLE);
+                        cardViewSecondTicket.setVisibility(View.GONE);
+
+                    }else if(eventResponse.equals("1")){
+
+                        cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+                        imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going));
+                        cardViewSecondInterested.setVisibility(View.GONE);
+                        cardViewSecondTicket.setVisibility(View.VISIBLE);
+                    }else {
+                        cardViewFirst.setVisibility(View.GONE);
+                        cardViewFirstInterested.setVisibility(View.VISIBLE);
+                        cardViewSecondInterested.setVisibility(View.GONE);
+                        cardViewSecondTicket.setVisibility(View.VISIBLE);
+                    }
+                    // Toast.makeText(EventActivity.this, "c"+" "+apiResponse.getCollection().getFollowing(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+                DynamicToast.makeError(EventActivity.this,"There was an error").show();
+                finish();
+            }
+        });
+
+        userRole="User";
+        apiInterface.getEventStatus(eventId).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse=response.body();
+                if(!apiResponse.getError()){
+                    eventStatus=apiResponse.getEvent().getStatus();
+                    if(eventStatus.equals("2")){
+
+                        linearLayout.setVisibility(View.GONE);
+                        textViewEventClosed.setVisibility(View.VISIBLE);
+                        buttonFollow.setClickable(false);
+                        linearLayoutResponseLayout.setVisibility(View.GONE);
+//                                        cardViewFirst.setClickable(false);
+//                                        cardViewFirstInterested.setClickable(false);
+//                                        cardViewSecondInterested.setClickable(false);
+//                                        cardViewSecondTicket.setClickable(false);
+//                                        cardViewMessage.setClickable(false);
+
+                    }else if(eventStatus.equals("4")){
+                        DynamicToast.makeError(EventActivity.this,"This event has been removed").show();
+                        finish();
+                    }else {
+
+                    }
+                }else {
+                    DynamicToast.makeError(EventActivity.this,"Problem loading event").show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void animation(Context c, ImageView v, int r){
         final Animation anim_out = AnimationUtils.loadAnimation(c, android.R.anim.fade_out);
         final Animation anim_in  = AnimationUtils.loadAnimation(c, android.R.anim.fade_in);
@@ -780,6 +773,86 @@ textViewPhone.setOnClickListener(new View.OnClickListener() {
         }
     }
 
+    private void createPost(){
+        cardViewPost.setVisibility(View.VISIBLE);
+        buttonPost.setVisibility(View.GONE);
+        editTextPostDetail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.length()>10){
+                    buttonPost.setVisibility(View.VISIBLE);
+                }else {
+                    buttonPost.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        imageViewPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showImageChooser();
+            }
+        });
+        buttonPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String postDetail=editTextPostDetail.getText().toString();
+                Log.d("postCheck",postDetail+"||||||"+path);
+            }
+        });
+    }
+
+    private void checkeventStatus(){
+        apiInterface.getEventStatus(eventId).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse=response.body();
+                if(!apiResponse.getError()){
+                    String statusCheck=apiResponse.getEvent().getStatus();
+                    if(statusCheck.equals("2")){
+                        textViewEventClosedAdmin.setVisibility(View.VISIBLE);
+                    }else if(statusCheck.equals("4")) {
+                        // linearLayout.setVisibility(View.GONE);
+                        textViewEventClosedAdmin.setVisibility(View.VISIBLE);
+
+
+
+
+                        buttonFollow.setClickable(false);
+                        buttonFollowing.setClickable(false);
+                        linearLayoutResponseLayout.setVisibility(View.GONE);
+
+                        textViewEventClosedAdmin.setText("Your event was removed due to false information,please contact service");
+                    }else {
+                        //if admin and all status is fine
+                        if(userRole.equals("Admin")){
+                            createPost();
+                        }else if(userRole.equals("Editor")){
+                            createPost();
+                        }else {
+                            cardViewPost.setVisibility(View.GONE);
+                        }
+
+                        linearLayoutResponseLayout.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+
+            }
+        });
+    }
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {

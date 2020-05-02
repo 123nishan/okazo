@@ -138,10 +138,71 @@
                     android:text="Following"/>
 
             </RelativeLayout>
-          <LinearLayout
+           <HorizontalScrollView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+              android:visibility="gone"
+               android:id="@+id/event_activity_moderator_action_layout">
+               <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+
+                >
+              <Button
+                  android:id="@+id/event_activity_moderator_action_message"
+                  android:layout_width="100dp"
+                  android:layout_height="35dp"
+
+                  android:text="Inbox"
+                  android:drawableLeft="@drawable/ic_message"
+                  android:paddingLeft="8dp"
+                  android:paddingRight="8dp"
+                  android:background="@drawable/round_button"/>
+                <Button
+                    android:id="@+id/event_activity_moderator_action_moderator"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="150dp"
+                    android:layout_height="35dp"
+                    android:minWidth="150dp"
+                    android:text="Moderator"
+                    android:drawableLeft="@drawable/ic_add_moderator"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="8dp"
+                    android:background="@drawable/round_button"/>
+
+               <Button
+                   android:id="@+id/event_activity_moderator_action_notification"
+                   android:layout_marginLeft="5dp"
+                   android:layout_width="150dp"
+                   android:layout_height="35dp"
+                   android:minWidth="150dp"
+                   android:text="Notifications"
+                   android:drawableLeft="@drawable/ic_notification"
+                   android:paddingLeft="12dp"
+                   android:paddingRight="8dp"
+                   android:background="@drawable/round_button"/>
+
+                   <Button
+                       android:id="@+id/event_activity_moderator_action_report"
+                       android:layout_marginLeft="5dp"
+                       android:layout_width="150dp"
+                       android:layout_height="35dp"
+                       android:minWidth="150dp"
+                       android:text="Report"
+                       android:drawableLeft="@drawable/ic_report"
+                       android:paddingLeft="12dp"
+                       android:paddingRight="8dp"
+                       android:background="@drawable/round_button"/>
+            </LinearLayout>
+           </HorizontalScrollView>
+
+            <LinearLayout
               android:id="@+id/event_activity_response_button_layout"
               android:layout_width="match_parent"
               android:layout_marginTop="8dp"
+
               android:orientation="horizontal"
               android:layout_height="wrap_content">
              <androidx.cardview.widget.CardView
@@ -270,6 +331,8 @@
                       android:src="@drawable/ic_message"/>
               </androidx.cardview.widget.CardView>
           </LinearLayout>
+
+
             <androidx.cardview.widget.CardView
                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
@@ -535,7 +598,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:background="@color/transparentBlack"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent"
                >
                 <TextView
                     android:layout_width="match_parent"
