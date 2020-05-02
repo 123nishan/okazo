@@ -1,5 +1,6 @@
 package com.example.okazo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -22,13 +23,19 @@ import com.example.okazo.util.JavaMailAPI;
 
 
 import com.example.okazo.util.constants;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import pl.droidsonroids.gif.GifDrawable;
 import retrofit2.Call;
@@ -38,9 +45,11 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
     TextInputEditText editTextEmail,editTextPassword,editTextMobile,editTextName;
     Button btnRegister;
-    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+   // String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    String emailPattern="^(.+)@(.+)$";;
     ApiInterface apiInterface;
     Boolean emailStatus=false,passwordStatus=false,nameStatus=false,mobileStatus=false;
+    Pattern pattern;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,16 +66,17 @@ public class RegisterActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        pattern= Pattern.compile(emailPattern);
         GifDrawable finalGiffChecking = gifChecking;
         editTextEmail.setOnFocusChangeListener((v, hasFocus) -> {
             if(hasFocus){
                 editTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, finalGiffChecking,null);
 
             }else {
-                if(editTextEmail.getText().toString().matches(emailPattern)){
-                }else {
-                    editTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
-                }
+//                if(editTextEmail.getText().toString().matches(emailPattern)){
+//                }else {
+//                    editTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
+//                }
             }
 
         });
@@ -125,20 +135,24 @@ public class RegisterActivity extends AppCompatActivity {
         editTextEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(s.toString().matches(emailPattern)){
+                Matcher matcher=pattern.matcher(s.toString());
+                if(matcher.matches()){
                     editTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
                 }
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().matches(emailPattern)){
+                Matcher matcher=pattern.matcher(s.toString());
+                if(matcher.matches()){
                     emailStatus=true;
                     editTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
                 }else {
                     emailStatus=false;
                     btnRegister.setVisibility(View.GONE);
                 }
+                //TODO check here later for validation in email
+
 
                 if(emailStatus && passwordStatus && nameStatus && mobileStatus){
                     btnRegister.setVisibility(View.VISIBLE);
@@ -241,8 +255,9 @@ public class RegisterActivity extends AppCompatActivity {
                 String name=editTextName.getText().toString();
                 String password=editTextPassword.getText().toString();
                 String email=editTextEmail.getText().toString();
+                Matcher matcher=pattern.matcher(email);
                 Random random=new Random();
-                if(email.matches(emailPattern)){
+                if(matcher.matches()){
                     editTextEmail.setError(null);
                     if(name!=null && !name.isEmpty()){
 
@@ -267,24 +282,45 @@ public class RegisterActivity extends AppCompatActivity {
                                         if(result.getError()){
                                             DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
                                         }else {
-                                            apiInterface.registerUser(email,password,name,phone).enqueue(new Callback<APIResponse>() {
-                                                @Override
-                                                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                                    APIResponse apiResponse=response.body();
-                                                    if(apiResponse.getError()){
-                                                        DynamicToast.makeError(getApplicationContext(), apiResponse.getErrorMsg()).show();
-                                                    }else {
-                                                        JavaMailAPI javaMailAPI=new JavaMailAPI(RegisterActivity.this,"nishan.nishan.timalsena@gmail.com",
-                                                                "Verification Code","OTP is:",num+"",password,phone,name,email,identifier);
-                                                        javaMailAPI.execute();
-                                                    }
-                                                }
 
-                                                @Override
-                                                public void onFailure(Call<APIResponse> call, Throwable t) {
+                                            FirebaseInstanceId.getInstance().getInstanceId()
+                                                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
 
-                                                }
-                                            });
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                                            if (!task.isSuccessful()) {
+                                                                //Log.w(TAG, "getInstanceId failed", task.getException());
+                                                                return;
+                                                            }
+
+                                                            // Get new Instance ID token
+                                                            String token = task.getResult().getToken();
+                                                            apiInterface.registerUser(email,password,name,phone,token).enqueue(new Callback<APIResponse>() {
+                                                                @Override
+                                                                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                                                    APIResponse apiResponse=response.body();
+                                                                    if(apiResponse.getError()){
+                                                                        DynamicToast.makeError(getApplicationContext(), apiResponse.getErrorMsg()).show();
+                                                                    }else {
+
+                                                                        JavaMailAPI javaMailAPI=new JavaMailAPI(RegisterActivity.this,"nishan.nishan.timalsena@gmail.com",
+                                                                                "Verification Code","OTP is:",num+"",password,phone,name,email,identifier);
+                                                                        javaMailAPI.execute();
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                                                }
+                                                            });
+                                                            // Log and toast
+                                                           // String msg = getString(R.string.msg_token_fmt, token);
+
+                                                            //Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+
 
                                         }
                                     }

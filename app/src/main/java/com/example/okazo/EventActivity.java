@@ -542,25 +542,71 @@ textViewPhone.setOnClickListener(new View.OnClickListener() {
 
 
 
-
+going=false;
         cardViewFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(going){
-                    cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-                    imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going_not_filled));
-                    going=false;
-                    cardViewSecondInterested.setVisibility(View.VISIBLE);
-                    cardViewSecondTicket.setVisibility(View.GONE);
-                }else {
-                    going=true;
-                    cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
-                    imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going));
+                Log.d("onCLick",eventResponse);
+             if(eventResponse.equals("3")){
+                 apiInterface.setEventResponse(userId,eventId,"1").enqueue(new Callback<APIResponse>() {
+                     @Override
+                     public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                         APIResponse apiResponse=response.body();
+                         if(!apiResponse.getError()){
+                             cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+                                imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going));
+                                cardViewSecondInterested.setVisibility(View.GONE);
+                                cardViewSecondTicket.setVisibility(View.VISIBLE);
+                                eventResponse="1";
+                                textViewGoing.setText(String.valueOf(Integer.valueOf(textViewGoing.getText().toString())+1));
+                               // getFollowing();
+                         }
+                     }
 
+                     @Override
+                     public void onFailure(Call<APIResponse> call, Throwable t) {
 
-                    cardViewSecondInterested.setVisibility(View.GONE);
-                    cardViewSecondTicket.setVisibility(View.VISIBLE);
-                }
+                     }
+                 });
+             }else if(eventResponse.equals("1")){
+                 apiInterface.setEventResponse(userId,eventId,"3").enqueue(new Callback<APIResponse>() {
+                     @Override
+                     public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                         APIResponse apiResponse=response.body();
+                         if(!apiResponse.getError()){
+                             cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                             imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going_not_filled));
+                             cardViewSecondInterested.setVisibility(View.VISIBLE);
+                             cardViewSecondTicket.setVisibility(View.GONE);
+                             eventResponse="3";
+                             textViewGoing.setText(String.valueOf(Integer.valueOf(textViewGoing.getText().toString())-1));
+                            // getFollowing();
+                         }
+                     }
+
+                     @Override
+                     public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                     }
+                 });
+             }else {
+
+             }
+//                if(going){
+//                    cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+//                    imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going_not_filled));
+//                    going=false;
+//                    cardViewSecondInterested.setVisibility(View.VISIBLE);
+//                    cardViewSecondTicket.setVisibility(View.GONE);
+//                }else {
+//                    going=true;
+//                    cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+//                    imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going));
+//
+//
+//                    cardViewSecondInterested.setVisibility(View.GONE);
+//                    cardViewSecondTicket.setVisibility(View.VISIBLE);
+//                }
 
 
 
@@ -568,22 +614,124 @@ textViewPhone.setOnClickListener(new View.OnClickListener() {
         });
 
        cardViewSecondInterested.setOnClickListener(new View.OnClickListener() {
+
            @Override
            public void onClick(View view) {
-               cardViewFirst.setVisibility(View.GONE);
-               cardViewFirstInterested.setVisibility(View.VISIBLE);
-               cardViewSecondInterested.setVisibility(View.GONE);
-               cardViewSecondTicket.setVisibility(View.VISIBLE);
+
+              // getFollowing();
+//               cardViewFirst.setVisibility(View.GONE);
+//               cardViewFirstInterested.setVisibility(View.VISIBLE);
+//               cardViewSecondInterested.setVisibility(View.GONE);
+//               cardViewSecondTicket.setVisibility(View.VISIBLE);
+
+               if(eventResponse.equals("3")){
+                   apiInterface.setEventResponse(userId,eventId,"2").enqueue(new Callback<APIResponse>() {
+                       @Override
+                       public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                           APIResponse apiResponse=response.body();
+                           if(!apiResponse.getError()){
+                               cardViewFirst.setVisibility(View.GONE);
+                               cardViewFirstInterested.setVisibility(View.VISIBLE);
+//                               cardViewFirstInterested.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+//                               imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_interested));
+                               cardViewSecondInterested.setVisibility(View.GONE);
+                               cardViewSecondTicket.setVisibility(View.VISIBLE);
+                               eventResponse="2";
+                               textViewInterested.setText(String.valueOf(Integer.valueOf(textViewInterested.getText().toString())+1));
+                               //getFollowing();
+                           }
+                       }
+
+                       @Override
+                       public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                       }
+                   });
+               }else if(eventResponse.equals("2")){
+                   apiInterface.setEventResponse(userId,eventId,"3").enqueue(new Callback<APIResponse>() {
+                       @Override
+                       public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                           APIResponse apiResponse=response.body();
+                           if(!apiResponse.getError()){
+                               cardViewFirst.setVisibility(View.VISIBLE);
+                               cardViewFirstInterested.setVisibility(View.GONE);
+                               cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                               imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going_not_filled));
+                               cardViewSecondInterested.setVisibility(View.VISIBLE);
+                               cardViewSecondTicket.setVisibility(View.GONE);
+                               eventResponse="3";
+                               textViewInterested.setText(String.valueOf(Integer.valueOf(textViewInterested.getText().toString())-1));
+
+                           }
+                       }
+
+                       @Override
+                       public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                       }
+                   });
+               }
+
+
            }
        });
 
         cardViewFirstInterested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cardViewFirstInterested.setVisibility(View.GONE);
-                cardViewFirst.setVisibility(View.VISIBLE);
-                cardViewSecondInterested.setVisibility(View.VISIBLE);
-                cardViewSecondTicket.setVisibility(View.GONE);
+//                cardViewFirstInterested.setVisibility(View.GONE);
+//                cardViewFirst.setVisibility(View.VISIBLE);
+//                cardViewSecondInterested.setVisibility(View.VISIBLE);
+//                cardViewSecondTicket.setVisibility(View.GONE);
+
+//                if(eventResponse.equals("3")){
+//                    apiInterface.setEventResponse(userId,eventId,"2").enqueue(new Callback<APIResponse>() {
+//                        @Override
+//                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+//                            APIResponse apiResponse=response.body();
+//                            if(!apiResponse.getError()){
+//                                cardViewFirst.setVisibility(View.VISIBLE);
+//                                cardViewFirstInterested.setVisibility(View.GONE);
+//                                cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+//                                imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going_not_filled));
+//                                cardViewSecondInterested.setVisibility(View.VISIBLE);
+//                                cardViewSecondTicket.setVisibility(View.GONE);
+//                                eventResponse="2";
+//                                //getFollowing();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<APIResponse> call, Throwable t) {
+//
+//                        }
+//                    });
+//                }else if(eventResponse.equals("2")){
+                    apiInterface.setEventResponse(userId,eventId,"3").enqueue(new Callback<APIResponse>() {
+                        @Override
+                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                            APIResponse apiResponse=response.body();
+                            if(!apiResponse.getError()){
+                                cardViewFirst.setVisibility(View.VISIBLE);
+                                cardViewFirstInterested.setVisibility(View.GONE);
+                                cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                                imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going_not_filled));
+                                cardViewSecondInterested.setVisibility(View.VISIBLE);
+                                cardViewSecondTicket.setVisibility(View.GONE);
+                                eventResponse="3";
+                                textViewInterested.setText(String.valueOf(Integer.valueOf(textViewInterested.getText().toString())-1));
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                        }
+                    });
+              //  }
+
+
             }
         });
 
@@ -633,51 +781,7 @@ textViewPhone.setOnClickListener(new View.OnClickListener() {
             textViewTicket.setText("Free Entry");
         }
 
-        apiInterface.getFollowing(userId,eventId).enqueue(new Callback<APIResponse>() {
-            @Override
-            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                APIResponse apiResponse=response.body();
-                if(!apiResponse.getError()){
-                    // following=apiResponse.getCollection().getFollowing();
-                    following=apiResponse.getEvent().getFollowing();
-                    eventResponse=apiResponse.getEvent().getResponse();
-                    if(following.equals("1")){
-
-                        buttonFollow.setVisibility(View.GONE);
-                        buttonFollowing.setVisibility(View.VISIBLE);
-                    }else {
-                        buttonFollow.setVisibility(View.GONE);
-                        buttonFollowing.setVisibility(View.VISIBLE);
-                    }
-
-                    if(eventResponse.equals("3")){
-                        cardViewFirst.setVisibility(View.VISIBLE);
-                        cardViewFirstInterested.setVisibility(View.GONE);
-                        cardViewSecondInterested.setVisibility(View.VISIBLE);
-                        cardViewSecondTicket.setVisibility(View.GONE);
-
-                    }else if(eventResponse.equals("1")){
-
-                        cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
-                        imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going));
-                        cardViewSecondInterested.setVisibility(View.GONE);
-                        cardViewSecondTicket.setVisibility(View.VISIBLE);
-                    }else {
-                        cardViewFirst.setVisibility(View.GONE);
-                        cardViewFirstInterested.setVisibility(View.VISIBLE);
-                        cardViewSecondInterested.setVisibility(View.GONE);
-                        cardViewSecondTicket.setVisibility(View.VISIBLE);
-                    }
-                    // Toast.makeText(EventActivity.this, "c"+" "+apiResponse.getCollection().getFollowing(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<APIResponse> call, Throwable t) {
-                DynamicToast.makeError(EventActivity.this,"There was an error").show();
-                finish();
-            }
-        });
+    getFollowing();
 
         userRole="User";
         apiInterface.getEventStatus(eventId).enqueue(new Callback<APIResponse>() {
@@ -925,5 +1029,52 @@ textViewPhone.setOnClickListener(new View.OnClickListener() {
 
 
 
+    }
+    private void getFollowing(){
+        apiInterface.getFollowing(userId,eventId).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse=response.body();
+                if(!apiResponse.getError()){
+                    // following=apiResponse.getCollection().getFollowing();
+                    following=apiResponse.getEvent().getFollowing();
+                    eventResponse=apiResponse.getEvent().getResponse();
+                    if(following.equals("1")){
+
+                        buttonFollow.setVisibility(View.GONE);
+                        buttonFollowing.setVisibility(View.VISIBLE);
+                    }else {
+                        buttonFollow.setVisibility(View.GONE);
+                        buttonFollowing.setVisibility(View.VISIBLE);
+                    }
+
+                    if(eventResponse.equals("3")){
+                        cardViewFirst.setVisibility(View.VISIBLE);
+                        cardViewFirstInterested.setVisibility(View.GONE);
+                        cardViewSecondInterested.setVisibility(View.VISIBLE);
+                        cardViewSecondTicket.setVisibility(View.GONE);
+
+                    }else if(eventResponse.equals("1")){
+
+                        cardViewFirst.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
+                        imageViewFirstCard.setBackground(getDrawable(R.drawable.ic_going));
+                        cardViewSecondInterested.setVisibility(View.GONE);
+                        cardViewSecondTicket.setVisibility(View.VISIBLE);
+                    }else {
+                        cardViewFirst.setVisibility(View.GONE);
+                        cardViewFirstInterested.setVisibility(View.VISIBLE);
+                        cardViewSecondInterested.setVisibility(View.GONE);
+                        cardViewSecondTicket.setVisibility(View.VISIBLE);
+                    }
+                    // Toast.makeText(EventActivity.this, "c"+" "+apiResponse.getCollection().getFollowing(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+                DynamicToast.makeError(EventActivity.this,"There was an error").show();
+                finish();
+            }
+        });
     }
 }

@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import pl.droidsonroids.gif.GifDrawable;
 import retrofit2.Call;
@@ -42,11 +44,13 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     Button buttonLogin;
     AppCompatImageButton registerButton;
-    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    //String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    String emailPattern="^(.+)@(.+)$";;
     TextInputEditText inputEditTextEmail, inputEditTextPassword;
     String email, password,userId;
     ApiInterface apiInterface;
     ProgressBar progressBar;
+    Pattern pattern;
     Boolean emailStatus=false;
     Boolean passwordStatus=false;
     String sharedPreferencesConstant = "hello";
@@ -55,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(sharedPreferencesConstant, MODE_PRIVATE);
-
+        pattern= Pattern.compile(emailPattern);
         if (sharedPreferences.getString("user_email", "") != null && !sharedPreferences.getString("user_email", "").isEmpty()
         &&sharedPreferences.getString("user_id","")!=null && !sharedPreferences.getString("user_id","").isEmpty()) {
             Toast.makeText(this, "email: "+sharedPreferences.getString("user_email", ""), Toast.LENGTH_SHORT).show();
@@ -125,14 +129,17 @@ public class LoginActivity extends AppCompatActivity {
           inputEditTextEmail.addTextChangedListener(new TextWatcher() {
               @Override
               public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(s.toString().matches(emailPattern)){
+                  Matcher matcher=pattern.matcher(s.toString());
+
+                if(matcher.matches()){
                     inputEditTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
                 }
               }
 
               @Override
               public void onTextChanged(CharSequence s, int start, int before, int count) {
-                  if(s.toString().matches(emailPattern)){
+                  Matcher matcher=pattern.matcher(s.toString());
+                  if(matcher.matches()){
                       emailStatus=true;
                       inputEditTextEmail.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, ResourcesCompat.getDrawable(getResources(),R.drawable.ic_correct,null),null);
                   }else {
@@ -193,8 +200,8 @@ public class LoginActivity extends AppCompatActivity {
                 progressBar.setProgress(10);
                 email = inputEditTextEmail.getText().toString().trim();
                 password = inputEditTextPassword.getText().toString().trim();
-
-                if (email.matches(emailPattern)) {
+                Matcher matcher=pattern.matcher(email);
+                if (matcher.matches()) {
                     inputEditTextEmail.setError(null);
                     if (password.isEmpty()) {
                         inputEditTextPassword.setError("Error");
