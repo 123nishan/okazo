@@ -223,6 +223,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                       });
                       //for admin only
                        if(role.equals("Admin")){
+                           addModerator();
                            buttonMessage.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View view) {
@@ -966,6 +967,7 @@ going=false;
                         if(userRole.equals("Admin")){
                             createPost();
                         }else if(userRole.equals("Editor")){
+                            addModerator();
                             createPost();
                         }else {
                             cardViewPost.setVisibility(View.GONE);
@@ -1129,7 +1131,8 @@ going=false;
         buttonModerator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent=new Intent(getApplicationContext(),ModeratorActivity.class);
+                startActivity(intent);
             }
         });
     }

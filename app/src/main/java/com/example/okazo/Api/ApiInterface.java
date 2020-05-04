@@ -1,5 +1,7 @@
 package com.example.okazo.Api;
 
+import android.text.Editable;
+
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Geofence;
 import com.example.okazo.Model.Note;
@@ -46,10 +48,24 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("moderator/all_user.php")
+    Call<APIResponse> getAllUser(
+            @Field("search") Editable search
+    );
+
+    @FormUrlEncoded
     @POST("fcm.php")
     Call<APIResponse> sendInboxNotification(
             @Field("message") String message,
             @Field("id") String id
+    );
+
+    @FormUrlEncoded
+    @POST("moderator/add_moderator.php")
+    Call<APIResponse> requestModerator(
+            @Field("user_id") String userId,
+            @Field("event_id") String eventId,
+            @Field("role") String role
     );
 
     @FormUrlEncoded

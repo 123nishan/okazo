@@ -20,6 +20,7 @@ import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.EventActivity;
 import com.example.okazo.Model.Note;
+import com.example.okazo.ModeratorActivity;
 import com.example.okazo.R;
 
 import retrofit2.Call;
@@ -57,8 +58,9 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent=new Intent(getActivity().getApplicationContext(), EventActivity.class);
+                Intent intent=new Intent(getActivity().getApplicationContext(), ModeratorActivity.class);
                 startActivity(intent);
+
 //                String latitude=editTextLatitude.getText().toString();
 //                String longitude=editTextLongitude.getText().toString();
 //                String name=editTextName.getText().toString().trim();

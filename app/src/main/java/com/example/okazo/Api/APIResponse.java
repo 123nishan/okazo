@@ -73,6 +73,15 @@ public class APIResponse {
     @Expose
     private ArrayList<Comment> commentArray;
 
+
+    @SerializedName("user_array")
+    @Expose
+    private ArrayList<User> userArray;
+
+    public ArrayList<User> getUserArray() {
+        return userArray;
+    }
+
     public ArrayList<Comment> getCommentArray() {
         return commentArray;
     }

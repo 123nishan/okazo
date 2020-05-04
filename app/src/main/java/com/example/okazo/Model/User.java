@@ -51,6 +51,14 @@ public class User {
     @Expose
     private Object updatedAt;
 
+    @SerializedName("image")
+    @Expose
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
     public User() {
     }
 
