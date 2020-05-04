@@ -88,10 +88,29 @@ public class MessageActivity extends AppCompatActivity {
                                                 arrayListCreatedAt.add(val.getCreated_at());
                                                 arrayListMessage.add(val.getMessage());
                                             }
+                                            apiInterface.sendInboxNotification(sendMessage,currentUser).enqueue(new Callback<APIResponse>() {
+                                                @Override
+                                                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                                    APIResponse response1=response.body();
+                                                    if(!response1.getError()){
+
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                                }
+                                            });
                                             editText.clearFocus();
                                             editText.setText("");
                                             button.setVisibility(View.GONE);
-                                            adapter.notifyDataSetChanged();
+                                            for (String test:arrayListMessage
+                                                 ) {
+                                                Log.d("MESSAGE",test);
+                                            }
+//                                            adapter.notifyDataSetChanged();
+//                                            recyclerView.scrollToPosition(arrayListMessage.size()-1);
                                         }else {
                                           if(apiResponse.getErrorMsg().equals("2") || apiResponse.getErrorMsg().equals("3") || apiResponse.getErrorMsg().equals("4")){
                                                     linearLayout.setVisibility(View.GONE);
@@ -131,6 +150,7 @@ public class MessageActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
        recyclerView.setAdapter(adapter);
+       recyclerView.scrollToPosition(arrayListMessage.size()-1);
 
     }
     private void getMessage(){

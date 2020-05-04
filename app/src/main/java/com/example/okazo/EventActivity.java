@@ -48,6 +48,7 @@ import com.example.okazo.util.PostCommentAdapter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.text.ParseException;
@@ -55,6 +56,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -105,6 +107,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
     private String moderatorId;
     private Boolean followButtonFlag=false;
     private HorizontalScrollView horizontalScrollView;
+    private CircleImageView circleImageViewDot;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +146,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
         imageViewBack=findViewById(R.id.event_activity_back);
          eventDetail= (EventDetail) getIntent().getSerializableExtra(KEY_EVENT_DETAIL);
         userId=getIntent().getExtras().getString(KEY_USER_ID);
+        circleImageViewDot=findViewById(R.id.event_activity_unseen_dot);
         eventId=eventDetail.getId();
         horizontalScrollView=findViewById(R.id.event_activity_moderator_action_layout);
         buttonMessage=findViewById(R.id.event_activity_moderator_action_message);
@@ -175,6 +179,24 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                    moderatorId=apiResponse.getModerator().getId();
 
                    if(status.equals("Accepted")){
+                       apiInterface.checkInbox(eventId).enqueue(new Callback<APIResponse>() {
+                           @Override
+                           public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                               APIResponse apiResponse1=response.body();
+                               if(!apiResponse1.getError()){
+                                   if(Integer.valueOf(apiResponse1.getInboxCount())>0){
+                                       circleImageViewDot.setVisibility(View.VISIBLE);
+                                   }else {
+                                       circleImageViewDot.setVisibility(View.GONE);
+                                   }
+                               }
+                           }
+
+                           @Override
+                           public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                           }
+                       });
                        horizontalScrollView.setVisibility(View.VISIBLE);
                        linearLayoutResponseLayout.setVisibility(View.GONE);
                        if(ticketStatus.equals("1")){
@@ -1077,6 +1099,37 @@ going=false;
             public void onFailure(Call<APIResponse> call, Throwable t) {
                 DynamicToast.makeError(EventActivity.this,"There was an error").show();
                 finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        apiInterface.checkInbox(eventId).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse response1=response.body();
+                if(!response1.getError()){
+                    if(Integer.valueOf(response1.getInboxCount())>0){
+                        circleImageViewDot.setVisibility(View.VISIBLE);
+                    }else {
+                        circleImageViewDot.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+
+            }
+        });
+    }
+    private void addModerator(){
+        buttonModerator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }

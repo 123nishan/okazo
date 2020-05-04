@@ -53,6 +53,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
@@ -100,6 +102,23 @@ String userEmail,userId;
         mRequestingLocationUpdates = false;
 //        textView=findViewById(R.id.textview);
 //        swipeRefreshLayout=findViewById(R.id.swipe_refresh);
+
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            //Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        Log.d("TOKEN",token);
+                    }});
+
 
         mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
         bottomNavigationView=findViewById(R.id.bottom_nav_bar);

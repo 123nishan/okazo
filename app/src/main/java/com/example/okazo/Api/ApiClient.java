@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
 public class ApiClient {
-    public static final String BASE_URL = "http://192.168.0.196/okazo/";
+    public static final String BASE_URL = "http://192.168.0.199/okazo/";
 
 
     public static Retrofit retrofit = null;

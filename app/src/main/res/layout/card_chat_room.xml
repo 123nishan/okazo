@@ -56,7 +56,7 @@
                 android:layout_height="30dp"
                 android:background="@drawable/round_button"
                 android:text="1"
-                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
                 android:clickable="false"
                 android:id="@+id/card_chat_room_unseen"/>
 

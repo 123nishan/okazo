@@ -24,6 +24,15 @@ public class APIResponse {
     @Expose
     private User user;
 
+
+    @SerializedName("inbox_count")
+    @Expose
+    private String inboxCount;
+
+    public String getInboxCount() {
+        return inboxCount;
+    }
+
     @SerializedName("moderator")
     @Expose
     private Moderator moderator;

@@ -141,18 +141,21 @@
            <HorizontalScrollView
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-              android:visibility="gone"
+                android:visibility="gone"
                android:id="@+id/event_activity_moderator_action_layout">
                <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="8dp"
-
                 >
+                   <androidx.coordinatorlayout.widget.CoordinatorLayout
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content">
+
               <Button
                   android:id="@+id/event_activity_moderator_action_message"
-                  android:layout_width="100dp"
+                  android:layout_width="match_parent"
                   android:layout_height="35dp"
 
                   android:text="Inbox"
@@ -160,6 +163,18 @@
                   android:paddingLeft="8dp"
                   android:paddingRight="8dp"
                   android:background="@drawable/round_button"/>
+                       <de.hdodenhof.circleimageview.CircleImageView
+                           android:layout_width="8dp"
+                           android:visibility="gone"
+                            android:elevation="10dp"
+                           android:id="@+id/event_activity_unseen_dot"
+                           android:layout_height="8dp"
+                           android:layout_gravity="right"
+                           android:layout_marginTop="2dp"
+                           android:layout_marginRight="3dp"
+                           android:background="@drawable/ic_notification_dot"/>
+
+                   </androidx.coordinatorlayout.widget.CoordinatorLayout>
                 <Button
                     android:id="@+id/event_activity_moderator_action_moderator"
                     android:layout_marginLeft="5dp"

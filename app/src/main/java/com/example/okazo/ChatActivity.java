@@ -81,14 +81,33 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+
         adapter.setOnCardClickListener(new ChatAdapter.OnCardClickListener() {
             @Override
             public void onClick(int position, ArrayList<String> sender_id) {
-                Intent intent=new Intent(ChatActivity.this,MessageActivity.class);
-                intent.putExtra(KEY_SENDER_ID,sender_id.get(position));
-                intent.putExtra(KEY_RECEIVER_ID,id);
-                intent.putExtra(KEY_SENDER_NAME,arrayListName.get(position));
-                startActivity(intent);
+                apiInterface.makeSeen(id,sender_id.get(position)).enqueue(new Callback<APIResponse>() {
+                    @Override
+                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                        APIResponse apiResponse=response.body();
+
+                        if(!apiResponse.getError()){
+                            ((Button)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_chat_room_unseen) ).setVisibility(View.GONE);
+                            Intent intent=new Intent(ChatActivity.this,MessageActivity.class);
+                            intent.putExtra(KEY_SENDER_ID,sender_id.get(position));
+                            intent.putExtra(KEY_RECEIVER_ID,id);
+                            intent.putExtra(KEY_SENDER_NAME,arrayListName.get(position));
+                            startActivity(intent);
+                        }else {
+                            DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                    }
+                });
+
             }
         });
 

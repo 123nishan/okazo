@@ -2,10 +2,12 @@ package com.example.okazo.util;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.okazo.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -48,26 +54,45 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             String sender=senderId.get(position);
         String imagePath=KEY_IMAGE_ADDRESS+(image.get(position));
+
+        String created=createdAt.get(position);
+        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date=null;
+        try{
+            date=simpleDateFormat.parse(created);
+        }catch (ParseException e){}
+        long millis=date.getTime();
+        Date currentDateTimeString = Calendar.getInstance().getTime();
+        long currentMillis=currentDateTimeString.getTime();
+        CharSequence sequence= DateUtils.getRelativeTimeSpanString(millis,currentMillis,DateUtils.MINUTE_IN_MILLIS);
+
             if(sender.equals(currentUser)){
-                holder.cardViewLeft.setVisibility(View.GONE);
-                holder.cardViewRight.setVisibility(View.VISIBLE);
+                holder.linearLayoutLeft.setVisibility(View.GONE);
+                holder.linearLayoutRight.setVisibility(View.VISIBLE);
                 holder.textViewRightMessage.setText(message.get(position));
                 Glide.with(context)
                         .load(Uri.parse(imagePath))
                         .placeholder(R.drawable.ic_place_holder_background)
                         .centerCrop()
                         .into(holder.circleImageViewRight);
+                holder.textViewRightTime.setText(sequence);
 
             }else {
-                holder.cardViewLeft.setVisibility(View.VISIBLE);
-                holder.cardViewRight.setVisibility(View.GONE);
+                holder.linearLayoutLeft.setVisibility(View.VISIBLE);
+                holder.linearLayoutRight.setVisibility(View.GONE);
                 holder.textViewLeftMessage.setText(message.get(position));
                 Glide.with(context)
                         .load(Uri.parse(imagePath))
                         .placeholder(R.drawable.ic_place_holder_background)
                         .centerCrop()
                         .into(holder.circleImageViewLeft);
+                holder.textViewLeftTime.setText(sequence);
             }
+
+
+
+
+
     }
 
     @Override
@@ -76,22 +101,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
-        CardView cardViewLeft,cardViewRight;
+        LinearLayout linearLayoutLeft,linearLayoutRight;
         CircleImageView circleImageViewLeft,circleImageViewRight;
         TextView textViewLeftMessage,textViewLeftTime,textViewRightMessage,textViewRightTime;;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            cardViewLeft=itemView.findViewById(R.id.card_message_left_layout);
-            cardViewRight=itemView.findViewById(R.id.card_message_right_layout);
+            linearLayoutLeft=itemView.findViewById(R.id.card_message_left_layout);
+            linearLayoutRight=itemView.findViewById(R.id.card_message_right_layout);
             textViewLeftMessage=itemView.findViewById(R.id.card_message_left_message);
             textViewLeftTime=itemView.findViewById(R.id.card_message_left_time);
             textViewRightMessage=itemView.findViewById(R.id.card_message_right_message);
             textViewRightTime=itemView.findViewById(R.id.card_message_right_time);
             circleImageViewLeft=itemView.findViewById(R.id.card_message_left_image);
             circleImageViewRight=itemView.findViewById(R.id.card_message_right_image);
-            cardViewRight.setVisibility(View.GONE);
-            cardViewLeft.setVisibility(View.GONE);
+            linearLayoutRight.setVisibility(View.GONE);
+            linearLayoutLeft.setVisibility(View.GONE);
 
         }
     }

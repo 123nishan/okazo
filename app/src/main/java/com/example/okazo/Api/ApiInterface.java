@@ -37,7 +37,19 @@ public interface ApiInterface {
             @Field("phone") String phone,
             @Field("token") String token
 
+    );
 
+    @FormUrlEncoded
+    @POST("chat/check_inbox.php")
+    Call<APIResponse> checkInbox(
+            @Field("id") String id
+    );
+
+    @FormUrlEncoded
+    @POST("fcm.php")
+    Call<APIResponse> sendInboxNotification(
+            @Field("message") String message,
+            @Field("id") String id
     );
 
     @FormUrlEncoded
@@ -96,6 +108,15 @@ public interface ApiInterface {
             @Field("receiver_id") String receiverId,
             @Field("sender_id") String senderId,
             @Field("message") String message
+    );
+
+    @FormUrlEncoded
+    @POST("chat/make_seen.php")
+    Call<APIResponse> makeSeen(
+
+            @Field("receiver_id") String receiverId,
+            @Field("sender_id") String senderId
+
     );
 
     @FormUrlEncoded
