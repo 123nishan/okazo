@@ -103,7 +103,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d("google map","");
+       // Log.d("google map","");
         this.googleMap = googleMap;
         Double lat=mLocation.getLatitude();
         Double longi=mLocation.getLongitude();

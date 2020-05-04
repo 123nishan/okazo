@@ -15,6 +15,7 @@ public class constants {
     public static final String PASSWORD = "baikuntha";
     //for event detail
     public static final String  KEY_EVENT_TITLE="eventTitle";
+    public static final String  KEY_ID_FOR_CHAT="id";
     public static final String KEY_EVENT_START_DATE="startDate";
     public static final String KEY_EVENT_END_DATE="endDate";
     public static final String KEY_EVENT_START_TIME="startTime";
@@ -43,5 +44,8 @@ public class constants {
 
     public static final String KEY_USER_ID="userId";
     public static final String KEY_EVENT_DETAIL="eventDetail";
+    public static final String KEY_SENDER_ID="senderId";
+    public static final String KEY_RECEIVER_ID="receiverId";
+    public static final String KEY_SENDER_NAME="senderName";
 
 }

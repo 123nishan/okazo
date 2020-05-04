@@ -75,6 +75,30 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("chat/chat_room.php")
+    Call<APIResponse> getChatRoom(
+
+            @Field("receiver_id") String receiverId
+    );
+
+    @FormUrlEncoded
+    @POST("chat/message.php")
+    Call<APIResponse> getMessage(
+
+            @Field("receiver_id") String receiverId,
+            @Field("sender_id") String senderId
+    );
+
+    @FormUrlEncoded
+    @POST("chat/send_message.php")
+    Call<APIResponse> sendMessgae(
+
+            @Field("receiver_id") String receiverId,
+            @Field("sender_id") String senderId,
+            @Field("message") String message
+    );
+
+    @FormUrlEncoded
     @POST("moderator/leave_event.php")
     Call<APIResponse> leaveEvent(
 

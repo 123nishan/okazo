@@ -60,6 +60,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
+
+import static com.example.okazo.util.constants.KEY_ID_FOR_CHAT;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
 import static com.example.okazo.util.constants.KEY_USER_ID;
@@ -203,6 +205,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                                @Override
                                public void onClick(View view) {
                                    Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
+                                   intent.putExtra(KEY_ID_FOR_CHAT,eventId);
                                    startActivity(intent);
                                }
                            });

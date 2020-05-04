@@ -28,9 +28,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ChatActivity"
+        <activity android:name=".MessageActivity"
             android:theme="@style/AppTheme.NoActionBar"
             ></activity>
+        <activity
+            android:name=".ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EventActivity"
             android:theme="@style/AppTheme.NoActionBar" />

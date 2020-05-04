@@ -198,11 +198,11 @@ String userEmail,userId;
             public void onComplete(@NonNull Task<Location> task) {
                 if(task.isSuccessful()){
                     Location location=task.getResult();
-                    Log.d("lat",String.valueOf(location.getLatitude()));
-                    Log. d("longi",String.valueOf(location.getLongitude()));
+                   // Log.d("lat",String.valueOf(location.getLatitude()));
+                   // Log. d("longi",String.valueOf(location.getLongitude()));
 
                 }else {
-                    Log. d("Failed","");
+                   // Log. d("Failed","");
                 }
             }
         });

@@ -1,6 +1,7 @@
 package com.example.okazo.Api;
 
 
+import com.example.okazo.Model.Chat;
 import com.example.okazo.Model.Comment;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Moderator;
@@ -39,10 +40,25 @@ public class APIResponse {
     @Expose
     private ArrayList<Posts> postArray;
 
+    @SerializedName("chat_array")
+    @Expose
+    private ArrayList<Chat> chatArray;
+
+    public ArrayList<Chat> getChatArray() {
+        return chatArray;
+    }
+
     @SerializedName("comment")
     @Expose
     private Comment comment;
 
+    public Chat getChat() {
+        return chat;
+    }
+
+    @SerializedName("chat")
+    @Expose
+    private Chat chat;
 
     @SerializedName("commentArray")
     @Expose
