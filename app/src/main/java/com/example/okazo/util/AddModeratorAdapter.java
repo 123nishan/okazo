@@ -22,14 +22,15 @@ import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 
 public class AddModeratorAdapter extends RecyclerView.Adapter<AddModeratorAdapter.MyViewHolder>{
     AddModeratorAdapter.OnButtonClickListener onButtonClickListener;
-    ArrayList<String>name,email,image,id;
+    ArrayList<String>name,email,image,id,status;
     Context context;
-    public AddModeratorAdapter(ArrayList<String> name, ArrayList<String> email, ArrayList<String> image, Context context, ArrayList<String> id){
+    public AddModeratorAdapter(ArrayList<String> name, ArrayList<String> email, ArrayList<String> image, Context context, ArrayList<String> id,ArrayList<String> status){
         this.name=name;
         this.email=email;
         this.image=image;
         this.context=context;
         this.id=id;
+        this.status=status;
     }
     @NonNull
     @Override
@@ -40,15 +41,24 @@ public class AddModeratorAdapter extends RecyclerView.Adapter<AddModeratorAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.textViewName.setText(name.get(position));
-        holder.textViewEmail.setText(email.get(position));
-        String imagePath=KEY_IMAGE_ADDRESS+(image.get(position));
+        if(status.get(position).equals("Accepted")){
+            //no thing
+        }else {
+            holder.textViewName.setText(name.get(position));
+            holder.textViewEmail.setText(email.get(position));
+            String imagePath = KEY_IMAGE_ADDRESS + (image.get(position));
 
-        Glide.with(context)
-                .load(Uri.parse(imagePath))
-                .placeholder(R.drawable.ic_place_holder_background)
-                .centerCrop()
-                .into(holder.circleImageView);
+            Glide.with(context)
+                    .load(Uri.parse(imagePath))
+                    .placeholder(R.drawable.ic_place_holder_background)
+                    .centerCrop()
+                    .into(holder.circleImageView);
+            if(status.get(position).equals("Pending")){
+                holder.button.setVisibility(View.GONE);
+                holder.textViewStatus.setVisibility(View.VISIBLE);
+
+            }
+        }
     }
 
     @Override
@@ -63,7 +73,7 @@ public class AddModeratorAdapter extends RecyclerView.Adapter<AddModeratorAdapte
     }
     class MyViewHolder extends RecyclerView.ViewHolder{
         CircleImageView circleImageView;
-        TextView textViewName,textViewEmail;
+        TextView textViewName,textViewEmail,textViewStatus;
         Button button;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,6 +81,7 @@ public class AddModeratorAdapter extends RecyclerView.Adapter<AddModeratorAdapte
             textViewEmail=itemView.findViewById(R.id.card_add_moderator_email);
             textViewName=itemView.findViewById(R.id.card_add_moderator_name);
             button=itemView.findViewById(R.id.card_add_moderator_add_button);
+            textViewStatus=itemView.findViewById(R.id.card_add_moderator_status);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

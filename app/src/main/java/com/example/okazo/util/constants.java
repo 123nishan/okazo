@@ -43,9 +43,11 @@ public class constants {
     //public static final String KYE_EVENT_SELECTED_COUNTRY=""
 
     public static final String KEY_USER_ID="userId";
+    public static final String KEY_EVENT_ID="eventId";
     public static final String KEY_EVENT_DETAIL="eventDetail";
     public static final String KEY_SENDER_ID="senderId";
     public static final String KEY_RECEIVER_ID="receiverId";
     public static final String KEY_SENDER_NAME="senderName";
+    public static final String KEY_USER_ROLE="userRole";
 
 }

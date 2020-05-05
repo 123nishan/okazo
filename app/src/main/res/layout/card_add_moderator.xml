@@ -14,8 +14,8 @@
 
         android:orientation="horizontal">
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_weight="0.1"
         android:id="@+id/card_add_moderator_image"/>
         <LinearLayout
@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
+                android:layout_marginLeft="8dp"
                 android:id="@+id/card_add_moderator_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,6 +36,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimaryDark"/>
             <TextView
+                android:layout_marginLeft="8dp"
                 android:id="@+id/card_add_moderator_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,5 +58,14 @@
             android:background="@drawable/round_button"
             android:layout_gravity="end"
             />
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/card_add_moderator_status"
+            android:layout_width="80dp"
+            android:layout_height="55dp"
+            android:layout_alignParentEnd="true"
+         android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:text="Pending Request"/>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

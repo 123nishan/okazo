@@ -63,10 +63,12 @@ import retrofit2.Response;
 
 import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
 
+import static com.example.okazo.util.constants.KEY_EVENT_ID;
 import static com.example.okazo.util.constants.KEY_ID_FOR_CHAT;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
 import static com.example.okazo.util.constants.KEY_USER_ID;
+import static com.example.okazo.util.constants.KEY_USER_ROLE;
 
 public class EventActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener,ConfirmationDialog.orderConfirmationListener {
 
@@ -223,7 +225,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                       });
                       //for admin only
                        if(role.equals("Admin")){
-                           addModerator();
+
                            buttonMessage.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View view) {
@@ -241,6 +243,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                            checkeventStatus();
                            Toast.makeText(EventActivity.this, "Editor", Toast.LENGTH_SHORT).show();
                        }else {
+
                            userRole="Moderator";
                            checkeventStatus();
                             buttonReport.setClickable(false);
@@ -966,10 +969,12 @@ going=false;
                         //if admin and all status is fine
                         if(userRole.equals("Admin")){
                             createPost();
+                            addModerator(userRole);
                         }else if(userRole.equals("Editor")){
-                            addModerator();
+                            addModerator(userRole);
                             createPost();
                         }else {
+                            addModerator(userRole);
                             cardViewPost.setVisibility(View.GONE);
                         }
 
@@ -1127,11 +1132,13 @@ going=false;
             }
         });
     }
-    private void addModerator(){
+    private void addModerator(String moderatorType){
         buttonModerator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(getApplicationContext(),ModeratorActivity.class);
+                intent.putExtra(KEY_EVENT_ID,eventId);
+                intent.putExtra(KEY_USER_ROLE,moderatorType);
                 startActivity(intent);
             }
         });

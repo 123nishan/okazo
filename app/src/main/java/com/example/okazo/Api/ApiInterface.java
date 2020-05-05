@@ -48,9 +48,31 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("eventDetail/all_moderator.php")
+    Call<APIResponse> getAllModerator(
+            @Field("event_id") String event_id,
+            @Field("mod_type") String modType
+    );
+
+    @FormUrlEncoded
     @POST("moderator/all_user.php")
     Call<APIResponse> getAllUser(
-            @Field("search") Editable search
+            @Field("search") Editable search,
+            @Field("event_id") String eventId
+    );
+
+    @FormUrlEncoded
+    @POST("moderator/remove_moderator.php")
+    Call<APIResponse> removeModerator(
+            @Field("event_id") String eventId,
+            @Field("moderator_id") String moderatorId
+    );
+
+    @FormUrlEncoded
+    @POST("user/current_user_info.php")
+    Call<APIResponse> currentUserInfo(
+            @Field("user_id") String userId
+
     );
 
     @FormUrlEncoded
