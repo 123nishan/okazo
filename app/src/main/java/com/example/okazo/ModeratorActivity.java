@@ -57,7 +57,7 @@ viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
     @Override
     public void onPageSelected(int position) {
-       
+
     }
 
     @Override

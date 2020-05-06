@@ -62,7 +62,7 @@ public class AllModeratorFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_all_moderator, container, false);
-    // getActivity().getSupportFragmentManager().beginTransaction().detach(this).attach(this).commit();
+    //
 
         textViewEmail=v.findViewById(R.id.all_moderator_fragment_admin_email);
         textViewName=v.findViewById(R.id.all_moderator_fragment_admin_name);
@@ -277,5 +277,14 @@ public class AllModeratorFragment extends Fragment {
         });
     }
 
-
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if(menuVisible){
+            getActivity().getSupportFragmentManager().beginTransaction().detach(this).attach(this).commit();
+           // Toast.makeText(getActivity().getApplicationContext(), menuVisible+"", Toast.LENGTH_SHORT).show();
+        }else {
+           // Toast.makeText(getActivity().getApplicationContext(), menuVisible+"", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

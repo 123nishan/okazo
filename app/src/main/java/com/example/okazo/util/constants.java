@@ -50,4 +50,5 @@ public class constants {
     public static final String KEY_SENDER_NAME="senderName";
     public static final String KEY_USER_ROLE="userRole";
 
+
 }

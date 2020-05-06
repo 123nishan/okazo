@@ -479,8 +479,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
 
             }
         });
-        //post recyclerView
-
+        //post recyclerView○
 
 
         String imagePath=KEY_IMAGE_ADDRESS+(eventDetail.getImage());
@@ -994,7 +993,14 @@ going=false;
     public boolean onMenuItemClick(MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.event_setting_1:
-
+                if(userRole.equals("Moderator")){
+                        DynamicToast.makeError(EventActivity.this,"You dont have permission to this feature").show();
+                }else {
+                    Intent intent = new Intent(EventActivity.this, EventSettingActivity.class);
+                    intent.putExtra(KEY_EVENT_ID,eventId);
+                    intent.putExtra(KEY_USER_ROLE, userRole);
+                    startActivity(intent);
+                }
                 break;
             case R.id.event_setting_2:
                 String message;
@@ -1007,6 +1013,7 @@ going=false;
                 confirmationDialog.show(getSupportFragmentManager(),"Confirmation");
 
                 break;
+
         }
         return false;
     }

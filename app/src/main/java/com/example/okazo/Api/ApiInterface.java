@@ -62,6 +62,13 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("eventDetail/all_detail.php")
+    Call<APIResponse> getEventAllDetail(
+
+            @Field("event_id") String eventId
+    );
+
+    @FormUrlEncoded
     @POST("moderator/remove_moderator.php")
     Call<APIResponse> removeModerator(
             @Field("event_id") String eventId,

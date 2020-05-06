@@ -194,7 +194,7 @@ ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,
          endTime=intent.getString(KEY_EVENT_END_TIME);
          pageStatus=intent.getString(KEY_PAGE_STATUS);
         ticketStatus=intent.getString(KEY_EVENT_TICKET_STATUS);
-        Toast.makeText(this, ticketStatus, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, ticketStatus, Toast.LENGTH_SHORT).show();
          selectedLocaition=intent.getString(KEY_EVENT_SELECTED_LOCATION);
          description=intent.getString(KEY_EVENT_DESCRIPTION);
          latitude=intent.getString(KEY_LATITUDE);
