@@ -28,7 +28,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EventSettingActivity"></activity>
+        <activity android:name=".EventSettingActivity"
+            android:windowSoftInputMode="adjustResize"
+            ></activity>
         <activity android:name=".ModeratorActivity" />
         <activity
             android:name=".MessageActivity"
