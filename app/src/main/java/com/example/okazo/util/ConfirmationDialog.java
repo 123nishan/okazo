@@ -12,6 +12,7 @@ public class ConfirmationDialog extends AppCompatDialogFragment {
 
     private orderConfirmationListener listener;
     private String message;
+
     public ConfirmationDialog(String message){
         this.message=message;
     }

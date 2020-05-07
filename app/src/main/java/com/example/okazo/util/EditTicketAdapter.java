@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditTicketAdapter  extends RecyclerView.Adapter<EditTicketAdapter.MyViewHolder>{
+    public OnRemoveClickListener onRemoveClickListener;
     ArrayList<String>id,name,price,quanity;
     public EditTicketAdapter(ArrayList<String>id,ArrayList<String>name,ArrayList<String>price,ArrayList<String>quanity){
         this.id=id;
@@ -60,6 +61,13 @@ public class EditTicketAdapter  extends RecyclerView.Adapter<EditTicketAdapter.M
         return id.size();
     }
 
+    public interface OnRemoveClickListener
+    {
+        void onRemoveClick(int position,ArrayList<String> id);
+    }
+    public void setOnRemoveClickListener(OnRemoveClickListener onRemoveClickListener){
+        this.onRemoveClickListener=onRemoveClickListener;
+    }
     class MyViewHolder extends RecyclerView.ViewHolder {
     TextInputEditText textInputEditTextPrice,textInputEditTextName,textInputEditTextQuantity;
     CircleImageView circleImageView;
@@ -74,6 +82,15 @@ public class EditTicketAdapter  extends RecyclerView.Adapter<EditTicketAdapter.M
             textInputEditTextName=itemView.findViewById(R.id.card_ticket_type_edit_name);
             textInputEditTextPrice=itemView.findViewById(R.id.card_ticket_type_edit_price);
             textInputEditTextQuantity=itemView.findViewById(R.id.card_ticket_type_edit_quantity);
+            circleImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=getAdapterPosition();
+                    if(position!=RecyclerView.NO_POSITION && onRemoveClickListener!=null){
+                        onRemoveClickListener.onRemoveClick(position,id);
+                    }
+                }
+            });
         }
     }
 }

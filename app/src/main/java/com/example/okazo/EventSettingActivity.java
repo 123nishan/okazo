@@ -1,19 +1,28 @@
 package com.example.okazo;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.LoginFilter;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -31,9 +40,29 @@ import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.util.ConfirmationDialog;
+import com.example.okazo.util.DateTimePicker;
 import com.example.okazo.util.EditTicketAdapter;
 import com.github.jorgecastilloprz.FABProgressCircle;
 import com.google.android.material.textfield.TextInputEditText;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Point;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.maps.SupportMapFragment;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
+import com.mapbox.mapboxsdk.plugins.places.picker.PlacePicker;
+import com.mapbox.mapboxsdk.plugins.places.picker.model.PlacePickerOptions;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.lang.reflect.Array;
@@ -46,12 +75,16 @@ import retrofit2.Response;
 import static com.example.okazo.util.constants.KEY_EVENT_ID;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 import static com.example.okazo.util.constants.KEY_USER_ROLE;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
 public class EventSettingActivity extends AppCompatActivity implements ConfirmationDialog.orderConfirmationListener {
     private FABProgressCircle fabProgressCircle;
     private ImageView imageViewProfile,imageViewChange;
     private ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,expandableCardViewEventDate,expandableCardViewEventLocation;
-    private String userRole,path,eventId,latitude,longitude,ticketStatus,pagePrivate,ticketCount;
+    private String userRole,path,eventId,ticketStatus,pagePrivate,ticketCount="0";
+    private Double latitude,longitude;
+
     private Switch switchPrivate,switchTicket;
     private int changeCounter=0;
     private static final int CHOOSE_IMAGE = 505;
@@ -63,27 +96,36 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
     private TextView textViewTagHeading,textViewTicketSwitchMessage,textViewAddType;
     private EventDetail detail;
     private RecyclerView recyclerViewTag;
+    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
     private String title,description,startDate,endDate,startTime,endTime,ticketNoTypePrice,ticketNoTypeQuantity;
     private Boolean aBooleanTitle=false,aBooleanDescription=false,aBooleanStartDate=false,aBooleanStartTime=false
-            ,aBooleanEndTime=false,aBooleanEndDate=false,aBooleanPageStatus=false,aBooleanTicketStatus=false,aBooleanNoTypeTicketPrice=false,aBooleanNoTypeTicketQuantity=false;
+            ,aBooleanEndTime=false,aBooleanEndDate=false,aBooleanPageStatus=false,aBooleanTicketStatus=false
+            ,aBooleanNoTypeTicketPrice=false,aBooleanNoTypeTicketQuantity=false,aBooleanImage=false,aBooleanLocation=false;
     private String changeTitle,changeDescription,changeStartDate,changeEndDate,changeStartTime,
             changeEndTime,changeLocation,changePageStatus,changeTicketStatus,changeTicketPrice,changeTicketQuantity;
-    private ArrayList<String> arrayListPrice,arrayListQuantity,arrayListId,arrayListName;
+    private ArrayList<String> arrayListPrice=new ArrayList<>(),arrayListQuantity=new ArrayList<>(),arrayListId= new ArrayList<>(),arrayListName=new ArrayList<>(),arrayListFromAdapter= new ArrayList<>();
     private EditTicketAdapter adapter,adapter1;
     private TextView buttonAddMore;
     private LinearLayout linearLayoutNoTicket,linearLayout,linearLayout2,linearLayout1;
     private int expandCount=0;
+    private static final String ICON_ID = "ICON_ID";
+    private static final String LAYER_ID = "LAYER_ID";
+    private static final String SOURCE_ID = "SOURCE_ID";
+    private static final int REQUEST_CODE = 5675;
+    private Bundle savedInstance;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        savedInstance=savedInstanceState;
         getSupportActionBar().hide();
        // getActionBar().hide();
         setContentView(R.layout.activity_event_setting);
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
-        arrayListId=new ArrayList<>();
-        arrayListName=new ArrayList<>();
-        arrayListPrice=new ArrayList<>();
-        arrayListQuantity=new ArrayList<>();
+//        arrayListId=new ArrayList<>();
+//        arrayListName=new ArrayList<>();
+//        arrayListPrice=new ArrayList<>();
+//        arrayListQuantity=new ArrayList<>();
+//        arrayListFromAdapter=new ArrayList<>();
 
         fabProgressCircle=findViewById(R.id.event_setting_activity_fabProgressCircleToolBar);
         imageViewProfile=findViewById(R.id.event_setting_activity_image);
@@ -132,6 +174,49 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 
 
 
+
+        apiInterface.getEventAllDetail(eventId).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse=response.body();
+                if(!apiResponse.getError()){
+                    detail=apiResponse.getEvent();
+                    arrayListFromAdapter=detail.getTicketId();
+
+                    expandableCardViewEventLocation.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+                        @Override
+                        public void onExpandChanged(View v, boolean isExpanded) {
+
+                            addMap(detail.getLatitude(),detail.getLongitude(),savedInstanceState);
+
+
+                            eventDetailLocation.setOnTouchListener(new View.OnTouchListener() {
+                                @Override
+                                public boolean onTouch(View view, MotionEvent motionEvent) {
+                                    if(MotionEvent.ACTION_UP==motionEvent.getAction()) {
+                                        initSearchFab();
+
+                                    }
+                                    return false;
+                                }
+
+
+                            });
+
+                        }
+
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+
+            }
+        });
+
         apiInterface.getEventAllDetail(eventId).enqueue(new Callback<APIResponse>() {
             @Override
             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
@@ -140,7 +225,11 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                     EventDetail eventDetail=apiResponse.getEvent();
 
 
-                    detail=eventDetail;
+
+
+
+
+                    //detail=eventDetail;
                     eventDetailtitle.setText(eventDetail.getTitle());
                     title=eventDetail.getTitle();
                     eventDetailtitle.setClickable(true);
@@ -157,31 +246,31 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 
                     eventDetailStartdate.setText(eventDetail.getStartDate());
                     startDate=eventDetail.getStartDate();
-                    eventDetailStartdate.setClickable(true);
-                    eventDetailStartdate.setCursorVisible(true);
-                    eventDetailStartdate.setFocusable(true);
-                    eventDetailStartdate.setFocusableInTouchMode(true);
+//                    eventDetailStartdate.setClickable(true);
+//                    eventDetailStartdate.setCursorVisible(true);
+//                    eventDetailStartdate.setFocusable(true);
+//                    eventDetailStartdate.setFocusableInTouchMode(true);
 
                     eventDetailEndDate.setText(eventDetail.getEndDate());
                     endDate=eventDetail.getEndDate();
-                    eventDetailEndDate.setClickable(true);
-                    eventDetailEndDate.setCursorVisible(true);
-                    eventDetailEndDate.setFocusable(true);
-                    eventDetailEndDate.setFocusableInTouchMode(true);
+//                    eventDetailEndDate.setClickable(true);
+//                    eventDetailEndDate.setCursorVisible(true);
+//                    eventDetailEndDate.setFocusable(true);
+//                    eventDetailEndDate.setFocusableInTouchMode(true);
 
                     eventDetailStartTime.setText(eventDetail.getStartTime());
                     startTime=eventDetail.getStartTime();
-                    eventDetailStartTime.setClickable(true);
-                    eventDetailStartTime.setCursorVisible(true);
-                    eventDetailStartTime.setFocusable(true);
-                    eventDetailStartTime.setFocusableInTouchMode(true);
+//                    eventDetailStartTime.setClickable(true);
+//                    eventDetailStartTime.setCursorVisible(true);
+//                    eventDetailStartTime.setFocusable(true);
+//                    eventDetailStartTime.setFocusableInTouchMode(true);
 
                     eventDetailEndTime.setText(eventDetail.getEndTime());
                     endTime=eventDetail.getEndTime();
-                    eventDetailEndTime.setClickable(true);
-                    eventDetailEndTime.setCursorVisible(true);
-                    eventDetailEndTime.setFocusable(true);
-                    eventDetailEndTime.setFocusableInTouchMode(true);
+//                    eventDetailEndTime.setClickable(true);
+//                    eventDetailEndTime.setCursorVisible(true);
+//                    eventDetailEndTime.setFocusable(true);
+//                    eventDetailEndTime.setFocusableInTouchMode(true);
 
 
                     eventDetailLocation.setText(eventDetail.getPlace());
@@ -222,6 +311,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                         arrayListQuantity=eventDetail.getTicketQuantity();
                         arrayListName=eventDetail.getTicketName();
                         arrayListId=eventDetail.getTicketId();
+
                         ticketCount=eventDetail.getTicketCount();
                         if (Integer.valueOf(ticketCount) > 1) {
                             //if multiple ticket type
@@ -236,6 +326,52 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                             recyclerView.setLayoutManager(linearLayoutManager);
                             // recyclerView.setItemAnimator(new DefaultItemAnimator());
                             recyclerView.setAdapter(adapter);
+                            //arrayListFromAdapter=arrayListId;
+
+
+                            adapter.setOnRemoveClickListener(new EditTicketAdapter.OnRemoveClickListener() {
+                                @Override
+                                public void onRemoveClick(int position,ArrayList<String>id) {
+                                    arrayListId.remove(position);
+                                    arrayListName.remove(position);
+                                    arrayListPrice.remove(position);
+                                    arrayListQuantity.remove(position);
+                                  //  arrayListFromAdapter=id;
+                                    if(arrayListId.equals(arrayListFromAdapter)){
+                                        aBooleanTicketStatus=false;
+
+                                    }else {
+                                        aBooleanTicketStatus=true;
+
+                                    }
+                                    visibleSaveButton();
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+
+                            textViewAddType.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    expandableCardViewTicketDetail.collapse();
+
+                                    arrayListId.add("Empty");
+                                    arrayListName.add("Empty");
+                                    arrayListPrice.add("Empty");
+                                    arrayListQuantity.add("Empty");
+                                    adapter.notifyDataSetChanged();
+                                    aBooleanTicketStatus=true;
+                                    visibleSaveButton();
+                                    expandableCardViewTicketDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+                                        @Override
+                                        public void onExpandChanged(View v, boolean isExpanded) {
+                                            if(!isExpanded){
+                                                expandableCardViewTicketDetail.expand();
+                                                expandableCardViewTicketDetail.removeOnExpandedListener();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
                             //adapter.notifyDataSetChanged();
 
 
@@ -383,6 +519,16 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                     //description
 
                     //startDate
+                   eventDetailStartdate.setOnTouchListener(new View.OnTouchListener() {
+                       @Override
+                       public boolean onTouch(View view, MotionEvent motionEvent) {
+                           if(MotionEvent.ACTION_UP==motionEvent.getAction()){
+                               DateTimePicker dateTimePicker=new DateTimePicker();
+                               dateTimePicker.showDatePickerDialog(EventSettingActivity.this,eventDetailStartdate,"date");
+                           }
+                           return false;
+                       }
+                   });
                     eventDetailStartdate.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -409,6 +555,16 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                     //startDate
 
                     //endDate
+                    eventDetailEndDate.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            if(MotionEvent.ACTION_UP==motionEvent.getAction()){
+                                DateTimePicker dateTimePicker=new DateTimePicker();
+                                dateTimePicker.showDatePickerDialog(EventSettingActivity.this,eventDetailEndDate,"date");
+                            }
+                            return false;
+                        }
+                    });
                     eventDetailEndDate.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -435,6 +591,16 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                     //endDate
 
                     //startTime
+                    eventDetailStartTime.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            if(MotionEvent.ACTION_UP==motionEvent.getAction()){
+                                DateTimePicker dateTimePicker=new DateTimePicker();
+                                dateTimePicker.showDatePickerDialog(EventSettingActivity.this,eventDetailStartTime,"time");
+                            }
+                            return false;
+                        }
+                    });
                     eventDetailStartTime.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -461,6 +627,16 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                     //startTime
 
                     //endTime
+                    eventDetailEndTime.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            if(MotionEvent.ACTION_UP==motionEvent.getAction()){
+                                DateTimePicker dateTimePicker=new DateTimePicker();
+                                dateTimePicker.showDatePickerDialog(EventSettingActivity.this,eventDetailEndTime,"time");
+                            }
+                            return false;
+                        }
+                    });
                     eventDetailEndTime.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -524,9 +700,39 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 
                     textViewTicketSwitchMessage.setVisibility(View.GONE);
                     if(ticketStatus.equals("1")){
+
+
+                        linearLayoutNoTicket.setVisibility(View.VISIBLE);
                         aBooleanTicketStatus=false;
                         changeTicketStatus="1";
                         buttonAddMore.setVisibility(View.GONE);
+                        if(Integer.valueOf(ticketCount)>1){
+
+                            Log.d("EQUAL1","HERE"+arrayListId.get(arrayListId.size()-1)+" "+arrayListFromAdapter.get(arrayListFromAdapter.size()-1));
+                            textViewAddType.setVisibility(View.VISIBLE);
+                            if(!arrayListId.equals(arrayListFromAdapter)){
+
+
+                                aBooleanTicketStatus=true;
+                            }
+                        }
+                        if(expandCount==0){
+
+                        }else {
+                            expandableCardViewTicketDetail.collapse();
+                            expandableCardViewTicketDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+                                @Override
+                                public void onExpandChanged(View v, boolean isExpanded) {
+                                    if(!isExpanded){
+                                        expandableCardViewTicketDetail.expand();
+                                        expandableCardViewTicketDetail.removeOnExpandedListener();
+                                    }
+
+                                }
+                            });
+                        }
+                        expandCount+=1;
+                        //linearLayout1.setVisibility(View.VISIBLE);
                     }else {
                         expandableCardViewTicketDetail.collapse();
                         linearLayoutNoTicket.setVisibility(View.VISIBLE);
@@ -561,7 +767,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                 }else {
                     textViewAddType.setVisibility(View.GONE);
                         expandableCardViewTicketDetail.collapse();
-                    linearLayout2.setVisibility(View.GONE);
+                    //linearLayout2.setVisibility(View.GONE);
                     buttonAddMore.setVisibility(View.GONE);
                     textViewTicketSwitchMessage.setVisibility(View.VISIBLE);
                     linearLayoutNoTicket.setVisibility(View.GONE);
@@ -572,6 +778,16 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                         changeTicketStatus="0";
                         aBooleanTicketStatus=true;
                     }
+                    expandableCardViewTicketDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+                        @Override
+                        public void onExpandChanged(View v, boolean isExpanded) {
+                            if(!isExpanded){
+                                expandableCardViewTicketDetail.expand();
+                                expandableCardViewTicketDetail.removeOnExpandedListener();
+                            }
+
+                        }
+                    });
                     expandableCardViewTicketDetail.expand();
                     visibleSaveButton();
                     //unchecked
@@ -591,7 +807,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                     @Override
                     public void onClick(View view) {
                         expandableCardViewTicketDetail.collapse();
-                        
+
                         arrayListId.add("Empty");
                         arrayListName.add("Empty");
                         arrayListPrice.add("Empty");
@@ -682,9 +898,64 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 
     }
 
+    private void addMap(String latitude, String longitude, Bundle savedInstanceState) {
+        SupportMapFragment mapFragment;
+        Mapbox.getInstance(EventSettingActivity.this, getString(R.string.mapbox_access_token));
+        if(savedInstanceState==null) {
+
+            final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            MapboxMapOptions options = MapboxMapOptions.createFromAttributes(EventSettingActivity.this, null);
+            options.camera(new CameraPosition.Builder()
+                    .target(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)))
+                    .zoom(14)
+
+                    .build());
+
+            mapFragment = SupportMapFragment.newInstance(options);
+            transaction.add(R.id.expand_event_location, mapFragment, "com.mapbox.map");
+            transaction.commit();
+        }else {
+            mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentByTag("com.mapbox.map");
+        }
+        if(mapFragment!=null){
+
+
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(@NonNull MapboxMap mapboxMap) {
+                    //List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
+
+                    mapboxMap.setStyle(new Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
+                            .withImage(ICON_ID,BitmapFactory.decodeResource(EventSettingActivity.this.getResources(),R.drawable.map_default_map_marker))
+                            .withSource(new GeoJsonSource(SOURCE_ID, FeatureCollection.fromFeature(Feature.fromGeometry(Point.fromLngLat(Double.parseDouble(longitude),Double.parseDouble(latitude))))))
+                            .withLayer(new SymbolLayer(LAYER_ID, SOURCE_ID)
+                                    .withProperties(PropertyFactory.iconImage(ICON_ID),
+                                            iconAllowOverlap(true),
+                                            iconOffset(new Float[] {0f, -9f}))
+                            ), new Style.OnStyleLoaded() {
+                        @Override
+                        public void onStyleLoaded(@NonNull Style style) {
+
+// Map is set up and the style has loaded. Now you can add additional data or make other map adjustments.
+
+
+                        }
+                    });
+//                                mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+//                                    @Override
+//                                    public void onStyleLoaded(@NonNull Style style) {
+//                                         //SymbolManager symbolManager=new SymbolManager(mapFragment,mapboxMap,style);
+//
+//                                    }
+//                                });
+                }
+            });
+        }
+    }
+
     private void visibleSaveButton(){
         if(aBooleanTitle || aBooleanPageStatus || aBooleanDescription || aBooleanStartDate || aBooleanEndDate || aBooleanStartTime ||
-                aBooleanEndTime|| aBooleanNoTypeTicketPrice || aBooleanNoTypeTicketQuantity || aBooleanTicketStatus){
+                aBooleanEndTime|| aBooleanNoTypeTicketPrice || aBooleanNoTypeTicketQuantity || aBooleanTicketStatus || aBooleanImage || aBooleanLocation){
             fabProgressCircle.setVisibility(View.VISIBLE);
         }else {
             fabProgressCircle.setVisibility(View.GONE);
@@ -722,9 +993,58 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
             path=cursor.getString(columnIndex);
             cursor.close();
 
+            aBooleanImage=true;
+            visibleSaveButton();
+
 
 
         }
+
+
+        if(resultCode== Activity.RESULT_OK && requestCode==REQUEST_CODE_AUTOCOMPLETE){
+
+            CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
+            startActivityForResult(
+                    new PlacePicker.IntentBuilder()
+                            .accessToken(getString(R.string.mapbox_access_token))
+                            .placeOptions(PlacePickerOptions.builder().includeDeviceLocationButton(true)
+                                    .statingCameraPosition(new CameraPosition.Builder()
+                                            .target(new LatLng(((Point)selectedCarmenFeature.geometry()).latitude(), ((Point)selectedCarmenFeature.geometry()).longitude())).zoom(14).build())
+                                    .build())
+                            .build(EventSettingActivity.this), REQUEST_CODE);
+        }
+
+        if (resultCode == RESULT_CANCELED) {
+
+
+
+        } else if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+
+            CarmenFeature carmenFeature = PlacePicker.getPlace(data);
+
+
+            if (carmenFeature != null) {
+                aBooleanLocation=true;
+                visibleSaveButton();
+
+                latitude = carmenFeature.center().latitude();
+                longitude=carmenFeature.center().longitude();
+
+                addMap(String.valueOf(latitude),String.valueOf(longitude),savedInstance);
+
+
+                String  placeTitle = carmenFeature.placeName();
+                eventDetailLocation.setText(placeTitle);
+
+
+            }else
+            {
+                Toast.makeText(this, "Could not fetch location information, Please try again!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+
     }
 
     @Override
@@ -735,5 +1055,42 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
     @Override
     public void OnNoClicked() {
 
+    }
+    private void initSearchFab() {
+
+        Intent intent = new PlaceAutocomplete.IntentBuilder()
+                .accessToken(Mapbox.getAccessToken() != null ? Mapbox.getAccessToken() : getString(R.string.mapbox_access_token))
+                .placeOptions(PlaceOptions.builder()
+                        .backgroundColor(Color.parseColor("#EEEEEE"))
+                        .limit(10)
+
+                        .build(PlaceOptions.MODE_CARDS))
+                .build(EventSettingActivity.this);
+        startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE);
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+       // super.onBackPressed();
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(EventSettingActivity.this);
+        builder.setMessage("Any Changes made will not be applied")
+                .setPositiveButton("Discard", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+        AlertDialog alertDialog=builder.create();
+        alertDialog.show();
     }
 }
