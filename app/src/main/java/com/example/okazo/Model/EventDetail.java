@@ -138,6 +138,10 @@ public class EventDetail implements Serializable {
     @Expose
     private String ticketCount;
 
+    public String getTicketCount() {
+        return ticketCount;
+    }
+
     @SerializedName("ticket_price")
     @Expose
     private ArrayList<String> ticketPrice;
