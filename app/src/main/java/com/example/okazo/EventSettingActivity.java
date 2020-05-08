@@ -43,6 +43,7 @@ import com.example.okazo.util.ConfirmationDialog;
 import com.example.okazo.util.DateTimePicker;
 import com.example.okazo.util.EditTicketAdapter;
 import com.github.jorgecastilloprz.FABProgressCircle;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Feature;
@@ -79,10 +80,11 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
 public class EventSettingActivity extends AppCompatActivity implements ConfirmationDialog.orderConfirmationListener {
-    private FABProgressCircle fabProgressCircle;
+    private FloatingActionButton fabProgressCircle;
+    private FABProgressCircle progressCircle;
     private ImageView imageViewProfile,imageViewChange;
     private ExpandableCardView expandableCardViewEventDetail,expandableCardViewTicketDetail,expandableCardViewEventDate,expandableCardViewEventLocation;
-    private String userRole,path,eventId,ticketStatus,pagePrivate,ticketCount="0";
+    private String userRole,path,eventId,ticketStatus,pagePrivate,ticketCount="0",currentLatitude,currentLongitude;
     private Double latitude,longitude;
 
     private Switch switchPrivate,switchTicket;
@@ -97,12 +99,14 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
     private EventDetail detail;
     private RecyclerView recyclerViewTag;
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
+    private RecyclerView recyclerView;
     private String title,description,startDate,endDate,startTime,endTime,ticketNoTypePrice,ticketNoTypeQuantity;
     private Boolean aBooleanTitle=false,aBooleanDescription=false,aBooleanStartDate=false,aBooleanStartTime=false
             ,aBooleanEndTime=false,aBooleanEndDate=false,aBooleanPageStatus=false,aBooleanTicketStatus=false
             ,aBooleanNoTypeTicketPrice=false,aBooleanNoTypeTicketQuantity=false,aBooleanImage=false,aBooleanLocation=false;
     private String changeTitle,changeDescription,changeStartDate,changeEndDate,changeStartTime,
-            changeEndTime,changeLocation,changePageStatus,changeTicketStatus,changeTicketPrice,changeTicketQuantity;
+            changeEndTime,changeLocation,changePageStatus,changeTicketStatus,changeTicketPrice,
+            changeTicketQuantity,changeLatitude,changeLongitude,changeTicketId,changeTicketName;
     private ArrayList<String> arrayListPrice=new ArrayList<>(),arrayListQuantity=new ArrayList<>(),arrayListId= new ArrayList<>(),arrayListName=new ArrayList<>(),arrayListFromAdapter= new ArrayList<>();
     private EditTicketAdapter adapter,adapter1;
     private TextView buttonAddMore;
@@ -127,7 +131,8 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 //        arrayListQuantity=new ArrayList<>();
 //        arrayListFromAdapter=new ArrayList<>();
 
-        fabProgressCircle=findViewById(R.id.event_setting_activity_fabProgressCircleToolBar);
+        fabProgressCircle=findViewById(R.id.event_setting_activity_fabToolBar);
+        progressCircle=findViewById(R.id.event_setting_activity_fabProgressCircleToolBar);
         imageViewProfile=findViewById(R.id.event_setting_activity_image);
         imageViewChange=findViewById(R.id.event_setting_activity_change);
         expandableCardViewEventDate=findViewById(R.id.event_setting_activity_expandable_event_detail_date);
@@ -173,7 +178,14 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
         eventId=bundle.getString(KEY_EVENT_ID);
 
 
-
+        fabProgressCircle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(EventSettingActivity.this, "aaaaa", Toast.LENGTH_SHORT).show();
+                progressCircle.show();
+                saveButton();
+            }
+        });
 
         apiInterface.getEventAllDetail(eventId).enqueue(new Callback<APIResponse>() {
             @Override
@@ -182,6 +194,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                 if(!apiResponse.getError()){
                     detail=apiResponse.getEvent();
                     arrayListFromAdapter=detail.getTicketId();
+
 
                     expandableCardViewEventLocation.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
                         @Override
@@ -319,7 +332,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                             linearLayout1.setVisibility(View.VISIBLE);
                             linearLayout2.setVisibility(View.GONE);
 
-                            RecyclerView recyclerView=findViewById(R.id.expand_ticket_types_recycler_view);
+                             recyclerView=findViewById(R.id.expand_ticket_types_recycler_view);
                             adapter=new EditTicketAdapter(arrayListId,arrayListName,arrayListPrice,arrayListQuantity);
                             LinearLayoutManager linearLayoutManager=new LinearLayoutManager(EventSettingActivity.this);
                             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -705,16 +718,18 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                         linearLayoutNoTicket.setVisibility(View.VISIBLE);
                         aBooleanTicketStatus=false;
                         changeTicketStatus="1";
-                        buttonAddMore.setVisibility(View.GONE);
+                        ticketCount=String.valueOf(arrayListId.size());
                         if(Integer.valueOf(ticketCount)>1){
 
-                            Log.d("EQUAL1","HERE"+arrayListId.get(arrayListId.size()-1)+" "+arrayListFromAdapter.get(arrayListFromAdapter.size()-1));
+                            buttonAddMore.setVisibility(View.GONE);
                             textViewAddType.setVisibility(View.VISIBLE);
                             if(!arrayListId.equals(arrayListFromAdapter)){
 
 
                                 aBooleanTicketStatus=true;
                             }
+                        }else if(Integer.valueOf(ticketCount)==1){
+                            buttonAddMore.setVisibility(View.VISIBLE);
                         }
                         if(expandCount==0){
 
@@ -806,8 +821,10 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                 textViewAddType.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        expandableCardViewTicketDetail.collapse();
 
+                        expandableCardViewTicketDetail.collapse();
+                        aBooleanTicketStatus=true;
+                        visibleSaveButton();
                         arrayListId.add("Empty");
                         arrayListName.add("Empty");
                         arrayListPrice.add("Empty");
@@ -824,7 +841,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                         });
                     }
                 });
-                RecyclerView recyclerView=findViewById(R.id.expand_ticket_types_recycler_view);
+                 //recyclerView=findViewById(R.id.expand_ticket_types_recycler_view);
                 if(arrayListId.size()==0){
 
                     arrayListId.add("Empty");
@@ -841,6 +858,25 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                 recyclerView.setAdapter(adapter1);
                 //adapter1.notifyDataSetChanged();
                 //expandableCardViewTicketDetail.expand();
+                adapter1.setOnRemoveClickListener(new EditTicketAdapter.OnRemoveClickListener() {
+                    @Override
+                    public void onRemoveClick(int position, ArrayList<String> id) {
+                        arrayListId.remove(position);
+                        arrayListName.remove(position);
+                        arrayListPrice.remove(position);
+                        arrayListQuantity.remove(position);
+                        //  arrayListFromAdapter=id;
+                        if(arrayListId.equals(arrayListFromAdapter)){
+                            aBooleanTicketStatus=false;
+
+                        }else {
+                            aBooleanTicketStatus=true;
+
+                        }
+                        visibleSaveButton();
+                        adapter1.notifyDataSetChanged();
+                    }
+                });
 
                 expandableCardViewTicketDetail.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
                     @Override
@@ -889,12 +925,12 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
             }
         }
     });
-    fabProgressCircle.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Log.d("Check",changeTitle+" "+changePageStatus);
-        }
-    });
+//    fabProgressCircle.setOnClickListener(new View.OnClickListener() {
+//        @Override
+//        public void onClick(View view) {
+//            Log.d("Check",changeTitle+" "+changePageStatus);
+//        }
+//    });
 
     }
 
@@ -1092,5 +1128,129 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                 });
         AlertDialog alertDialog=builder.create();
         alertDialog.show();
+    }
+    public void saveButton(){
+        if(eventDetailtitle.getText().toString()==null || eventDetailtitle.getText().toString().isEmpty()){
+            eventDetailtitle.setError("Missing Value");
+            DynamicToast.makeError(EventSettingActivity.this,"Value Missing!").show();
+            return;
+        }else {
+            changeTitle=eventDetailtitle.getText().toString();
+        }
+
+        if(eventDetailDescription.getText().toString()==null || eventDetailDescription.getText().toString().isEmpty()){
+            eventDetailDescription.setError("Missing Value");
+            DynamicToast.makeError(EventSettingActivity.this,"Value Missing!").show();
+            return;
+        }else {
+            changeDescription=eventDetailDescription.getText().toString();
+        }
+
+        if(aBooleanStartDate){
+            StringBuilder stringBuilder = new StringBuilder(eventDetailStartdate.getText().toString());
+            String sDate = stringBuilder.substring(4, stringBuilder.length() - 1);
+            changeStartDate=sDate;
+        }else {
+            changeStartDate=eventDetailStartdate.getText().toString();
+        }
+        if(aBooleanEndDate){
+            StringBuilder stringBuilder = new StringBuilder(eventDetailEndDate.getText().toString());
+            String eDate = stringBuilder.substring(4, stringBuilder.length() - 1);
+            changeEndDate=eDate;
+        }else {
+            changeEndDate=eventDetailEndDate.getText().toString();
+        }
+//
+//        if(eventDetailDescription.getText().toString()==null || eventDetailDescription.getText().toString().isEmpty()){
+//            eventDetailDescription.setError("Missing Value");
+//            DynamicToast.makeError(EventSettingActivity.this,"Value Missing!").show();
+//            return;
+//        }else {
+//
+//        }
+
+       // changeEndDate=eventDetailEndDate.getText().toString();
+        changeStartTime=eventDetailStartTime.getText().toString();
+        changeEndTime=eventDetailEndTime.getText().toString();
+        changeLocation=eventDetailLocation.getText().toString();
+        if(latitude!=null && longitude!=null){
+            changeLatitude=String.valueOf(latitude);
+            changeLongitude=String.valueOf(longitude);
+
+        }else {
+            changeLatitude=detail.getLatitude();
+            changeLongitude=detail.getLongitude();
+        }
+
+//        Log.d("ALLCHECK",changeTitle+"\n"+changeDescription+"\n"+changeStartDate+"\n"+changeEndDate+"\n"
+//                +changeStartTime+"\n"+changeEndTime+"\n"+changeLocation+"\n"+changeLatitude+"\n"+changeLongitude);
+        if(changeTicketStatus.equals("1")){
+
+
+            ticketCount=String.valueOf(arrayListId.size());
+            if(ticketCount.equals("1")){
+                String name= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.card_ticket_type_edit_name)).getText().toString();
+                String price= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.card_ticket_type_edit_price)).getText().toString();
+                String quantity= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.card_ticket_type_edit_quantity)).getText().toString();
+                if(name==null || name.isEmpty() ||price==null || price.isEmpty()|| quantity==null || quantity.isEmpty() ){
+                    progressCircle.hide();
+                    DynamicToast.makeError(EventSettingActivity.this,"Ticket Information Missing!").show();
+
+                    return;
+                }else {
+                    changeTicketPrice = price;
+                    changeTicketQuantity = quantity;
+                    changeTicketName = name;
+                    changeTicketId = arrayListId.get(0);
+                }
+            }else if(Integer.valueOf(ticketCount)>1){
+
+                changeTicketPrice=null;
+                changeTicketQuantity=null;
+                changeTicketName=null;
+                changeTicketId=null;
+                for(int i=0;i<arrayListId.size();i++){
+                   // Log.d("Name",arrayListName.get(i)+" ");
+                    if(arrayListName.get(i).equals("Empty")){
+                        String name= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.card_ticket_type_edit_name)).getText().toString();
+                        String price= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.card_ticket_type_edit_price)).getText().toString();
+                        String quantity= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.card_ticket_type_edit_quantity)).getText().toString();
+
+                        if(name==null || name.isEmpty() ||price==null || price.isEmpty()|| quantity==null || quantity.isEmpty() ){
+                            progressCircle.hide();
+                            DynamicToast.makeError(EventSettingActivity.this,"Multiple Ticket Information Missing!").show();
+
+                            return;
+                        }
+                        changeTicketId = changeTicketId + "," + arrayListId.get(i);
+                        changeTicketQuantity = changeTicketQuantity + "," + quantity;
+                        changeTicketName = changeTicketName + "," + name;
+                        changeTicketPrice = changeTicketPrice + "," + price;
+                    }else {
+                        changeTicketId = changeTicketId + "," + arrayListId.get(i);
+                        changeTicketQuantity = changeTicketQuantity + "," + arrayListQuantity.get(i);
+                        changeTicketName = changeTicketName + "," + arrayListName.get(i);
+                        changeTicketPrice = changeTicketPrice + "," + arrayListPrice.get(i);
+                    }
+                }
+            }else {
+                progressCircle.hide();
+                DynamicToast.makeError(EventSettingActivity.this,"Cant add Empty ticket").show();
+
+                return;
+            }
+//            if(changeTicketId==null){
+//
+//            }
+        }else {
+            changeTicketPrice="No";
+            changeTicketQuantity="No";
+            changeTicketName="No";
+            changeTicketId="No";
+        }
+        Log.d("TICKET",ticketStatus+"\n"+ticketCount+"\n"+changeTicketName);
+
+       // Toast.makeText(EventSettingActivity.this, "a "+arrayListId.size(), Toast.LENGTH_SHORT).show();
+
     }
 }

@@ -188,6 +188,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="number"
                         android:id="@+id/card_ticket_type_edit_price"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -223,6 +224,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="number"
                         android:id="@+id/card_ticket_type_edit_quantity"/>
                 </com.google.android.material.textfield.TextInputLayout>
 

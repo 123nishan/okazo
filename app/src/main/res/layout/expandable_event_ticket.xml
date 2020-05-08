@@ -166,7 +166,7 @@
        <LinearLayout
 
            android:layout_width="match_parent"
-           android:layout_height="match_parent"
+           android:layout_height="wrap_content"
            android:orientation="vertical"
            android:id="@+id/expand_yes_ticket_type">
            <androidx.recyclerview.widget.RecyclerView
@@ -187,7 +187,7 @@
 
        </LinearLayout>
     <LinearLayout
-
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

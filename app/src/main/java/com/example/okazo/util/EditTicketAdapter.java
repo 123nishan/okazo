@@ -37,6 +37,7 @@ public class EditTicketAdapter  extends RecyclerView.Adapter<EditTicketAdapter.M
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+       // holder.textInputEditTextPrice.setInputType(num);
         if(id.get(position).equals("Empty")){
             holder.linearLayoutPreview.setVisibility(View.GONE);
             holder.linearLayoutEdit.setVisibility(View.VISIBLE);
