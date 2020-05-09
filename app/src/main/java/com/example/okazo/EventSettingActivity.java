@@ -43,6 +43,7 @@ import com.example.okazo.util.ConfirmationDialog;
 import com.example.okazo.util.DateTimePicker;
 import com.example.okazo.util.EditTicketAdapter;
 import com.github.jorgecastilloprz.FABProgressCircle;
+import com.google.android.gms.common.api.Api;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
@@ -66,9 +67,13 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -95,7 +100,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
     private TextInputEditText eventDetailtitle,eventDetailDescription,eventDetailStartdate,eventDetailEndDate,
             eventDetailStartTime,eventDetailEndTime,eventDetailLocation,eventDetailSingleTicketPrice,eventDetailSingleTicketQuantity,textInputEditTextQuantity,textInputEditTextPrice;
     private RelativeLayout relativeLayout;
-    private TextView textViewTagHeading,textViewTicketSwitchMessage,textViewAddType;
+    private TextView textViewTagHeading,textViewTicketSwitchMessage,textViewAddType,textViewRemoveType;
     private EventDetail detail;
     private RecyclerView recyclerViewTag;
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
@@ -117,6 +122,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
     private static final String SOURCE_ID = "SOURCE_ID";
     private static final int REQUEST_CODE = 5675;
     private Bundle savedInstance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,7 +175,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
          linearLayout1=findViewById(R.id.expand_yes_ticket_type);
          linearLayout2=findViewById(R.id.expand_no_ticket_type);
          textViewAddType=findViewById(R.id.expand_event_ticket_add_type);
-
+        textViewRemoveType=findViewById(R.id.expand_event_ticket_remove_type);
      //   fabProgressCircle.setVisibility(View.GONE);
 
 
@@ -177,13 +183,21 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
         userRole=bundle.getString(KEY_USER_ROLE);
         eventId=bundle.getString(KEY_EVENT_ID);
 
+        recyclerView=findViewById(R.id.expand_ticket_types_recycler_view);
+        adapter=new EditTicketAdapter(arrayListId,arrayListName,arrayListPrice,arrayListQuantity);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(EventSettingActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        // recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
 
         fabProgressCircle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(EventSettingActivity.this, "aaaaa", Toast.LENGTH_SHORT).show();
+
                 progressCircle.show();
-                saveButton();
+              saveButton();
             }
         });
 
@@ -319,7 +333,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 //                changePageStatus=pagePrivate;
 //                changeTicketStatus=ticketStatus;
                     if(ticketStatus.equals("1")) {
-
+                        textViewRemoveType.setVisibility(View.GONE);
                         arrayListPrice=eventDetail.getTicketPrice();
                         arrayListQuantity=eventDetail.getTicketQuantity();
                         arrayListName=eventDetail.getTicketName();
@@ -327,12 +341,14 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 
                         ticketCount=eventDetail.getTicketCount();
                         if (Integer.valueOf(ticketCount) > 1) {
+                            textViewAddType.setVisibility(View.VISIBLE);
+                            textViewRemoveType.setVisibility(View.VISIBLE);
                             //if multiple ticket type
                             linearLayout.setVisibility(View.GONE);
                             linearLayout1.setVisibility(View.VISIBLE);
                             linearLayout2.setVisibility(View.GONE);
 
-                             recyclerView=findViewById(R.id.expand_ticket_types_recycler_view);
+
                             adapter=new EditTicketAdapter(arrayListId,arrayListName,arrayListPrice,arrayListQuantity);
                             LinearLayoutManager linearLayoutManager=new LinearLayoutManager(EventSettingActivity.this);
                             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -345,20 +361,25 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                             adapter.setOnRemoveClickListener(new EditTicketAdapter.OnRemoveClickListener() {
                                 @Override
                                 public void onRemoveClick(int position,ArrayList<String>id) {
-                                    arrayListId.remove(position);
-                                    arrayListName.remove(position);
-                                    arrayListPrice.remove(position);
-                                    arrayListQuantity.remove(position);
-                                  //  arrayListFromAdapter=id;
-                                    if(arrayListId.equals(arrayListFromAdapter)){
-                                        aBooleanTicketStatus=false;
+                                    if(adapter.getItemCount()<=2){
+                                        DynamicToast.makeError(EventSettingActivity.this,"Atleats two type of ticket needed").show();
 
                                     }else {
-                                        aBooleanTicketStatus=true;
+                                        arrayListId.remove(position);
+                                        arrayListName.remove(position);
+                                        arrayListPrice.remove(position);
+                                        arrayListQuantity.remove(position);
+                                        //  arrayListFromAdapter=id;
+                                        if (arrayListId.equals(arrayListFromAdapter)) {
+                                            aBooleanTicketStatus = false;
 
+                                        } else {
+                                            aBooleanTicketStatus = true;
+
+                                        }
+                                        visibleSaveButton();
+                                        adapter.notifyDataSetChanged();
                                     }
-                                    visibleSaveButton();
-                                    adapter.notifyDataSetChanged();
                                 }
                             });
 
@@ -396,6 +417,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 
                         }else {
                             // if no ticket type
+                            textViewRemoveType.setVisibility(View.GONE);
                             linearLayout.setVisibility(View.GONE);
                             linearLayout1.setVisibility(View.GONE);
                             linearLayout2.setVisibility(View.VISIBLE);
@@ -703,7 +725,16 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
         });
 
 
-
+        textViewRemoveType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonAddMore.setVisibility(View.VISIBLE);
+                linearLayout2.setVisibility(View.VISIBLE);
+                linearLayout1.setVisibility(View.GONE);
+                aBooleanTicketStatus=true;
+                visibleSaveButton();
+            }
+        });
 
         switchTicket.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -720,7 +751,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                         changeTicketStatus="1";
                         ticketCount=String.valueOf(arrayListId.size());
                         if(Integer.valueOf(ticketCount)>1){
-
+                            textViewRemoveType.setVisibility(View.VISIBLE);
                             buttonAddMore.setVisibility(View.GONE);
                             textViewAddType.setVisibility(View.VISIBLE);
                             if(!arrayListId.equals(arrayListFromAdapter)){
@@ -729,6 +760,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                                 aBooleanTicketStatus=true;
                             }
                         }else if(Integer.valueOf(ticketCount)==1){
+                            textViewRemoveType.setVisibility(View.GONE);
                             buttonAddMore.setVisibility(View.VISIBLE);
                         }
                         if(expandCount==0){
@@ -816,8 +848,14 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
             public void onClick(View view) {
                 expandableCardViewTicketDetail.collapse();
                 linearLayout1.setVisibility(View.VISIBLE);
+                textViewRemoveType.setVisibility(View.VISIBLE);
                 linearLayout2.setVisibility(View.GONE);
                 textViewAddType.setVisibility(View.VISIBLE);
+//                arrayListId.add("Empty");
+//                arrayListName.add("Empty");
+//                arrayListPrice.add("Empty");
+//                arrayListQuantity.add("Empty");
+//                adapter1.notifyDataSetChanged();
                 textViewAddType.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -842,13 +880,29 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                     }
                 });
                  //recyclerView=findViewById(R.id.expand_ticket_types_recycler_view);
-                if(arrayListId.size()==0){
-
+                if(arrayListId.size()==1){
+                    aBooleanTicketStatus=true;
+                    visibleSaveButton();
                     arrayListId.add("Empty");
                    arrayListName.add("Empty");
                     arrayListPrice.add("Empty");
                     arrayListQuantity.add("Empty");
+                }else if(arrayListId.size()==0){
+                    aBooleanTicketStatus=true;
+                    visibleSaveButton();
+                    arrayListId.add("Empty");
+                    arrayListName.add("Empty");
+                    arrayListPrice.add("Empty");
+                    arrayListQuantity.add("Empty");
+                    arrayListId.add("Empty");
+                    arrayListName.add("Empty");
+                    arrayListPrice.add("Empty");
+                    arrayListQuantity.add("Empty");
+                }else {
+                    aBooleanTicketStatus=false;
+                    visibleSaveButton();
                 }
+
 
                 adapter1=new EditTicketAdapter(arrayListId,arrayListName,arrayListPrice,arrayListQuantity);
                 LinearLayoutManager linearLayoutManager1=new LinearLayoutManager(EventSettingActivity.this);
@@ -861,20 +915,26 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                 adapter1.setOnRemoveClickListener(new EditTicketAdapter.OnRemoveClickListener() {
                     @Override
                     public void onRemoveClick(int position, ArrayList<String> id) {
-                        arrayListId.remove(position);
-                        arrayListName.remove(position);
-                        arrayListPrice.remove(position);
-                        arrayListQuantity.remove(position);
-                        //  arrayListFromAdapter=id;
-                        if(arrayListId.equals(arrayListFromAdapter)){
-                            aBooleanTicketStatus=false;
+                        if(adapter1.getItemCount()<=2){
+                            DynamicToast.makeError(EventSettingActivity.this,"Atleats two type of ticket needed").show();
 
                         }else {
-                            aBooleanTicketStatus=true;
+                            arrayListId.remove(position);
+                            arrayListName.remove(position);
+                            arrayListPrice.remove(position);
+                            arrayListQuantity.remove(position);
+                            //  arrayListFromAdapter=id;
+                            if(arrayListId.equals(arrayListFromAdapter)){
+                                aBooleanTicketStatus=false;
 
+                            }else {
+                                aBooleanTicketStatus=true;
+
+                            }
+                            visibleSaveButton();
+                            adapter1.notifyDataSetChanged();
                         }
-                        visibleSaveButton();
-                        adapter1.notifyDataSetChanged();
+
                     }
                 });
 
@@ -1147,15 +1207,19 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
         }
 
         if(aBooleanStartDate){
+
             StringBuilder stringBuilder = new StringBuilder(eventDetailStartdate.getText().toString());
-            String sDate = stringBuilder.substring(4, stringBuilder.length() - 1);
+            String sDate = stringBuilder.substring(4, stringBuilder.length());
+
+
             changeStartDate=sDate;
         }else {
             changeStartDate=eventDetailStartdate.getText().toString();
+
         }
         if(aBooleanEndDate){
             StringBuilder stringBuilder = new StringBuilder(eventDetailEndDate.getText().toString());
-            String eDate = stringBuilder.substring(4, stringBuilder.length() - 1);
+            String eDate = stringBuilder.substring(4, stringBuilder.length());
             changeEndDate=eDate;
         }else {
             changeEndDate=eventDetailEndDate.getText().toString();
@@ -1182,27 +1246,34 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
             changeLongitude=detail.getLongitude();
         }
 
-//        Log.d("ALLCHECK",changeTitle+"\n"+changeDescription+"\n"+changeStartDate+"\n"+changeEndDate+"\n"
-//                +changeStartTime+"\n"+changeEndTime+"\n"+changeLocation+"\n"+changeLatitude+"\n"+changeLongitude);
+        Log.d("ALLCHECK",changeTitle+"\n"+changeDescription+"\n"+changeStartDate+"\n"+changeEndDate+"\n"
+                +changeStartTime+"\n"+changeEndTime+"\n"+changeLocation+"\n"+changeLatitude+"\n"+changeLongitude);
         if(changeTicketStatus.equals("1")){
 
-
+//            if(){
+//                DynamicToast.make(EventSettingActivity.this,"ON").show();
+//            }
             ticketCount=String.valueOf(arrayListId.size());
-            if(ticketCount.equals("1")){
-                String name= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.card_ticket_type_edit_name)).getText().toString();
-                String price= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.card_ticket_type_edit_price)).getText().toString();
-                String quantity= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.card_ticket_type_edit_quantity)).getText().toString();
-                if(name==null || name.isEmpty() ||price==null || price.isEmpty()|| quantity==null || quantity.isEmpty() ){
-                    progressCircle.hide();
-                    DynamicToast.makeError(EventSettingActivity.this,"Ticket Information Missing!").show();
-
-                    return;
-                }else {
-                    changeTicketPrice = price;
-                    changeTicketQuantity = quantity;
-                    changeTicketName = name;
-                    changeTicketId = arrayListId.get(0);
-                }
+            Log.d("VISI",eventDetailSingleTicketQuantity.getVisibility()+"");
+            if(linearLayout2.getVisibility()==View.VISIBLE){
+                changeTicketPrice = eventDetailSingleTicketPrice.getText().toString();
+                    changeTicketQuantity = eventDetailSingleTicketQuantity.getText().toString();
+                    changeTicketName = "NA";
+                   // changeTicketId = arrayListId.get(0);
+//                String name= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.card_ticket_type_edit_name)).getText().toString();
+//                String price= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.card_ticket_type_edit_price)).getText().toString();
+//                String quantity= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(0).itemView.findViewById(R.id.card_ticket_type_edit_quantity)).getText().toString();
+//                if(name==null || name.isEmpty() ||price==null || price.isEmpty()|| quantity==null || quantity.isEmpty() ){
+//                    progressCircle.hide();
+//                    DynamicToast.makeError(EventSettingActivity.this,"Ticket Information Missing!").show();
+//
+//                    return;
+//                }else {
+//                    changeTicketPrice = price;
+//                    changeTicketQuantity = quantity;
+//                    changeTicketName = "NA";
+//                    changeTicketId = arrayListId.get(0);
+//                }
             }else if(Integer.valueOf(ticketCount)>1){
 
                 changeTicketPrice=null;
@@ -1210,13 +1281,15 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                 changeTicketName=null;
                 changeTicketId=null;
                 for(int i=0;i<arrayListId.size();i++){
+                   // Log.d("COUNT",i+"");
                    // Log.d("Name",arrayListName.get(i)+" ");
-                    if(arrayListName.get(i).equals("Empty")){
+                  //  if(arrayListName.get(i).equals("Empty")){
                         String name= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.card_ticket_type_edit_name)).getText().toString();
                         String price= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.card_ticket_type_edit_price)).getText().toString();
                         String quantity= ((TextInputEditText)recyclerView.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.card_ticket_type_edit_quantity)).getText().toString();
 
                         if(name==null || name.isEmpty() ||price==null || price.isEmpty()|| quantity==null || quantity.isEmpty() ){
+
                             progressCircle.hide();
                             DynamicToast.makeError(EventSettingActivity.this,"Multiple Ticket Information Missing!").show();
 
@@ -1226,12 +1299,12 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                         changeTicketQuantity = changeTicketQuantity + "," + quantity;
                         changeTicketName = changeTicketName + "," + name;
                         changeTicketPrice = changeTicketPrice + "," + price;
-                    }else {
-                        changeTicketId = changeTicketId + "," + arrayListId.get(i);
-                        changeTicketQuantity = changeTicketQuantity + "," + arrayListQuantity.get(i);
-                        changeTicketName = changeTicketName + "," + arrayListName.get(i);
-                        changeTicketPrice = changeTicketPrice + "," + arrayListPrice.get(i);
-                    }
+//                    }else {
+//                        changeTicketId = changeTicketId + "," + arrayListId.get(i);
+//                        changeTicketQuantity = changeTicketQuantity + "," + arrayListQuantity.get(i);
+//                        changeTicketName = changeTicketName + "," + arrayListName.get(i);
+//                        changeTicketPrice = changeTicketPrice + "," + arrayListPrice.get(i);
+//                    }
                 }
             }else {
                 progressCircle.hide();
@@ -1248,7 +1321,69 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
             changeTicketName="No";
             changeTicketId="No";
         }
-        Log.d("TICKET",ticketStatus+"\n"+ticketCount+"\n"+changeTicketName);
+
+        apiInterface.updateEventDetail(changeTitle,changeDescription,changeStartTime,changeEndTime,changeStartDate,changeEndDate,changeLocation,
+                changeLatitude,changeLongitude,changeTicketStatus,changePageStatus,eventId,changeTicketPrice,changeTicketName,changeTicketQuantity)
+                .enqueue(new Callback<APIResponse>() {
+                    @Override
+                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                        APIResponse apiResponse=response.body();
+                        if(!apiResponse.getError()){
+
+                            //progressCircle.onCompleteFABAnimationEnd();
+
+                           progressCircle.hide();
+                           if(path!=null ){
+                               File file = new File(path);
+
+                               String imageName=(eventId)+"_"+"profile"+".png";
+                               RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+                               RequestBody fileName = RequestBody.create(MediaType.parse("text/plain"), imageName);
+                               MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+                               apiInterface.uploadEventProfileImage(fileToUpload,fileName).enqueue(new Callback<APIResponse>() {
+                                   @Override
+                                   public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                       APIResponse response1=response.body();
+                                       if(!response1.getError()){
+                                           progressCircle.beginFinalAnimation();
+                                           DynamicToast.makeSuccess(EventSettingActivity.this,"Detail updated").show();
+                                           progressCircle.hide();
+                                           finish();
+                                       }else {
+                                           progressCircle.hide();
+                                           DynamicToast.makeError(EventSettingActivity.this,"There was problem while uploading image").show();
+                                       }
+                                   }
+
+                                   @Override
+                                   public void onFailure(Call<APIResponse> call, Throwable t) {
+                                       progressCircle.hide();
+                                       DynamicToast.makeError(EventSettingActivity.this,"Image API FAILED").show();
+                                   }
+                               });
+                           }else {
+                               progressCircle.beginFinalAnimation();
+                               DynamicToast.makeSuccess(EventSettingActivity.this,"Detail updated").show();
+                               progressCircle.hide();
+                               finish();
+                           }
+                           // fabProgressCircle.hide();
+
+
+                        }else {
+                            DynamicToast.makeError(EventSettingActivity.this,apiResponse.getErrorMsg()).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResponse> call, Throwable t) {
+                        //Log.d("ALLVAL",changeTicketStatus);
+                        progressCircle.hide();
+                        DynamicToast.makeError(EventSettingActivity.this,t.getLocalizedMessage()).show();
+                    }
+                });
+
+        Log.d("TICKET",ticketStatus+"\n"+ticketCount+"\n"+changeTicketPrice);
 
        // Toast.makeText(EventSettingActivity.this, "a "+arrayListId.size(), Toast.LENGTH_SHORT).show();
 

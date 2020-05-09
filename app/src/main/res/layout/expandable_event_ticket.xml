@@ -169,6 +169,17 @@
            android:layout_height="wrap_content"
            android:orientation="vertical"
            android:id="@+id/expand_yes_ticket_type">
+           <TextView
+
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="end"
+               android:textStyle="italic"
+               android:textSize="15dp"
+               android:visibility="gone"
+               android:id="@+id/expand_event_ticket_remove_type"
+               android:textColor="@color/colorPrimary"
+               android:text="Without types"/>
            <androidx.recyclerview.widget.RecyclerView
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
@@ -179,6 +190,7 @@
                android:layout_height="wrap_content"
                android:gravity="end"
                android:textStyle="italic"
+               android:visibility="gone"
                android:textSize="15dp"
                android:id="@+id/expand_event_ticket_add_type"
                android:textColor="@color/colorPrimary"
@@ -224,10 +236,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:clickable="false"
-                            android:cursorVisible="false"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
+
                             android:id="@+id/expand_event_total_ticket"
                             android:hint="Number of ticket"/>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -262,10 +271,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:clickable="false"
-                            android:cursorVisible="false"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
+
                             android:id="@+id/expand_ticekt_price"
                             android:hint="Ticket price"/>
 

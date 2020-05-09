@@ -110,6 +110,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
     private Boolean followButtonFlag=false;
     private HorizontalScrollView horizontalScrollView;
     private CircleImageView circleImageViewDot;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -996,9 +997,11 @@ going=false;
                 if(userRole.equals("Moderator")){
                         DynamicToast.makeError(EventActivity.this,"You dont have permission to this feature").show();
                 }else {
+//                    temp+=1;
                     Intent intent = new Intent(EventActivity.this, EventSettingActivity.class);
                     intent.putExtra(KEY_EVENT_ID,eventId);
                     intent.putExtra(KEY_USER_ROLE, userRole);
+
                     startActivity(intent);
                 }
                 break;
@@ -1120,6 +1123,7 @@ going=false;
     @Override
     protected void onResume() {
         super.onResume();
+
         apiInterface.checkInbox(eventId).enqueue(new Callback<APIResponse>() {
             @Override
             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
@@ -1138,6 +1142,10 @@ going=false;
 
             }
         });
+//        if(temp==1) {
+//            temp=0;
+//            startActivity(getIntent());
+//        }
     }
     private void addModerator(String moderatorType){
         buttonModerator.setOnClickListener(new View.OnClickListener() {
@@ -1150,4 +1158,5 @@ going=false;
             }
         });
     }
+
 }

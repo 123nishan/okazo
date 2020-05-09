@@ -156,6 +156,27 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("eventDetail/update_detail.php")
+    Call<APIResponse> updateEventDetail(
+
+            @Field("title") String title,
+            @Field("description") String description,
+            @Field("start_time") String startTime,
+            @Field("end_time") String endTime,
+            @Field("start_date") String startDate,
+            @Field("end_date") String endDate,
+            @Field("place") String place,
+            @Field("latitude") String latitude,
+            @Field("longitude") String longitude,
+            @Field("ticket_status") String ticketStatus,
+            @Field("page_status") String pageStatus,
+            @Field("event_id") String eventId,
+            @Field("ticket_price_array") String ticketPrice,
+            @Field("ticket_name_array") String ticketName,
+            @Field("ticket_quantity_array") String ticketQuantity
+    );
+
+    @FormUrlEncoded
     @POST("chat/make_seen.php")
     Call<APIResponse> makeSeen(
 
