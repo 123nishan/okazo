@@ -799,6 +799,15 @@ going=false;
                 }
             }
         });
+
+        textViewTicket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ticketStatus.equals("1")) {
+                    Toast.makeText(EventActivity.this, "TCIKET", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void NoModerator() {
@@ -1159,6 +1168,8 @@ going=false;
                                 long milis=date1.getTime();
                                 CharSequence sequence= DateUtils.getRelativeDateTimeString(EventActivity.this,milis,DateUtils.MINUTE_IN_MILLIS,DateUtils.WEEK_IN_MILLIS,0);
                                 textViewCountDown.setText(sequence);
+                                ticketStatus=eventDetail.getTicketStatus();
+
 
 
                             }else {

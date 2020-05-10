@@ -125,6 +125,13 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("eventDetail/ticket.php")
+    Call<ArrayList<EventDetail>> getAllTicket(
+            @Field("event_id") String eventId
+
+    );
+
+    @FormUrlEncoded
     @POST("map/check_event_type.php")
     Call<APIResponse> checkEventType(
 
