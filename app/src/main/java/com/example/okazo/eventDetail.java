@@ -488,16 +488,14 @@ SearchableSpinner eventTypeSpinner;
                             .build(eventDetail.this), REQUEST_CODE);
         }
         if (resultCode == RESULT_CANCELED) {
-// Show the button and set the OnClickListener()
+
 
 
         } else if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-// Retrieve the information from the selected location's CarmenFeature
+
             CarmenFeature carmenFeature = PlacePicker.getPlace(data);
 
-// Set the TextView text to the entire CarmenFeature. The CarmenFeature
-// also be parsed through to grab and display certain information such as
-// its placeName, text, or coordinates.
+
             if (carmenFeature != null) {
 
 
@@ -509,32 +507,7 @@ SearchableSpinner eventTypeSpinner;
 
                 String  placeTitle = carmenFeature.placeName();
                 inputEditTextLocation.setText(placeTitle);
-//                String[] element=placeTitle.split("\\s*,\\s*");
-//                int addressCounter=1,addressDetailCounter=1;
-//                placeList= Arrays.asList(element);
-//                int placeListCounter=placeList.size();
-//                for (String value:placeList){
-//                    if(temp==placeListCounter || temp==placeListCounter-1){
-//                        if(addressDetailCounter==1){
-//                            addressDetail=value;
-//                        }else {
-//                            addressDetail = addressDetail + ", " + value;
-//
-//                        }
-//                        addressDetailCounter+=1;
-//                    }else {
-//                        if(addressCounter==1){
-//                            address=value;
-//                        }else {
-//                            address = address + ", " + value;
-//                        }
-//                        addressCounter+=1;
-//                    }
-//
-//
-//                    temp+=1;
-//
-//                }
+
 
             }else
             {

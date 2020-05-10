@@ -150,7 +150,7 @@ public class MessageActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
        recyclerView.setAdapter(adapter);
-       recyclerView.scrollToPosition(arrayListMessage.size()-1);
+       recyclerView.smoothScrollToPosition(arrayListMessage.size()-1);
 
     }
     private void getMessage(){

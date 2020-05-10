@@ -5,7 +5,7 @@
         android:id="@+id/event_setting_1"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_setting"
-        android:title="Page Setting">
+        android:title="Event Setting">
 
     </item>
 

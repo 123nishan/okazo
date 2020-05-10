@@ -1,5 +1,7 @@
 package com.example.okazo.Api;
 
+import android.text.Editable;
+
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Geofence;
 import com.example.okazo.Model.Note;
@@ -46,10 +48,53 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("eventDetail/all_moderator.php")
+    Call<APIResponse> getAllModerator(
+            @Field("event_id") String event_id,
+            @Field("mod_type") String modType
+    );
+
+    @FormUrlEncoded
+    @POST("moderator/all_user.php")
+    Call<APIResponse> getAllUser(
+            @Field("search") Editable search,
+            @Field("event_id") String eventId
+    );
+
+    @FormUrlEncoded
+    @POST("eventDetail/all_detail.php")
+    Call<APIResponse> getEventAllDetail(
+
+            @Field("event_id") String eventId
+    );
+
+    @FormUrlEncoded
+    @POST("moderator/remove_moderator.php")
+    Call<APIResponse> removeModerator(
+            @Field("event_id") String eventId,
+            @Field("moderator_id") String moderatorId
+    );
+
+    @FormUrlEncoded
+    @POST("user/current_user_info.php")
+    Call<APIResponse> currentUserInfo(
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
     @POST("fcm.php")
     Call<APIResponse> sendInboxNotification(
             @Field("message") String message,
             @Field("id") String id
+    );
+
+    @FormUrlEncoded
+    @POST("moderator/add_moderator.php")
+    Call<APIResponse> requestModerator(
+            @Field("user_id") String userId,
+            @Field("event_id") String eventId,
+            @Field("role") String role
     );
 
     @FormUrlEncoded
@@ -77,6 +122,13 @@ public interface ApiInterface {
     Call<ArrayList<EventDetail>> getEventLocation(
             @Field("user_id") String userId,
             @Field("type") String type
+    );
+
+    @FormUrlEncoded
+    @POST("eventDetail/ticket.php")
+    Call<ArrayList<EventDetail>> getAllTicket(
+            @Field("event_id") String eventId
+
     );
 
     @FormUrlEncoded
@@ -108,6 +160,27 @@ public interface ApiInterface {
             @Field("receiver_id") String receiverId,
             @Field("sender_id") String senderId,
             @Field("message") String message
+    );
+
+    @FormUrlEncoded
+    @POST("eventDetail/update_detail.php")
+    Call<APIResponse> updateEventDetail(
+
+            @Field("title") String title,
+            @Field("description") String description,
+            @Field("start_time") String startTime,
+            @Field("end_time") String endTime,
+            @Field("start_date") String startDate,
+            @Field("end_date") String endDate,
+            @Field("place") String place,
+            @Field("latitude") String latitude,
+            @Field("longitude") String longitude,
+            @Field("ticket_status") String ticketStatus,
+            @Field("page_status") String pageStatus,
+            @Field("event_id") String eventId,
+            @Field("ticket_price_array") String ticketPrice,
+            @Field("ticket_name_array") String ticketName,
+            @Field("ticket_quantity_array") String ticketQuantity
     );
 
     @FormUrlEncoded

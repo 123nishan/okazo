@@ -63,10 +63,12 @@ import retrofit2.Response;
 
 import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
 
+import static com.example.okazo.util.constants.KEY_EVENT_ID;
 import static com.example.okazo.util.constants.KEY_ID_FOR_CHAT;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
 import static com.example.okazo.util.constants.KEY_USER_ID;
+import static com.example.okazo.util.constants.KEY_USER_ROLE;
 
 public class EventActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener,ConfirmationDialog.orderConfirmationListener {
 
@@ -108,6 +110,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
     private Boolean followButtonFlag=false;
     private HorizontalScrollView horizontalScrollView;
     private CircleImageView circleImageViewDot;
+        private int temp=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,6 +226,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                       });
                       //for admin only
                        if(role.equals("Admin")){
+
                            buttonMessage.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View view) {
@@ -240,6 +244,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                            checkeventStatus();
                            Toast.makeText(EventActivity.this, "Editor", Toast.LENGTH_SHORT).show();
                        }else {
+
                            userRole="Moderator";
                            checkeventStatus();
                             buttonReport.setClickable(false);
@@ -475,8 +480,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
 
             }
         });
-        //post recyclerView
-
+        //post recyclerView○
 
 
         String imagePath=KEY_IMAGE_ADDRESS+(eventDetail.getImage());
@@ -795,6 +799,15 @@ going=false;
                 }
             }
         });
+
+        textViewTicket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ticketStatus.equals("1")) {
+                    Toast.makeText(EventActivity.this, "TCIKET", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void NoModerator() {
@@ -965,9 +978,12 @@ going=false;
                         //if admin and all status is fine
                         if(userRole.equals("Admin")){
                             createPost();
+                            addModerator(userRole);
                         }else if(userRole.equals("Editor")){
+                            addModerator(userRole);
                             createPost();
                         }else {
+                            addModerator(userRole);
                             cardViewPost.setVisibility(View.GONE);
                         }
 
@@ -987,7 +1003,16 @@ going=false;
     public boolean onMenuItemClick(MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.event_setting_1:
+                if(userRole.equals("Moderator")){
+                        DynamicToast.makeError(EventActivity.this,"You dont have permission to this feature").show();
+                }else {
+                   temp+=1;
+                    Intent intent = new Intent(EventActivity.this, EventSettingActivity.class);
+                    intent.putExtra(KEY_EVENT_ID,eventId);
+                    intent.putExtra(KEY_USER_ROLE, userRole);
 
+                    startActivity(intent);
+                }
                 break;
             case R.id.event_setting_2:
                 String message;
@@ -1000,6 +1025,7 @@ going=false;
                 confirmationDialog.show(getSupportFragmentManager(),"Confirmation");
 
                 break;
+
         }
         return false;
     }
@@ -1106,6 +1132,61 @@ going=false;
     @Override
     protected void onResume() {
         super.onResume();
+                if(temp==1) {
+            temp=0;
+                    apiInterface.getEventAllDetail(eventId).enqueue(new Callback<APIResponse>() {
+                        @Override
+                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                            APIResponse apiResponse=response.body();
+                            if(!apiResponse.getError()){
+                                eventDetail=apiResponse.getEvent();
+                                textViewTitle.setText(eventDetail.getTitle());
+                                textViewDetail.setText(eventDetail.getDescription());
+                                textViewLocation.setText(eventDetail.getPlace());
+                                if(eventDetail.getEndDate().equals(eventDetail.getStartDate()) || eventDetail.getEndDate()!=null || !eventDetail.getEndDate().isEmpty() ){
+                                    textViewDate.setText(eventDetail.getStartDate());
+                                }else {
+                                    textViewDate.setText(eventDetail.getStartDate()+" - "+eventDetail.getEndDate() );
+                                }
+                                textViewtime.setText(eventDetail.getStartTime()+" - "+eventDetail.getEndTime() );
+                                String date=eventDetail.getStartDate();
+                                String time=eventDetail.getStartTime();
+                                SimpleDateFormat  simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");;
+                                if(time.length()==4){
+                                    time=time+0;
+                                }else {
+
+                                }
+
+                                String dateTime=date+" "+time;
+                                Date date1=null;
+                                try {
+                                    date1=simpleDateFormat.parse(dateTime);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                long milis=date1.getTime();
+                                CharSequence sequence= DateUtils.getRelativeDateTimeString(EventActivity.this,milis,DateUtils.MINUTE_IN_MILLIS,DateUtils.WEEK_IN_MILLIS,0);
+                                textViewCountDown.setText(sequence);
+                                ticketStatus=eventDetail.getTicketStatus();
+
+
+
+                            }else {
+                                DynamicToast.makeError(EventActivity.this,"Problem Loading data").show();
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                        }
+                    });
+        }
+
+
+
         apiInterface.checkInbox(eventId).enqueue(new Callback<APIResponse>() {
             @Override
             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
@@ -1124,13 +1205,18 @@ going=false;
 
             }
         });
+
     }
-    private void addModerator(){
+    private void addModerator(String moderatorType){
         buttonModerator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent=new Intent(getApplicationContext(),ModeratorActivity.class);
+                intent.putExtra(KEY_EVENT_ID,eventId);
+                intent.putExtra(KEY_USER_ROLE,moderatorType);
+                startActivity(intent);
             }
         });
     }
+
 }

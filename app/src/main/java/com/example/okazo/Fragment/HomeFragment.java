@@ -276,6 +276,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
 
           Intent intent=new Intent(getActivity().getApplicationContext(), GeoFenceActivity.class);
+          //Intent intent=new Intent(getActivity().getApplicationContext(), eventDetail.class);
             startActivity(intent);
             }
         });

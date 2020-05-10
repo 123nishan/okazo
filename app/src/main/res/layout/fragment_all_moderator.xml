@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.AllModeratorFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Admin"
+            android:textSize="18dp"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
+
+        <RelativeLayout
+            android:padding="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:id="@+id/all_moderator_fragment_admin_image"/>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/all_moderator_fragment_admin_image"
+            android:id="@+id/all_moderator_fragment_admin_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textStyle="italic"
+            android:textSize="16dp"/>
+        <TextView
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/all_moderator_fragment_admin_image"
+            android:id="@+id/all_moderator_fragment_admin_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textStyle="italic"
+            android:layout_below="@+id/all_moderator_fragment_admin_name"
+            android:textSize="16dp"/>
+        </RelativeLayout>
+        <View
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#FA101010"/>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Editor"
+            android:textSize="18dp"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/all_moderator_fragment_editor_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No Editor"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:padding="3dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:padding="3dp"
+            android:layout_marginTop="4dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/all_moderator_fragment_editor_recycler_view"/>
+        <View
+            android:layout_marginTop="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#FA101010"/>
+
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Moderator"
+            android:textSize="18dp"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_marginTop="4dp"
+            android:id="@+id/all_moderator_fragment_moderator_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No Moderator"
+            android:visibility="gone"
+            android:textAlignment="center"
+            android:textStyle="bold"
+
+            android:textSize="16dp"
+            android:padding="3dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:padding="3dp"
+            android:layout_marginTop="4dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/all_moderator_fragment_moderator_recycler_view"/>
+        <View
+            android:layout_marginTop="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#FA101010"/>
+
+    </LinearLayout>
+
+</FrameLayout>

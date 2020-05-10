@@ -39,6 +39,22 @@ public class User {
     @Expose
     private String status;
 
+    @SerializedName("mod_id")
+    @Expose
+    private String modId;
+
+    public String getModId() {
+        return modId;
+    }
+
+    @SerializedName("mod_status")
+    @Expose
+    private String modStatus;
+
+    public String getModStatus() {
+        return modStatus;
+    }
+
     public String getId() {
         return id;
     }
@@ -50,6 +66,14 @@ public class User {
     @SerializedName("updated_at")
     @Expose
     private Object updatedAt;
+
+    @SerializedName("image")
+    @Expose
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
 
     public User() {
     }

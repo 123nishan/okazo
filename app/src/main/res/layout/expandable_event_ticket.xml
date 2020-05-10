@@ -4,17 +4,47 @@
     android:paddingLeft="30dp"
     android:paddingRight="30dp"
     android:paddingTop="10dp"
+    android:paddingBottom="5dp"
     android:layout_height="match_parent">
+
 <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="All ticket types"
+    android:text="Tickets"
     android:textSize="18dp"
     android:id="@+id/expand_ticket_status"
     android:textStyle="bold"/>
 
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:id="@+id/expand_ticket_switch_layout"
+        android:visibility="gone"
+        >
+        <TextView
 
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:gravity="center"
+            android:text="Ticket"
+            android:id="@+id/expand_ticket"/>
+        <Switch
+            android:layout_marginLeft="3dp"
+            android:layout_width="wrap_content"
+            android:id="@+id/expand_ticket_switch"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/expand_ticket"/>
+    </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Free Entry"
+        android:visibility="gone"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:id="@+id/expand_event_ticket_switch_message"/>
 
 
 
@@ -28,6 +58,7 @@
        android:id="@+id/expand_ticket_layout_yes">
 
        <LinearLayout
+
            android:layout_marginTop="3dp"
            android:layout_marginBottom="3dp"
             android:id="@+id/expand_ticket_single_layout"
@@ -133,14 +164,37 @@
 
 
        <LinearLayout
+
            android:layout_width="match_parent"
-           android:layout_height="match_parent"
+           android:layout_height="wrap_content"
            android:orientation="vertical"
            android:id="@+id/expand_yes_ticket_type">
+           <TextView
+
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="end"
+               android:textStyle="italic"
+               android:textSize="15dp"
+               android:visibility="gone"
+               android:id="@+id/expand_event_ticket_remove_type"
+               android:textColor="@color/colorPrimary"
+               android:text="Without types"/>
            <androidx.recyclerview.widget.RecyclerView
                android:layout_width="match_parent"
-               android:layout_height="match_parent"
+               android:layout_height="wrap_content"
                android:id="@+id/expand_ticket_types_recycler_view"/>
+           <TextView
+
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="end"
+               android:textStyle="italic"
+               android:visibility="gone"
+               android:textSize="15dp"
+               android:id="@+id/expand_event_ticket_add_type"
+               android:textColor="@color/colorPrimary"
+               android:text="Add more"/>
 
 
        </LinearLayout>
@@ -148,7 +202,7 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginTop="3dp"
         android:weightSum="2"
         android:id="@+id/expand_no_ticket_type"
@@ -182,10 +236,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:clickable="false"
-                            android:cursorVisible="false"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
+
                             android:id="@+id/expand_event_total_ticket"
                             android:hint="Number of ticket"/>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -196,7 +247,7 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_weight="1">
                 <ImageView
@@ -220,10 +271,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:clickable="false"
-                            android:cursorVisible="false"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
+
                             android:id="@+id/expand_ticekt_price"
                             android:hint="Ticket price"/>
 
@@ -231,6 +279,16 @@
 
                 </LinearLayout>
             </LinearLayout>
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:gravity="end"
+           android:textStyle="italic"
+           android:textSize="15dp"
+           android:id="@+id/expand_event_ticket_add_ticket"
+           android:textColor="@color/colorPrimary"
+           android:text="Add more type"/>
+
         </LinearLayout>
    </LinearLayout>
 </LinearLayout>

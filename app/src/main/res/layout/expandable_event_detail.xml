@@ -35,6 +35,7 @@
             android:id="@+id/expand_event_description"/>
     </com.google.android.material.textfield.TextInputLayout>
     <TextView
+        android:id="@+id/expand_detail_tag_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Selected Tag"

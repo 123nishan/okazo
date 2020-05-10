@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class EventDetail implements Serializable {
     @SerializedName("event_type")
@@ -132,6 +133,46 @@ public class EventDetail implements Serializable {
     @SerializedName("following")
     @Expose
     private String following;
+
+    @SerializedName("ticket_count")
+    @Expose
+    private String ticketCount;
+
+    public String getTicketCount() {
+        return ticketCount;
+    }
+
+    @SerializedName("ticket_price")
+    @Expose
+    private ArrayList<String> ticketPrice;
+
+    @SerializedName("ticket_quantity")
+    @Expose
+    private ArrayList<String> ticketQuantity;
+
+    @SerializedName("ticket_name")
+    @Expose
+    private ArrayList<String> ticketName;
+
+    @SerializedName("ticket_id")
+    @Expose
+    private ArrayList<String> ticketId;
+
+    public ArrayList<String> getTicketId() {
+        return ticketId;
+    }
+
+    public ArrayList<String> getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public ArrayList<String> getTicketQuantity() {
+        return ticketQuantity;
+    }
+
+    public ArrayList<String> getTicketName() {
+        return ticketName;
+    }
 
     public String getFollowing() {
         return following;
