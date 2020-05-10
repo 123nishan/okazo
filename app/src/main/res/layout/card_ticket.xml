@@ -13,7 +13,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-
+        app:cardBackgroundColor="#C1BBBB"
         android:layout_height="wrap_content"
         android:elevation="3dp"
         app:cardCornerRadius="8dp">
@@ -22,32 +22,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/card_ticket_start_date"
-            android:text="Start Date"/>
-                <TextView
 
-                    android:gravity="end"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/card_ticket_start_time"
-                    android:text="Start Time"/>
-            </LinearLayout>
 
-            <TextView
-                android:id="@+id/card_ticket_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Title"/>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,6 +32,8 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
                 <TextView
+                    android:textSize="16dp"
+                    android:textStyle="bold"
                     android:id="@+id/card_ticket_ticket_name"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
@@ -64,20 +43,72 @@
                     android:id="@+id/card_ticket_price"
                     android:gravity="end"
                     android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Ticket Price"/>
             </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:padding="4dp"
 
+                android:weightSum="2">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/colorPrimaryDark"
+                    app:cardCornerRadius="5dp"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/card_ticket_sub_quantity">
+                    <ImageView
+                        android:layout_margin="4dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/ic_substract"
+                        />
+                </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/card_ticket_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="1"
+                    android:textSize="22dp"
+                    android:textStyle="bold" />
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/colorPrimaryDark"
+                    app:cardCornerRadius="5dp"
+
+
+                    android:id="@+id/card_ticket_add_quantity">
+                    <ImageView
+                        android:layout_margin="4dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/ic_add_quantity"
+                        />
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
     <LinearLayout
         android:id="@+id/card_ticket_buy_layout"
-        android:layout_width="375dp"
-        android:layout_marginLeft="10dp"
+        android:layout_width="345dp"
+        android:layout_marginLeft="20dp"
         android:layout_height="wrap_content"
         android:background="@drawable/ticket_layout_round"
-        android:padding="5dp"
+        android:padding="3dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
         <TextView
@@ -93,6 +124,31 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/ic_buy_ticket"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/card_ticket_add_cart_layout"
+        android:layout_width="345dp"
+        android:visibility="gone"
+        android:layout_marginLeft="20dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ticket_layout_round"
+        android:padding="3dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+        <TextView
+            android:textSize="16dp"
+            android:textStyle="bold"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="Add Cart"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_shopping_cart"
             />
     </LinearLayout>
 

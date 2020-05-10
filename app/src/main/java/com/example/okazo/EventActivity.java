@@ -804,7 +804,11 @@ going=false;
             @Override
             public void onClick(View view) {
                 if(ticketStatus.equals("1")) {
-                    Toast.makeText(EventActivity.this, "TCIKET", Toast.LENGTH_SHORT).show();
+                    Intent intent=new Intent(EventActivity.this,TicketActivity.class);
+                    intent.putExtra(KEY_EVENT_ID,eventId);
+
+                    startActivity(intent);
+                  //  Toast.makeText(EventActivity.this, "TCIKET", Toast.LENGTH_SHORT).show();
                 }
             }
         });
