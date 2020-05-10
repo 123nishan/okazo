@@ -110,7 +110,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
     private Boolean followButtonFlag=false;
     private HorizontalScrollView horizontalScrollView;
     private CircleImageView circleImageViewDot;
-
+        private int temp=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -997,7 +997,7 @@ going=false;
                 if(userRole.equals("Moderator")){
                         DynamicToast.makeError(EventActivity.this,"You dont have permission to this feature").show();
                 }else {
-//                    temp+=1;
+                   temp+=1;
                     Intent intent = new Intent(EventActivity.this, EventSettingActivity.class);
                     intent.putExtra(KEY_EVENT_ID,eventId);
                     intent.putExtra(KEY_USER_ROLE, userRole);
@@ -1123,6 +1123,58 @@ going=false;
     @Override
     protected void onResume() {
         super.onResume();
+                if(temp==1) {
+            temp=0;
+                    apiInterface.getEventAllDetail(eventId).enqueue(new Callback<APIResponse>() {
+                        @Override
+                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                            APIResponse apiResponse=response.body();
+                            if(!apiResponse.getError()){
+                                eventDetail=apiResponse.getEvent();
+                                textViewTitle.setText(eventDetail.getTitle());
+                                textViewDetail.setText(eventDetail.getDescription());
+                                textViewLocation.setText(eventDetail.getPlace());
+                                if(eventDetail.getEndDate().equals(eventDetail.getStartDate()) || eventDetail.getEndDate()!=null || !eventDetail.getEndDate().isEmpty() ){
+                                    textViewDate.setText(eventDetail.getStartDate());
+                                }else {
+                                    textViewDate.setText(eventDetail.getStartDate()+" - "+eventDetail.getEndDate() );
+                                }
+                                textViewtime.setText(eventDetail.getStartTime()+" - "+eventDetail.getEndTime() );
+                                String date=eventDetail.getStartDate();
+                                String time=eventDetail.getStartTime();
+                                SimpleDateFormat  simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm");;
+                                if(time.length()==4){
+                                    time=time+0;
+                                }else {
+
+                                }
+
+                                String dateTime=date+" "+time;
+                                Date date1=null;
+                                try {
+                                    date1=simpleDateFormat.parse(dateTime);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                long milis=date1.getTime();
+                                CharSequence sequence= DateUtils.getRelativeDateTimeString(EventActivity.this,milis,DateUtils.MINUTE_IN_MILLIS,DateUtils.WEEK_IN_MILLIS,0);
+                                textViewCountDown.setText(sequence);
+
+
+                            }else {
+                                DynamicToast.makeError(EventActivity.this,"Problem Loading data").show();
+                                finish();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                        }
+                    });
+        }
+
+
 
         apiInterface.checkInbox(eventId).enqueue(new Callback<APIResponse>() {
             @Override
@@ -1142,10 +1194,7 @@ going=false;
 
             }
         });
-//        if(temp==1) {
-//            temp=0;
-//            startActivity(getIntent());
-//        }
+
     }
     private void addModerator(String moderatorType){
         buttonModerator.setOnClickListener(new View.OnClickListener() {
