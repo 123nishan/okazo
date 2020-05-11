@@ -100,7 +100,7 @@ public class TicketActivity extends AppCompatActivity {
                         @Override
                         public void onAddToCart(int position) {
                             LinearLayout linearLayout=((LinearLayout)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_ticket_add_cart_layout));
-                            
+
 
                         }
                     });

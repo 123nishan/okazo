@@ -27,6 +27,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -61,6 +62,8 @@ import com.luseen.spacenavigation.SpaceNavigationView;
 import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.special.ResideMenu.ResideMenu;
+import com.special.ResideMenu.ResideMenuItem;
 
 import java.util.List;
 
@@ -75,7 +78,7 @@ import static com.example.okazo.util.constants.ERROR_DIALOG_REQUEST;
 import static com.example.okazo.util.constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 import static com.example.okazo.util.constants.PERMISSION_REQUEST_ENABLE_GPS;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
 
 
@@ -95,10 +98,20 @@ String userEmail,userId;
 
     private Boolean mRequestingLocationUpdates;
 
+    private ResideMenu resideMenu;
+    private MainActivity mContext;
+    private ResideMenuItem itemHome;
+    private ResideMenuItem itemProfile;
+    private ResideMenuItem itemCalendar;
+    private ResideMenuItem itemSettings;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        setUpMenu();
         mRequestingLocationUpdates = false;
 //        textView=findViewById(R.id.textview);
 //        swipeRefreshLayout=findViewById(R.id.swipe_refresh);
@@ -207,6 +220,78 @@ String userEmail,userId;
 
 
     }
+
+    private void setUpMenu() {
+
+        resideMenu = new ResideMenu(MainActivity.this);
+//        resideMenu.setUse3D(true);
+        resideMenu.setBackground(R.color.colorPrimary);
+        resideMenu.attachToActivity(this);
+       // resideMenu.setMenuListener(menuListener);
+        //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
+        resideMenu.setScaleValue(0.6f);
+        resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
+        String titles[] = { "Home", "Profile", "Calendar", "Settings" };
+        int icon[] = { R.drawable.ic_home, R.drawable.ic_person_outline, R.drawable.ic_calendar, R.drawable.ic_setting };
+
+        for (int i = 0; i < titles.length; i++){
+            ResideMenuItem item = new ResideMenuItem(this, icon[i], titles[i]);
+            int finalI = i;
+            item.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    switch (titles[finalI]){
+                        case "Home":
+                            Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                            resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
+                            break;
+                        case "Profile":
+                            Toast.makeText(MainActivity.this, "Profile", Toast.LENGTH_SHORT).show();
+                            resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
+                            break;
+                    }
+
+                }
+            });
+            resideMenu.addMenuItem(item,  ResideMenu.DIRECTION_LEFT); // or  ResideMenu.DIRECTION_RIGHT
+        }
+//        itemHome     = new ResideMenuItem(this, R.drawable.ic_home,     "Home");
+//        itemProfile  = new ResideMenuItem(this, R.drawable.ic_people_group,  "Profile");
+//        itemCalendar = new ResideMenuItem(this, R.drawable.ic_calendar, "Calendar");
+//        itemSettings = new ResideMenuItem(this, R.drawable.ic_setting, "Settings");
+
+
+
+//        itemHome.setOnClickListener( this);
+//        itemProfile.setOnClickListener( this);
+//        itemCalendar.setOnClickListener( this);
+//        itemSettings.setOnClickListener(this);
+
+//        resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
+//        resideMenu.addMenuItem(itemProfile, ResideMenu.DIRECTION_LEFT);
+//        resideMenu.addMenuItem(itemCalendar, ResideMenu.DIRECTION_RIGHT);
+//        resideMenu.addMenuItem(itemSettings, ResideMenu.DIRECTION_RIGHT);
+
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return resideMenu.dispatchTouchEvent(ev);
+    }
+
+
+//    private ResideMenu.OnMenuListener menuListener=new ResideMenu.OnMenuListener() {
+//    @Override
+//    public void openMenu() {
+//        Toast.makeText(mContext, "Menu is opened!", Toast.LENGTH_SHORT).show();
+//    }
+//
+//    @Override
+//    public void closeMenu() {
+//        Toast.makeText(mContext, "Menu is closed!", Toast.LENGTH_SHORT).show();
+//    }
+//};
     private void getLastKnowLocation(){
         //d("location","last location");
         if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
@@ -455,24 +540,5 @@ String userEmail,userId;
     }
 
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        switch (requestCode) {
-//            // Check for the integer request code originally supplied to startResolutionForResult().
-//            case REQUEST_CHECK_SETTINGS:
-//                switch (resultCode) {
-//                    case Activity.RESULT_OK:
-//                        // Log.i("", "User agreed to make required location settings changes.");
-//                        // Nothing to do. startLocationupdates() gets called in onResume again.
-//                        break;
-//                    case Activity.RESULT_CANCELED:
-//                        // Log.i(TAG, "User chose not to make required location settings changes.");
-//                        mRequestingLocationUpdates = false;
-//                       // updateLocationUI();
-//                        break;
-//                }
-//                break;
-//        }
-//    }
+
 }
