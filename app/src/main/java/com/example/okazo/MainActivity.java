@@ -231,8 +231,8 @@ String userEmail,userId;
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
         resideMenu.setScaleValue(0.6f);
         resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        String titles[] = { "Home", "Profile", "Calendar", "Settings" };
-        int icon[] = { R.drawable.ic_home, R.drawable.ic_person_outline, R.drawable.ic_calendar, R.drawable.ic_setting };
+        String titles[] = { "Home", "Ticket", "Calendar", "Settings" };
+        int icon[] = { R.drawable.ic_home, R.drawable.ic_tickets, R.drawable.ic_calendar, R.drawable.ic_setting };
 
         for (int i = 0; i < titles.length; i++){
             ResideMenuItem item = new ResideMenuItem(this, icon[i], titles[i]);
@@ -246,9 +246,9 @@ String userEmail,userId;
                             Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
                             resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
                             break;
-                        case "Profile":
-                            Toast.makeText(MainActivity.this, "Profile", Toast.LENGTH_SHORT).show();
-                            resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
+                        case "Ticket":
+                            Intent intent=new Intent(MainActivity.this,MyTicketActivity.class);
+                            startActivity(intent);
                             break;
                     }
 

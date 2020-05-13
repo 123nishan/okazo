@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.LinearLayout;
@@ -27,14 +28,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.example.okazo.util.constants.KEY_EVENT_ID;
+import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
 
 public class TicketActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ApiInterface apiInterface;
     private TicketAdapter ticketAdapter;
-    private String eventId,title,startDate,startTime;
+    private String eventId,title,startDate,startTime,userId;
     private EventDetail eventDetail;
-    private ArrayList<String> arrayListPrice=new ArrayList<>(),arrayListName=new ArrayList<>();
+    private ArrayList<String> arrayListPrice=new ArrayList<>(),arrayListName=new ArrayList<>(),arrayListTicketId=new ArrayList<>();
     private TextView textViewStartDate,textViewStartTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,20 @@ public class TicketActivity extends AppCompatActivity {
         recyclerView=findViewById(R.id.ticket_activity_recycler_view);
         textViewStartDate=findViewById(R.id.ticket_activity_start_date);
         textViewStartTime=findViewById(R.id.ticket_activity_start_time);
+        SharedPreferences sharedPreferences = TicketActivity.this.getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
+        if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
+            userId=sharedPreferences.getString("user_id","");
+        }else {
+            DynamicToast.makeError(TicketActivity.this,"Something went wrong").show();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.remove("user_email");
+            editor.remove("user_id");
+            editor.commit();
+            Intent intent=new Intent(TicketActivity.this,LoginActivity.class);
+            startActivity(intent);
+        }
+
 
         apiInterface.getAllTicket(eventId).enqueue(new Callback<APIResponse>() {
             @Override
@@ -58,6 +74,7 @@ public class TicketActivity extends AppCompatActivity {
                         eventDetail=apiResponse.getEvent();
                     arrayListPrice=eventDetail.getTicketPrice();
                     arrayListName=eventDetail.getTicketName();
+                    arrayListTicketId=eventDetail.getTicketId();
                     title=eventDetail.getTitle();
                     startDate=eventDetail.getStartDate();
                     startTime=eventDetail.getStartTime();
@@ -100,8 +117,24 @@ public class TicketActivity extends AppCompatActivity {
                         @Override
                         public void onAddToCart(int position) {
                             LinearLayout linearLayout=((LinearLayout)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_ticket_add_cart_layout));
+                            String quantity= (((TextView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_ticket_quantity)).getText().toString());
+                            String ticketId=arrayListTicketId.get(position);
+                            apiInterface.addToCart(userId,ticketId,quantity).enqueue(new Callback<APIResponse>() {
+                                @Override
+                                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                    APIResponse apiResponse1=response.body();
+                                    if(!apiResponse1.getError()){
+                                        DynamicToast.makeSuccess(TicketActivity.this,"Ticket Added to Cart").show();
+                                    }else {
+                                        DynamicToast.makeError(TicketActivity.this,"Please try later").show();
+                                    }
+                                }
 
+                                @Override
+                                public void onFailure(Call<APIResponse> call, Throwable t) {
 
+                                }
+                            });
                         }
                     });
 

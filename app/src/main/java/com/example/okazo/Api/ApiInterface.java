@@ -139,6 +139,23 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("ticket/add_to_cart.php")
+    Call<APIResponse> addToCart(
+
+            @Field("user_id") String userId,
+            @Field("ticket_id") String ticketId,
+            @Field("quantity") String quantity
+    );
+
+    @FormUrlEncoded
+    @POST("ticket/all_event_ticket.php")
+    Call<APIResponse> allEventTicket(
+
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
     @POST("chat/chat_room.php")
     Call<APIResponse> getChatRoom(
 

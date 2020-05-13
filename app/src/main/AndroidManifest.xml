@@ -28,7 +28,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".TicketActivity"></activity>
+        <activity android:name=".CartActivity"></activity>
+        <activity android:name=".BuyTicketActivity" />
+        <activity android:name=".MyTicketActivity" />
+        <activity android:name=".TicketActivity" />
         <activity
             android:name=".EventSettingActivity"
             android:windowSoftInputMode="adjustResize" />

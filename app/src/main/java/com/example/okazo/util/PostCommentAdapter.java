@@ -35,13 +35,13 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
         this.userName=userName;
         this.createdDate=createdDate;
         this.context=context;
-        Log.d("recycelrCheck","const");
+        //Log.d("recycelrCheck","const");
     }
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(context).inflate(R.layout.card_comment,parent,false);
-        Log.d("recycelrCheck","view");
+        //Log.d("recycelrCheck","view");
         return new PostCommentAdapter.MyViewHolder(view);
     }
 
@@ -51,7 +51,7 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         String imagePath=KEY_IMAGE_ADDRESS+(userImage.get(position));
-        Log.d("recycelrCheck","onBind");
+       //Log.d("recycelrCheck","onBind");
         Glide.with(context)
                 .load(Uri.parse(imagePath))
                 .placeholder(R.drawable.ic_place_holder_background)
