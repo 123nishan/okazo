@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class TicketAdapter  extends RecyclerView.Adapter<TicketAdapter.MyViewHolder>{
     ArrayList<String>name,price;
 
-    public TicketAdapter.OnBuyClickListener onBuyClickListener;
+   // public TicketAdapter.OnBuyClickListener onBuyClickListener;
     public OnAddQuantityListener onAddQuantityListener;
     public OnSubQuantityListener onSubQuantityListener;
     public OnAddToCartListener onAddToCartListener;
@@ -37,8 +37,8 @@ public class TicketAdapter  extends RecyclerView.Adapter<TicketAdapter.MyViewHol
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         if(name.size()>1){
-            holder.linearLayout.setVisibility(View.GONE);
-            holder.linearLayoutAddToCart.setVisibility(View.VISIBLE);
+           // holder.linearLayout.setVisibility(View.GONE);
+           // holder.linearLayoutAddToCart.setVisibility(View.VISIBLE);
         }
         if(name.size()==1){
             holder.textViewTicketName.setText("Ticket Price: ");
@@ -57,9 +57,9 @@ public class TicketAdapter  extends RecyclerView.Adapter<TicketAdapter.MyViewHol
     public int getItemCount() {
         return name.size();
     }
-    public interface OnBuyClickListener{
-        void onBuyClick(int position);
-    }
+//    public interface OnBuyClickListener{
+//        void onBuyClick(int position);
+//    }
     public interface OnAddQuantityListener{
         void onAddQuantity(int position);
     }
@@ -69,9 +69,9 @@ public class TicketAdapter  extends RecyclerView.Adapter<TicketAdapter.MyViewHol
     public interface OnAddToCartListener{
         void onAddToCart(int position);
     }
-    public void setOnBuyClickListener (OnBuyClickListener onBuyClickListener){
-        this.onBuyClickListener=onBuyClickListener;
-    }
+//    public void setOnBuyClickListener (OnBuyClickListener onBuyClickListener){
+//        this.onBuyClickListener=onBuyClickListener;
+//    }
     public void setOnAddQuantityListener(OnAddQuantityListener onAddQuantityListener){
         this.onAddQuantityListener=onAddQuantityListener;
     }
@@ -83,7 +83,7 @@ public class TicketAdapter  extends RecyclerView.Adapter<TicketAdapter.MyViewHol
     }
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTicketName,textViewPrice,textViewQuantity;
-        LinearLayout linearLayout,linearLayoutAddToCart;
+        LinearLayout linearLayoutAddToCart;
         CardView cardViewAdd,cardViewSub;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -95,17 +95,17 @@ public class TicketAdapter  extends RecyclerView.Adapter<TicketAdapter.MyViewHol
             cardViewSub=itemView.findViewById(R.id.card_ticket_sub_quantity);
             textViewQuantity=itemView.findViewById(R.id.card_ticket_quantity);
             textViewTicketName=itemView.findViewById(R.id.card_ticket_ticket_name);
-            linearLayout=itemView.findViewById(R.id.card_ticket_buy_layout);
+           // linearLayout=itemView.findViewById(R.id.card_ticket_buy_layout);
             linearLayoutAddToCart=itemView.findViewById(R.id.card_ticket_add_cart_layout);
-            linearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position=getAdapterPosition();
-                    if(position!=RecyclerView.NO_POSITION && onBuyClickListener!=null){
-                        onBuyClickListener.onBuyClick(position);
-                    }
-                }
-            });
+//            linearLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    int position=getAdapterPosition();
+//                    if(position!=RecyclerView.NO_POSITION && onBuyClickListener!=null){
+//                        onBuyClickListener.onBuyClick(position);
+//                    }
+//                }
+//            });
             //add
             cardViewAdd.setOnClickListener(new View.OnClickListener() {
                 @Override

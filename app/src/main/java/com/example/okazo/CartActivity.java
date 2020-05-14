@@ -1,6 +1,8 @@
 package com.example.okazo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +15,7 @@ import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.util.MyEventTicketAdapter;
+import com.example.okazo.util.SwipeToDeleteCallBack;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.ArrayList;
@@ -60,6 +63,7 @@ public class CartActivity extends AppCompatActivity {
                         recyclerView.setLayoutManager(linearLayoutManager);
 
                         recyclerView.setAdapter(adapter);
+                        enableSwipeToDeleteAndUndo();
 
                     }else {
                         DynamicToast.makeError(CartActivity.this,"Problem loading data").show();
@@ -82,5 +86,37 @@ public class CartActivity extends AppCompatActivity {
             Intent intent=new Intent(CartActivity.this,LoginActivity.class);
             startActivity(intent);
         }
+    }
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeToDeleteCallBack swipeToDeleteCallback = new SwipeToDeleteCallBack(CartActivity.this) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+
+                final int position = viewHolder.getAdapterPosition();
+                // final String item = adapter.getData().get(position);
+
+                adapter.removeItem(position);
+
+
+//                Snackbar snackbar = Snackbar
+//                        .make(coordinatorLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+//                snackbar.setAction("UNDO", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                        adapter.restoreItem(item, position);
+//                        recyclerView.scrollToPosition(position);
+//                    }
+//                });
+//
+//                snackbar.setActionTextColor(Color.YELLOW);
+//                snackbar.show();
+
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
     }
 }

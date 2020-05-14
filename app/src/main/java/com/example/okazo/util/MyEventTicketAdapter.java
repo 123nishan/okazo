@@ -36,6 +36,15 @@ public class MyEventTicketAdapter extends RecyclerView.Adapter<MyEventTicketAdap
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.card_ticket_event,parent,false);
         return new MyEventTicketAdapter.MyViewHolder(view);
     }
+    public void removeItem(int position) {
+        title.remove(position);
+        startDate.remove(position);
+        startTime.remove(position);
+        image.remove(position);
+        totalCount.remove(position);
+
+        notifyItemRemoved(position);
+    }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {

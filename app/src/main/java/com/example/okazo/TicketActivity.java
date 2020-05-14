@@ -1,5 +1,6 @@
 package com.example.okazo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,6 +9,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +24,7 @@ import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.util.FeedAdapter;
 import com.example.okazo.util.TicketAdapter;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.textfield.TextInputEditText;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
@@ -38,6 +45,9 @@ public class TicketActivity extends AppCompatActivity {
     private EventDetail eventDetail;
     private ArrayList<String> arrayListPrice=new ArrayList<>(),arrayListName=new ArrayList<>(),arrayListTicketId=new ArrayList<>();
     private TextView textViewStartDate,textViewStartTime;
+    private Button buttonProceedPayment;
+    private View layoutBottomSheeet;
+    private BottomSheetBehavior sheetBehavior;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         /// ticket activity to buy ticket or explore that event ticket
@@ -50,6 +60,11 @@ public class TicketActivity extends AppCompatActivity {
         recyclerView=findViewById(R.id.ticket_activity_recycler_view);
         textViewStartDate=findViewById(R.id.ticket_activity_start_date);
         textViewStartTime=findViewById(R.id.ticket_activity_start_time);
+        buttonProceedPayment=findViewById(R.id.buy_bottom_sheet_proceed);
+        layoutBottomSheeet=findViewById(R.id.buy_bottom_sheet_layout);
+        layoutBottomSheeet.setVisibility(View.GONE);
+
+
         SharedPreferences sharedPreferences = TicketActivity.this.getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
         if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
             userId=sharedPreferences.getString("user_id","");
@@ -79,11 +94,11 @@ public class TicketActivity extends AppCompatActivity {
                     startDate=eventDetail.getStartDate();
                     startTime=eventDetail.getStartTime();
                     getSupportActionBar().setTitle(title);
-                    textViewStartDate.setText("Date: "+startDate);
+                    textViewStartDate.setText("Event Date: "+startDate);
                     if(startTime.length()==4){
                         startTime=startTime+"0";
                     }
-                    textViewStartTime.setText("Time: "+startTime);
+                    textViewStartTime.setText("Event Time: "+startTime);
                     ticketAdapter=new TicketAdapter(arrayListName,arrayListPrice);
                     LinearLayoutManager linearLayoutManager=new LinearLayoutManager(TicketActivity.this);
                     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -138,6 +153,8 @@ public class TicketActivity extends AppCompatActivity {
                         }
                     });
 
+
+
                 }else {
                     DynamicToast.makeError(TicketActivity.this,apiResponse.getErrorMsg()).show();
                 }
@@ -152,5 +169,24 @@ public class TicketActivity extends AppCompatActivity {
 
 
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.my_ticket_menu,menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.cart:
+                Intent intent=new Intent(TicketActivity.this,CartActivity.class);
+                startActivity(intent);
+                // Toast.makeText(this, "CART", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }

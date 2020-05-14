@@ -2,6 +2,7 @@ package com.example.okazo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.okazo.Api.APIResponse;
@@ -20,6 +22,8 @@ import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.util.MyEventTicketAdapter;
 import com.example.okazo.util.PostCommentAdapter;
+import com.example.okazo.util.SwipeToDeleteCallBack;
+import com.google.android.material.snackbar.Snackbar;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.ArrayList;
@@ -67,4 +71,5 @@ private ArrayList<String> arrayListTitle=new ArrayList<>(),arrayListImage=new Ar
 
         }
     }
+
 }
