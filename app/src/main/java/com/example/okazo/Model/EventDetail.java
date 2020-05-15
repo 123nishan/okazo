@@ -158,6 +158,14 @@ public class EventDetail implements Serializable {
     @Expose
     private ArrayList<String> ticketId;
 
+    @SerializedName("quantity")
+    @Expose
+    private ArrayList<String> quantity;
+
+    public ArrayList<String> getQuantity() {
+        return quantity;
+    }
+
     public ArrayList<String> getTicketId() {
         return ticketId;
     }

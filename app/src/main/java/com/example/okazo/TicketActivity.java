@@ -63,6 +63,7 @@ public class TicketActivity extends AppCompatActivity {
         buttonProceedPayment=findViewById(R.id.buy_bottom_sheet_proceed);
         layoutBottomSheeet=findViewById(R.id.buy_bottom_sheet_layout);
         layoutBottomSheeet.setVisibility(View.GONE);
+        //TODO remove bottom sheet
 
 
         SharedPreferences sharedPreferences = TicketActivity.this.getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);

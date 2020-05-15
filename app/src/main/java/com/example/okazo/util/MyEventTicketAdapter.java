@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -20,6 +21,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 
 public class MyEventTicketAdapter extends RecyclerView.Adapter<MyEventTicketAdapter.MyViewHolder> {
+    OnCardClickListener onCardClickListener;
     ArrayList<String>title,startDate,startTime,image,totalCount;
     Context context;
     public MyEventTicketAdapter(ArrayList<String> title,ArrayList<String> startDate,ArrayList<String> startTime,ArrayList<String> image,ArrayList<String>totalCount,Context context){
@@ -46,6 +48,12 @@ public class MyEventTicketAdapter extends RecyclerView.Adapter<MyEventTicketAdap
         notifyItemRemoved(position);
     }
 
+    public interface OnCardClickListener{
+        void onCardClick(int position);
+    }
+    public void setOnCardClickListener(OnCardClickListener onCardClickListener){
+        this.onCardClickListener=onCardClickListener;
+    }
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             holder.textViewTitle.setText("Event: "+title.get(position));
@@ -68,14 +76,25 @@ public class MyEventTicketAdapter extends RecyclerView.Adapter<MyEventTicketAdap
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         CircleImageView circleImageView;
+        CardView cardView;
         TextView textViewTitle,textViewStartDate,textViewStartTime,textViewTotalTicket;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            cardView=itemView.findViewById(R.id.card_ticket_event_card);
             circleImageView=itemView.findViewById(R.id.card_ticket_event_image);
             textViewStartDate=itemView.findViewById(R.id.card_ticket_event_start_date);
             textViewStartTime=itemView.findViewById(R.id.card_ticket_event_start_time);
             textViewTitle=itemView.findViewById(R.id.card_ticket_event_title);
             textViewTotalTicket=itemView.findViewById(R.id.card_ticket_event_total_quantity);
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=getAdapterPosition();
+                    if(position!=RecyclerView.NO_POSITION && onCardClickListener!=null){
+                        onCardClickListener.onCardClick(position);
+                    }
+                }
+            });
         }
     }
 }

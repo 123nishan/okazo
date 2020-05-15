@@ -156,6 +156,14 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("ticket/remove_event_ticket.php")
+    Call<APIResponse> removeEventTickets(
+
+            @Field("event_id") String eventId
+
+    );
+
+    @FormUrlEncoded
     @POST("chat/chat_room.php")
     Call<APIResponse> getChatRoom(
 
@@ -168,6 +176,32 @@ public interface ApiInterface {
 
             @Field("receiver_id") String receiverId,
             @Field("sender_id") String senderId
+    );
+
+    @FormUrlEncoded
+    @POST("ticket/all_user_ticket.php")
+    Call<APIResponse> getUserAllTicket(
+
+            @Field("user_id") String userId,
+            @Field("event_id") String eventId
+    );
+
+    @FormUrlEncoded
+    @POST("ticket/update_quantity.php")
+    Call<APIResponse> updateQuantity(
+
+            @Field("ticket_id") String ticketId,
+            @Field("type") String type,
+            @Field("quantity") String quantity
+    );
+
+    @FormUrlEncoded
+    @POST("ticket/remove_ticket.php")
+    Call<APIResponse> removeTicket(
+            @Field("user_id") String userId,
+            @Field("ticket_id") String ticketId
+
+
     );
 
     @FormUrlEncoded
