@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,8 +31,11 @@ import retrofit2.Response;
 import static com.example.okazo.util.constants.KEY_EVENT_ID;
 import static com.example.okazo.util.constants.KEY_EVENT_TITLE;
 import static com.example.okazo.util.constants.KEY_TICKET_ADD;
+import static com.example.okazo.util.constants.KEY_TICKET_ID_ARRAY;
 import static com.example.okazo.util.constants.KEY_TICKET_SUB;
+import static com.example.okazo.util.constants.KEY_TOTAL_AMOUNT;
 import static com.example.okazo.util.constants.KEY_USER_ID;
+import static com.example.okazo.util.constants.KEY_USER_ROLE;
 
 public class BuyTicketActivity extends AppCompatActivity {
     private String eventId,userId,eventTitle;
@@ -168,6 +173,18 @@ public class BuyTicketActivity extends AppCompatActivity {
             totalAmount=totalAmount+(price*quantity);
         }
         textViewAmount.setText("Rs. "+(totalAmount));
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent=new Intent(BuyTicketActivity.this,CheckOutActivity.class);
+                intent.putExtra(KEY_EVENT_ID,eventId);
+                intent.putExtra(KEY_USER_ID,userId);
+                intent.putExtra(KEY_TOTAL_AMOUNT,String.valueOf(totalAmount));
+                intent.putExtra(KEY_TICKET_ID_ARRAY,arrayListId);
+                startActivity(intent);
+            }
+        });
     }
 
     private void enableSwipeToDeleteAndUndo() {

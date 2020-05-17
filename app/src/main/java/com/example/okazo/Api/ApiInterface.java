@@ -179,6 +179,14 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("user/payment_info.php")
+    Call<APIResponse> getPaymentInfo(
+
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
     @POST("ticket/all_user_ticket.php")
     Call<APIResponse> getUserAllTicket(
 

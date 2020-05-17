@@ -28,7 +28,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CartActivity"></activity>
+        <activity android:name=".CheckOutActivity"></activity>
+        <activity android:name=".CartActivity" />
         <activity android:name=".BuyTicketActivity" />
         <activity android:name=".MyTicketActivity" />
         <activity android:name=".TicketActivity" />

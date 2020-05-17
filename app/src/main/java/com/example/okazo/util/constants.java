@@ -42,6 +42,7 @@ public class constants {
     public static final String KEY_TICKET_TYPE_NUMBER_LIST="ticketTypeNumberList";
     public static final String KEY_TICKET_ADD="ADD";
     public static final String KEY_TICKET_SUB="SUB";
+    public static final String KEY_TICKET_ID_ARRAY="ticket_id";
     //public static final String KYE_EVENT_SELECTED_COUNTRY=""
 
     public static final String KEY_USER_ID="userId";
@@ -51,6 +52,7 @@ public class constants {
     public static final String KEY_RECEIVER_ID="receiverId";
     public static final String KEY_SENDER_NAME="senderName";
     public static final String KEY_USER_ROLE="userRole";
+    public static final String KEY_TOTAL_AMOUNT="totalAmount";
 
 
 

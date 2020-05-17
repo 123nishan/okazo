@@ -43,6 +43,22 @@ public class User {
     @Expose
     private String modId;
 
+    @SerializedName("amount")
+    @Expose
+    private int amount;
+
+    @SerializedName("token")
+    @Expose
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
     public String getModId() {
         return modId;
     }
