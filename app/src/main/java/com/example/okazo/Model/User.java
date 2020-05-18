@@ -23,6 +23,22 @@ public class User {
     @Expose
     private String phone;
 
+    @SerializedName("following_count")
+    @Expose
+    private String followingCount;
+
+    @SerializedName("moderator_count")
+    @Expose
+    private String moderatorCount;
+
+    public String getFollowingCount() {
+        return followingCount;
+    }
+
+    public String getModeratorCount() {
+        return moderatorCount;
+    }
+
     @SerializedName("code")
     @Expose
     private String code;

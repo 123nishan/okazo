@@ -88,6 +88,7 @@ public class MessageActivity extends AppCompatActivity {
                                                 arrayListCreatedAt.add(val.getCreated_at());
                                                 arrayListMessage.add(val.getMessage());
                                             }
+                                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
                                             apiInterface.sendInboxNotification(sendMessage,currentUser).enqueue(new Callback<APIResponse>() {
                                                 @Override
                                                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
@@ -148,9 +149,11 @@ public class MessageActivity extends AppCompatActivity {
         adapter=new MessageAdapter(arrayListMessage,arrayListCreatedAt,arrayListSenderId,arrayListReceiverId,currentUser,getApplicationContext(),arrayListImage);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(MessageActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         recyclerView.setLayoutManager(linearLayoutManager);
+
        recyclerView.setAdapter(adapter);
-       recyclerView.smoothScrollToPosition(arrayListMessage.size()-1);
+
 
     }
     private void getMessage(){

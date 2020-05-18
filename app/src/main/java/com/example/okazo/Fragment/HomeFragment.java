@@ -34,6 +34,7 @@ import com.bumptech.glide.Glide;
 import com.example.okazo.Api.APIResponse;
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
+import com.example.okazo.EventActivity;
 import com.example.okazo.EventDetailPreviewActivity;
 import com.example.okazo.GeoFenceActivity;
 import com.example.okazo.LoginActivity;
@@ -61,8 +62,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
+import static com.example.okazo.util.constants.KEY_USER_ID;
 
 
 public class HomeFragment extends Fragment {
@@ -153,6 +156,7 @@ public class HomeFragment extends Fragment {
                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                     APIResponse apiResponse=response.body();
                     if(!apiResponse.getError()){
+                        EventDetail eventDetail=apiResponse.getEvent();
                         textViewFirst.setVisibility(View.VISIBLE);
                         textViewThird.setVisibility(View.GONE);
                         textViewFirst.setText(apiResponse.getEvent().getTitle().toUpperCase());
@@ -166,7 +170,28 @@ public class HomeFragment extends Fragment {
                         textViewFirst.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                               // Toast.makeText(getActivity().getApplicationContext(), "here "+apiResponse.getEvent().getLatitude(), Toast.LENGTH_SHORT).show();
+
+                                apiInterface.primaryEventInfo(eventDetail.getId(),userId).enqueue(new Callback<APIResponse>() {
+                                    @Override
+                                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                        APIResponse apiResponse1=response.body();
+                                        if(!apiResponse1.getError()){
+                                            Intent intent=new Intent(getActivity().getApplicationContext(), EventActivity.class);
+                                            intent.putExtra(KEY_EVENT_DETAIL,apiResponse1.getEvent());
+                                            intent.putExtra(KEY_USER_ID,userId);
+                                            startActivity(intent);
+                                        }else {
+                                            DynamicToast.makeError(getActivity().getApplicationContext(),apiResponse1.getErrorMsg()).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<APIResponse> call, Throwable t) {
+                                        DynamicToast.makeError(getActivity().getApplicationContext(),t.getLocalizedMessage()).show();
+                                    }
+                                });
+
+
                             }
                         });
 

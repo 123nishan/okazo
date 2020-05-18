@@ -131,6 +131,30 @@ public interface ApiInterface {
 
     );
 
+
+    @FormUrlEncoded
+    @POST("user/profile_info.php")
+    Call<APIResponse> getProfileInfo(
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
+    @POST("user/update_image.php")
+    Call<APIResponse> updateUserImage(
+            @Field("user_id") String userId,
+            @Field("file_name") String fileName
+
+    );
+
+    @FormUrlEncoded
+    @POST("user/primary_event_info.php")
+    Call<APIResponse> primaryEventInfo(
+            @Field("event_id") String eventId,
+            @Field("user_id") String userId
+
+    );
+
     @FormUrlEncoded
     @POST("map/check_event_type.php")
     Call<APIResponse> checkEventType(
@@ -278,12 +302,13 @@ public interface ApiInterface {
     @GET("map/event_type.php")
     Call<ArrayList<EventDetail>> getMapEventType();
 
+
+
     @FormUrlEncoded
-    @POST("save.php")
-    Call<Note> saveNote(
-            @Field("latitude") Double latitude,
-            @Field("longitude") Double longitude,
-            @Field("name") String name
+    @POST("user/list_moderator.php")
+    Call<APIResponse> getModeratorListUser(
+            @Field("user_id") String userId
+
     );
 
     @FormUrlEncoded
