@@ -53,6 +53,8 @@ public class constants {
     public static final String KEY_SENDER_NAME="senderName";
     public static final String KEY_USER_ROLE="userRole";
     public static final String KEY_TOTAL_AMOUNT="totalAmount";
+    public static final String KEY_TICKET_NAME="ticketName";
+    public static final String KEY_TICKET_QUANTITY="ticketQuantity";
 
 
 

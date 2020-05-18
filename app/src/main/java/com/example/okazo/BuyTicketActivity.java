@@ -32,7 +32,11 @@ import static com.example.okazo.util.constants.KEY_EVENT_ID;
 import static com.example.okazo.util.constants.KEY_EVENT_TITLE;
 import static com.example.okazo.util.constants.KEY_TICKET_ADD;
 import static com.example.okazo.util.constants.KEY_TICKET_ID_ARRAY;
+import static com.example.okazo.util.constants.KEY_TICKET_NAME;
+import static com.example.okazo.util.constants.KEY_TICKET_PRICE;
+import static com.example.okazo.util.constants.KEY_TICKET_QUANTITY;
 import static com.example.okazo.util.constants.KEY_TICKET_SUB;
+import static com.example.okazo.util.constants.KEY_TICKET_TYPE_NAME_LIST;
 import static com.example.okazo.util.constants.KEY_TOTAL_AMOUNT;
 import static com.example.okazo.util.constants.KEY_USER_ID;
 import static com.example.okazo.util.constants.KEY_USER_ROLE;
@@ -181,6 +185,9 @@ public class BuyTicketActivity extends AppCompatActivity {
                 intent.putExtra(KEY_EVENT_ID,eventId);
                 intent.putExtra(KEY_USER_ID,userId);
                 intent.putExtra(KEY_TOTAL_AMOUNT,String.valueOf(totalAmount));
+                intent.putExtra(KEY_TICKET_PRICE,arrayListPrice);
+                intent.putExtra(KEY_TICKET_NAME,arrayListName);
+                intent.putExtra(KEY_TICKET_QUANTITY,arrayListQuantity);
                 intent.putExtra(KEY_TICKET_ID_ARRAY,arrayListId);
                 startActivity(intent);
             }

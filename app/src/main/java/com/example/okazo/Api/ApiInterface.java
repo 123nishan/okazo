@@ -195,6 +195,21 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("user/buy_ticket.php")
+    Call<APIResponse> buyTicket(
+            @Field("amount") String amount,
+            @Field("user_id") String userId,
+            @Field("ticket_id") String ticketIdString,
+            @Field("option") String paymentOption,
+            @Field("t_money") String tMoney,
+            @Field("quantity") String ticketQuantityString,
+            @Field("per_amount") String ticketPriceString,
+            @Field("ticket_name") String ticketNameString,
+            @Field("event_id") String eventId
+    );
+
+
+    @FormUrlEncoded
     @POST("ticket/update_quantity.php")
     Call<APIResponse> updateQuantity(
 
@@ -370,6 +385,14 @@ Call<APIResponse> setEventResponse(
             @Field("user_id") String userId,
             @Field("event_id") String eventId
     );
+
+    @FormUrlEncoded
+    @POST("ticket/bought_user_ticket.php")
+    Call<APIResponse> boughtTicket(
+            @Field("user_id") String userId
+
+    );
+
 
 @FormUrlEncoded
 @POST("user/like.php")

@@ -3,8 +3,10 @@ package com.example.okazo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -26,6 +28,9 @@ import retrofit2.Response;
 
 import static com.example.okazo.util.constants.KEY_EVENT_ID;
 import static com.example.okazo.util.constants.KEY_TICKET_ID_ARRAY;
+import static com.example.okazo.util.constants.KEY_TICKET_NAME;
+import static com.example.okazo.util.constants.KEY_TICKET_PRICE;
+import static com.example.okazo.util.constants.KEY_TICKET_QUANTITY;
 import static com.example.okazo.util.constants.KEY_TOTAL_AMOUNT;
 import static com.example.okazo.util.constants.KEY_USER_ID;
 
@@ -34,9 +39,9 @@ public class CheckOutActivity extends AppCompatActivity implements ConfirmationD
     private TextView textViewTotalAmount,textViewCardUserName,textViewCardTMoney;
     private Button buttonSubmit;
     private CardView cardViewFirst,cardViewSecond;
-    private String paymentOption,eventId,userId,totalAmount,userName,token,ticketIdString=" ";
-    private ArrayList<String>ticketId;
-    private int userAmount;
+    private String paymentOption,eventId,userId,totalAmount,userName,token,ticketIdString=" ",ticketNameString=" ",ticketPriceString=" ",ticketQuantityString=" ";
+    private ArrayList<String>ticketId,ticketName,ticketPrice,ticketQuantity;
+    private int userAmount=0;
     private ApiInterface apiInterface;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,9 @@ public class CheckOutActivity extends AppCompatActivity implements ConfirmationD
         userId=bundle.getString(KEY_USER_ID);
         totalAmount=bundle.getString(KEY_TOTAL_AMOUNT);
         ticketId=(ArrayList<String>) bundle.getSerializable(KEY_TICKET_ID_ARRAY);
+        ticketName= (ArrayList<String>) bundle.getSerializable(KEY_TICKET_NAME);
+        ticketPrice= (ArrayList<String>) bundle.getSerializable(KEY_TICKET_PRICE);
+        ticketQuantity= (ArrayList<String>) bundle.getSerializable(KEY_TICKET_QUANTITY);
 
 
      textViewTotalAmount.setText("Rs. "+totalAmount);
@@ -75,7 +83,7 @@ public class CheckOutActivity extends AppCompatActivity implements ConfirmationD
                         @Override
                         public void onClick(View view) {
                             if(paymentOption!=null){
-                                if(paymentOption.equals("first")) {
+                                if(paymentOption.equals("t money")) {
                                     if (Integer.valueOf(totalAmount) < userAmount) {
                                         ConfirmationDialog confirmationDialog=new ConfirmationDialog("Do you want to confirm?");
                                         confirmationDialog.show(getSupportFragmentManager(),"Ticket Confirmation");
@@ -111,7 +119,7 @@ public class CheckOutActivity extends AppCompatActivity implements ConfirmationD
          public void onClick(View view) {
              cardViewFirst.setCardBackgroundColor(getColor(R.color.colorPrimaryLight));
              cardViewSecond.setCardBackgroundColor(getColor(R.color.space_white));
-             paymentOption="first";
+             paymentOption="t money";
          }
      });
      cardViewSecond.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +127,7 @@ public class CheckOutActivity extends AppCompatActivity implements ConfirmationD
          public void onClick(View view) {
              cardViewSecond.setCardBackgroundColor(getColor(R.color.colorPrimaryLight));
              cardViewFirst.setCardBackgroundColor(getColor(R.color.space_white));
-             paymentOption="second";
+             paymentOption="cash";
          }
      });
 
@@ -127,11 +135,39 @@ public class CheckOutActivity extends AppCompatActivity implements ConfirmationD
 
     @Override
     public void OnYesClicked() {
-        for (String val:ticketId
-             ) {
-                    ticketIdString=ticketIdString+","+val;
+        ticketIdString=" ";ticketNameString=" ";ticketPriceString=" ";ticketQuantityString=" ";
+     for(int i=0;i<ticketId.size();i++)
+              {
+                    ticketIdString=ticketIdString+","+ticketId.get(i);
+                    ticketQuantityString=ticketQuantityString+","+ticketQuantity.get(i);
+                    ticketNameString=ticketNameString+","+ticketName.get(i);
+                    ticketPriceString=ticketPriceString+","+ticketPrice.get(i);
+
         }
-      
+
+     //   Log.d("TESTCHECK",totalAmount+"||"+userId+"||"+ticketPriceString+"||"+paymentOption+"||"+userAmount+"||"+ticketQuantityString+"||"+ticketPriceString+"||"+ticketNameString+" ||"+ticketIdString);
+     String tMoney=String.valueOf(userAmount);
+     apiInterface.buyTicket(totalAmount,userId,ticketIdString,paymentOption,tMoney,ticketQuantityString,ticketPriceString,ticketNameString,eventId).enqueue(new Callback<APIResponse>() {
+         @Override
+         public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+             APIResponse apiResponse=response.body();
+             if(!apiResponse.getError()){
+
+                 DynamicToast.makeSuccess(CheckOutActivity.this,"ticket purchased").show();
+                 Intent intent=new Intent(CheckOutActivity.this,MainActivity.class);
+                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                 startActivity(intent);
+             }else {
+                 DynamicToast.makeError(CheckOutActivity.this,apiResponse.getErrorMsg()).show();
+             }
+         }
+
+         @Override
+         public void onFailure(Call<APIResponse> call, Throwable t) {
+             DynamicToast.makeError(CheckOutActivity.this,t.getLocalizedMessage()).show();
+         }
+     });
+
     }
 
     @Override

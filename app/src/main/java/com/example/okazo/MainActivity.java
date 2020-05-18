@@ -184,7 +184,7 @@ String userEmail,userId;
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.pop_in, R.anim.pop_out, R.anim.pop_in, R.anim.pop_out)
-                                .replace(R.id.frame_container,new EventLocationFragment())
+                                .replace(R.id.frame_container,new EventFragment())
                                 .addToBackStack(null)
                                 .commit();
                         frameLayout.removeAllViewsInLayout();
@@ -194,20 +194,20 @@ String userEmail,userId;
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.pop_in, R.anim.pop_out, R.anim.pop_in, R.anim.pop_out)
-                                .replace(R.id.frame_container,new EventFragment())
+                                .replace(R.id.frame_container,new EventLocationFragment())
                                 .addToBackStack(null)
                                 .commit();
                         frameLayout.removeAllViewsInLayout();
                         break;
-                    case R.id.nav_shop:
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations(R.anim.pop_in, R.anim.pop_out, R.anim.pop_in, R.anim.pop_out)
-                                .replace(R.id.frame_container,new ProfileFragment())
-                                .addToBackStack(null)
-                                .commit();
-                        frameLayout.removeAllViewsInLayout();
-                        break;
+//                    case R.id.nav_shop:
+//                        getSupportFragmentManager()
+//                                .beginTransaction()
+//                                .setCustomAnimations(R.anim.pop_in, R.anim.pop_out, R.anim.pop_in, R.anim.pop_out)
+//                                .replace(R.id.frame_container,new ProfileFragment())
+//                                .addToBackStack(null)
+//                                .commit();
+//                        frameLayout.removeAllViewsInLayout();
+//                        break;
                 }
             }
         });

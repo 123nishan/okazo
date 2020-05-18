@@ -24,14 +24,14 @@ public class EditTicketAdapter  extends RecyclerView.Adapter<EditTicketAdapter.M
         this.name=name;
         this.quanity=quanity;
         this.price=price;
-        Log.d("adap","cc");
+
 
     }
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.card_ticket_type,parent,false);
-        Log.d("adap","v");
+
         return new EditTicketAdapter.MyViewHolder(view);
     }
 
@@ -53,7 +53,7 @@ public class EditTicketAdapter  extends RecyclerView.Adapter<EditTicketAdapter.M
             holder.textInputEditTextQuantity.setText(quanity.get(position));
             holder.textInputEditTextPrice.setText(price.get(position));
         }
-        Log.d("adap","b");
+
 
     }
 
