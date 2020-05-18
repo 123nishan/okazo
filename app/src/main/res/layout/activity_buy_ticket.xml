@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+    tools:context=".BuyTicketActivity">
+    <TextView
+        android:layout_marginBottom="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Order Summary"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:id="@+id/title"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:id="@+id/buy_ticket_activity_recycerview"/>
+
+   <LinearLayout
+        android:background="@color/colorPrimary"
+       android:padding="3dp"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"
+       android:weightSum="3"
+       android:orientation="horizontal">
+       <TextView
+           android:layout_gravity="center"
+           android:gravity="end"
+           android:textSize="18dp"
+           android:textStyle="bold"
+           android:layout_weight="1"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Total:             "/>
+       <TextView
+           android:layout_gravity="center"
+           android:id="@+id/buy_ticket_activity_total_amount"
+           android:layout_weight="1"
+           android:textSize="18dp"
+           android:textStyle="bold"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="Amount"/>
+       <Button
+           android:layout_gravity="center"
+           android:id="@+id/buy_ticket_activity_confirm"
+           android:layout_weight="1"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_margin="4dp"
+           android:text="CONFIRM"
+           android:paddingRight="15dp"
+           android:paddingLeft="10dp"
+           android:drawableRight="@drawable/mdtp_ic_chevron_right_black_24dp"
+           android:background="@drawable/round_button"/>
+
+   </LinearLayout>
+</RelativeLayout>

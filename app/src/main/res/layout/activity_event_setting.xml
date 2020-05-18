@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".EventSettingActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        app:title="Profile"
+        app:titleTextColor="@color/colorPrimaryLight"
+       android:background="@color/colorPrimary"
+        android:layout_height="?attr/actionBarSize"
+       >
+        <com.github.jorgecastilloprz.FABProgressCircle
+            android:layout_width="wrap_content"
+            android:layout_gravity="right"
+            android:id="@+id/event_setting_activity_fabProgressCircleToolBar"
+            app:reusable="true"
+
+            app:finalIcon="@drawable/ic_correct"
+            android:layout_height="wrap_content">
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:visibility="gone"
+                android:id="@+id/event_setting_activity_fabToolBar"
+                app:rippleColor="@color/fab_orange_dark"
+                android:elevation="5dp"
+                android:src="@drawable/ic_save"
+
+                />
+        </com.github.jorgecastilloprz.FABProgressCircle>
+    </androidx.appcompat.widget.Toolbar>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+    <RelativeLayout
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+       >
+    <de.hdodenhof.circleimageview.CircleImageView
+       android:background="@drawable/ic_upload_image"
+        android:layout_width="100dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_height="90dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/event_setting_activity_image"/>
+        <ImageView
+
+            android:id="@+id/event_setting_activity_change"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ic_add_image"
+            android:layout_toRightOf="@+id/event_setting_activity_image"/>
+    </RelativeLayout>
+
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:gravity="right"
+       android:layout_marginTop="4dp"
+       >
+       <TextView
+
+           android:layout_width="wrap_content"
+           android:layout_height="26dp"
+           android:text="Private"
+           android:gravity="center_vertical"
+           android:id="@+id/switch_title"/>
+       <Switch
+           android:id="@+id/event_setting_activity_private_switch"
+           android:layout_marginLeft="5dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_toRightOf="@+id/switch_title"/>
+   </RelativeLayout>
+    <com.alespero.expandablecardview.ExpandableCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:title="Event Detail"
+        app:icon="@drawable/ic_add"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="8dp"
+
+        android:id="@+id/event_setting_activity_expandable_event_detail"
+        app:expandOnClick="true"
+        app:animationDuration="300"
+        app:startExpanded="false"
+        app:inner_view="@layout/expandable_event_detail"
+        />
+
+    <com.alespero.expandablecardview.ExpandableCardView
+        android:id="@+id/event_setting_activity_expandable_event_detail_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="15dp"
+        app:animationDuration="300"
+
+        app:expandOnClick="true"
+        app:icon="@drawable/ic_add"
+        app:inner_view="@layout/expandable_event_date"
+        app:startExpanded="false"
+        app:title="Event Date " />
+
+    <com.alespero.expandablecardview.ExpandableCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:title="Event Location "
+        app:icon="@drawable/ic_add"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="8dp"
+
+        android:id="@+id/event_setting_activity_expandable_event_detail_location"
+        app:expandOnClick="true"
+        app:animationDuration="300"
+        app:startExpanded="false"
+        app:inner_view="@layout/expandable_event_location"
+        />
+
+    <com.alespero.expandablecardview.ExpandableCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:title="Ticket Detail"
+        app:icon="@drawable/ic_add"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/event_setting_activity_expandable_ticket"
+        app:expandOnClick="true"
+        app:animationDuration="300"
+        app:startExpanded="false"
+        app:inner_view="@layout/expandable_event_ticket"
+        />
+            </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>
