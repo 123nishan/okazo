@@ -37,11 +37,13 @@ import com.example.okazo.Model.User;
 import com.example.okazo.ModeratorActivity;
 import com.example.okazo.ModeratorListActivity;
 import com.example.okazo.MyTicketActivity;
+import com.example.okazo.NotificationActivity;
 import com.example.okazo.R;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.io.File;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -71,7 +73,9 @@ public class ProfileFragment extends Fragment {
     private ApiInterface apiInterface;
     private String userId,imagePath;
     private static final int CHOOSE_IMAGE = 505;
+    private CircleImageView circleImageViewNotification,circleImageViewDot;
     private Uri uriProfileImage;
+    private int moderatorRequest=0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,6 +94,8 @@ public class ProfileFragment extends Fragment {
         linearLayoutFollowing=v.findViewById(R.id.profile_fragment_following_list);
         linearLayoutModerator=v.findViewById(R.id.profile_fragment_moderator_list);
         textViewLogout=v.findViewById(R.id.profile_fragment_logout);
+        circleImageViewNotification=v.findViewById(R.id.profile_fragment_notification);
+        circleImageViewDot=v.findViewById(R.id.primary_fragment_dot);
 
         textViewLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,63 +116,18 @@ public class ProfileFragment extends Fragment {
         if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
             userId=sharedPreferences.getString("user_id","");
             apiInterface=ApiClient.getApiClient().create(ApiInterface.class);
-            apiInterface.getProfileInfo(userId).enqueue(new Callback<APIResponse>() {
+
+            circleImageViewNotification.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                    APIResponse apiResponse=response.body();
-                    if(!apiResponse.getError()){
-                        User user=apiResponse.getUser();
-                        textViewEmail.setText(user.getEmail());
-                        textViewUserName.setText(user.getName().toUpperCase());
-                        textViewPhone.setText(user.getPhone());
-                        textViewFollowing.setText(user.getFollowingCount());
-                        textViewModerator.setText(user.getModeratorCount());
-
-                         imagePath=KEY_IMAGE_ADDRESS+(user.getImage());
-
-                        Glide.with(getActivity().getApplicationContext())
-                                .load(Uri.parse(imagePath))
-                                .placeholder(R.drawable.ic_place_holder_background)
-                                //.error(R.drawable.ic_image_not_found_background)
-                                .centerCrop()
-                                .into(imageViewProfile);
-
-                        imageViewProfile.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                showImageChooser();
-                            }
-                        });
-
-                        linearLayoutModerator.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                int count=Integer.valueOf(user.getModeratorCount());
-                                if(count==0){
-                                    DynamicToast.makeError(getActivity().getApplicationContext(),"you are not moderator in any group").show();
-                                }else {
-                                    Intent intent=new Intent(getActivity().getApplicationContext(), ModeratorListActivity.class);
-                                    intent.putExtra(KEY_USER_ID,userId);
-                                    startActivity(intent);
-                                }
-                            }
-                        });
-
-                        textViewTicket.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent=new Intent(getActivity().getApplicationContext(), MyTicketActivity.class);
-                                startActivity(intent);
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<APIResponse> call, Throwable t) {
-
+                public void onClick(View view) {
+                    Intent intent=new Intent(getActivity().getApplicationContext(), NotificationActivity.class);
+                    intent.putExtra(KEY_USER_ID,userId);
+                    startActivity(intent);
                 }
             });
+
+            getProfileInfo();
+
         }else {
             DynamicToast.makeError(getActivity().getApplicationContext(),"Something went wrong").show();
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -251,9 +212,77 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
-
         }
+
+    }
+    private void getProfileInfo(){
+        apiInterface.getProfileInfo(userId).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse=response.body();
+                if(!apiResponse.getError()){
+                    User user=apiResponse.getUser();
+                    textViewEmail.setText(user.getEmail());
+                    textViewUserName.setText(user.getName().toUpperCase());
+                    textViewPhone.setText(user.getPhone());
+                    textViewFollowing.setText(user.getFollowingCount());
+                    textViewModerator.setText(user.getModeratorCount());
+                    moderatorRequest=Integer.valueOf(user.getModeratorRequest());
+                    if(moderatorRequest>0){
+                        circleImageViewDot.setVisibility(View.VISIBLE);
+                    }else {
+                        circleImageViewDot.setVisibility(View.GONE);
+                    }
+                    imagePath=KEY_IMAGE_ADDRESS+(user.getImage());
+
+                    Glide.with(getActivity().getApplicationContext())
+                            .load(Uri.parse(imagePath))
+                            .placeholder(R.drawable.ic_place_holder_background)
+                            //.error(R.drawable.ic_image_not_found_background)
+                            .centerCrop()
+                            .into(imageViewProfile);
+
+                    imageViewProfile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showImageChooser();
+                        }
+                    });
+
+                    linearLayoutModerator.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int count=Integer.valueOf(user.getModeratorCount());
+                            if(count==0){
+                                DynamicToast.makeError(getActivity().getApplicationContext(),"you are not moderator in any group").show();
+                            }else {
+                                Intent intent=new Intent(getActivity().getApplicationContext(), ModeratorListActivity.class);
+                                intent.putExtra(KEY_USER_ID,userId);
+                                startActivity(intent);
+                            }
+                        }
+                    });
+
+                    textViewTicket.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent=new Intent(getActivity().getApplicationContext(), MyTicketActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+
+            }
+        });
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getProfileInfo();
+    }
 }

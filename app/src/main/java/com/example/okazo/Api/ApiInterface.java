@@ -389,6 +389,22 @@ Call<APIResponse> getUserName(
   @Field("request") String request
 );
 
+    @FormUrlEncoded
+    @POST("user/moderator_request.php")
+    Call<APIResponse> getRequestNotification(
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
+    @POST("user/moderator_response.php")
+    Call<APIResponse> moderatorResponse(
+            @Field("user_id") String userId,
+            @Field("type") String type,
+            @Field("event_id") String eventId
+
+    );
+
 @FormUrlEncoded
 @POST("user/feed.php")
 Call<APIResponse> getFeed(

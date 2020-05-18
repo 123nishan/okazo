@@ -53,7 +53,11 @@ public class ModeratorListAdapter extends RecyclerView.Adapter<ModeratorListAdap
     public int getItemCount() {
         return eventName.size();
     }
-
+    public void removeItem(int position) {
+        eventName.remove(position);
+        image.remove(position);
+        notifyItemRemoved(position);
+    }
     public interface OnClickListener{
         void onClick(int position);
     }

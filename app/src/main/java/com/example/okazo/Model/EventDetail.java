@@ -11,6 +11,14 @@ public class EventDetail implements Serializable {
     @Expose
     private String eventType;
 
+    @SerializedName("role_name")
+    @Expose
+    private String roleName;
+
+    public String getRoleName() {
+        return roleName;
+    }
+
     @SerializedName("total_event")
     @Expose
     private String totalEvent;

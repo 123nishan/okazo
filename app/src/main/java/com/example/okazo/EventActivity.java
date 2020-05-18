@@ -953,6 +953,7 @@ going=false;
             public void onClick(View view) {
                 String postDetail=editTextPostDetail.getText().toString();
                 Log.d("postCheck",postDetail+"||||||"+path);
+                //TODo create post
             }
         });
     }

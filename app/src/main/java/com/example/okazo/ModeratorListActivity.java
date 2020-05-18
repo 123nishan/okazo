@@ -11,6 +11,7 @@ import com.example.okazo.Api.APIResponse;
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Model.EventDetail;
+import com.example.okazo.Model.Moderator;
 import com.example.okazo.Model.Note;
 import com.example.okazo.util.ConfirmationDialog;
 import com.example.okazo.util.ModeratorListAdapter;
@@ -30,6 +31,8 @@ public class ModeratorListActivity extends AppCompatActivity implements Confirma
     private ModeratorListAdapter adapter;
     private ApiInterface apiInterface;
     private ArrayList<String> eventName=new ArrayList<>(),eventImage=new ArrayList<>(),eventId=new ArrayList<>();
+    private int positionAdapter;
+    private String moderatorId,moderatorType,moderatorStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,7 @@ public class ModeratorListActivity extends AppCompatActivity implements Confirma
                     adapter.setOnClickListener(new ModeratorListAdapter.OnClickListener() {
                         @Override
                         public void onClick(int position) {
+                            positionAdapter=position;
                             ConfirmationDialog confirmationDialog=new ConfirmationDialog("Do you want to leave this event?");
                             confirmationDialog.show(getSupportFragmentManager(),"Confirmation");
                         }
@@ -79,7 +83,43 @@ public class ModeratorListActivity extends AppCompatActivity implements Confirma
 
     @Override
     public void OnYesClicked() {
-        DynamicToast.makeSuccess(getApplicationContext(),"DELETE").show();
+        apiInterface.getModerator(userId,eventId.get(positionAdapter)).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse=response.body();
+                if(!apiResponse.getError()){
+                    Moderator moderator=apiResponse.getModerator();
+                    moderatorId=moderator.getId();
+                    moderatorType=moderator.getRole();
+                    moderatorStatus=moderator.getStatus();
+                    apiInterface.leaveEvent(moderatorId,eventId.get(positionAdapter),moderatorType).enqueue(new Callback<APIResponse>() {
+                        @Override
+                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                            APIResponse apiResponse1=response.body();
+                            if(!apiResponse1.getError()){
+                                    adapter.removeItem(positionAdapter);
+                                    eventId.remove(positionAdapter);
+                                    DynamicToast.makeSuccess(getApplicationContext(),"Left the event").show();
+                            }else {
+                                DynamicToast.makeError(getApplicationContext(),apiResponse1.getErrorMsg()).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                        }
+                    });
+                }else {
+                    DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

@@ -43,6 +43,14 @@ public class User {
     @Expose
     private String code;
 
+    @SerializedName("moderator_request")
+    @Expose
+    private String moderatorRequest;
+
+    public String getModeratorRequest() {
+        return moderatorRequest;
+    }
+
     @SerializedName("created_at")
     @Expose
     private String createdAt;
