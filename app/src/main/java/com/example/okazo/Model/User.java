@@ -3,6 +3,10 @@ package com.example.okazo.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+
 public class User {
     @SerializedName("id")
     @Expose
@@ -43,6 +47,24 @@ public class User {
     @Expose
     private String modId;
 
+    @SerializedName("amount")
+    @Expose
+    private int amount;
+
+
+
+    @SerializedName("token")
+    @Expose
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
     public String getModId() {
         return modId;
     }
@@ -71,9 +93,94 @@ public class User {
     @Expose
     private String image;
 
+    @SerializedName("payment_option")
+    @Expose
+    private ArrayList<String> paymentOption;
+
+    @SerializedName("bought_date")
+    @Expose
+    private ArrayList<String> boughtDate;
+
+    @SerializedName("bought_count")
+    @Expose
+    private String boughtCount;
+
+    @SerializedName("ticket_id")
+    @Expose
+    private ArrayList<String> ticketId;
+
+    @SerializedName("ticket_name")
+    @Expose
+    private ArrayList<String> ticketName;
+
+    @SerializedName("ticket_quantity")
+    @Expose
+    private ArrayList<String> ticketQuantity;
+
+    @SerializedName("ticket_amount")
+    @Expose
+    private ArrayList<String> ticketAmount;
+
+    @SerializedName("event_name")
+    @Expose
+    private ArrayList<String> eventName;
+
+    @SerializedName("event_start_date")
+    @Expose
+    private ArrayList<String> eventStartDate;
+
+    @SerializedName("event_start_time")
+    @Expose
+    private ArrayList<String> eventStartTime;
+
+
+
+    public ArrayList<String> getEventStartDate() {
+        return eventStartDate;
+    }
+
+    public ArrayList<String> getEventStartTime() {
+        return eventStartTime;
+    }
+
+    public ArrayList<String> getEventName() {
+        return eventName;
+    }
+
+    public ArrayList<String> getPaymentOption() {
+        return paymentOption;
+    }
+
+    public ArrayList<String> getBoughtDate() {
+        return boughtDate;
+    }
+
+    public ArrayList<String> getTicketId() {
+        return ticketId;
+    }
+
+    public ArrayList<String> getTicketName() {
+        return ticketName;
+    }
+
+    public ArrayList<String> getTicketQuantity() {
+        return ticketQuantity;
+    }
+
+    public ArrayList<String> getTicketAmount() {
+        return ticketAmount;
+    }
+
+    public String getBoughtCount() {
+        return boughtCount;
+    }
+
+
     public String getImage() {
         return image;
     }
+
+
 
     public User() {
     }

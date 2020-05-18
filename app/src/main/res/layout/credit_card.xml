@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    card_view:cardPreventCornerOverlap="false"
+    android:layout_width="match_parent"
+   app:cardCornerRadius="5dp"
+
+   android:layout_marginTop="10dp"
+    android:layout_marginLeft="50dp"
+    android:layout_marginRight="50dp"
+    android:layout_marginBottom="10dp"
+    android:layout_height="wrap_content">
+ <androidx.coordinatorlayout.widget.CoordinatorLayout
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content">
+ <ImageView
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:adjustViewBounds="true"
+     android:src="@drawable/backimage"
+     />
+  <LinearLayout
+      android:layout_marginTop="5dp"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+   android:orientation="vertical">
+     <TextView
+         android:layout_marginLeft="10dp"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+      android:text="Okazo"
+      android:textStyle="bold"
+      android:textSize="26dp"
+      android:textColor="@color/space_white"/>
+   <TextView
+       android:layout_marginTop="5dp"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="T-Money"
+       android:gravity="end"
+       android:layout_marginRight="10dp"
+       android:textStyle="bold"
+       android:textSize="16dp"
+       android:textColor="@color/space_white"/>
+
+   <TextView
+       android:id="@+id/credit_card_user_name"
+       android:layout_marginTop="5dp"
+       android:layout_marginLeft="10dp"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="Your Name"
+       android:textStyle="bold"
+       android:textSize="22dp"
+       android:textColor="@color/space_white"/>
+   <LinearLayout
+       android:layout_marginTop="5dp"
+       android:layout_width="wrap_content"
+    android:layout_gravity="end"
+       android:padding="10dp"
+       android:background="@color/colorPrimaryLight"
+       android:layout_marginRight="10dp"
+       android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+    android:id="@+id/credit_card_user_tmoney"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+     android:text="100"
+     android:textSize="24dp"
+     android:textStyle="bold"/>
+   </LinearLayout>
+
+
+  </LinearLayout>
+ </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.cardview.widget.CardView>

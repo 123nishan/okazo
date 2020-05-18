@@ -14,11 +14,11 @@
         android:enabled="true"
         app:showAsAction="ifRoom"
         android:title="@string/event"/>
-    <item android:id="@+id/nav_shop"
-        android:icon="@drawable/ic_shopping_cart"
-        android:enabled="true"
-        app:showAsAction="ifRoom"
-        android:title="@string/shop"/>
+<!--    <item android:id="@+id/nav_shop"-->
+<!--        android:icon="@drawable/ic_shopping_cart"-->
+<!--        android:enabled="true"-->
+<!--        app:showAsAction="ifRoom"-->
+<!--        android:title="@string/shop"/>-->
     <item android:id="@+id/nav_profile"
         android:icon="@drawable/ic_person_outline"
         android:enabled="true"

@@ -146,7 +146,7 @@ List<TextView> textViewsList=new ArrayList<>();
                     int listCounter=editTextsList.size();
                    //
                     if(inputEditTextTicketTypeName.getText().toString().equals("")){
-                        textViewTicketTypeName.setText("Please enter asdasdasd");
+                        textViewTicketTypeName.setText("Please enter value");
                         inputEditTextTicketTypeName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,getResources().getDrawable(R.drawable.ic_error),null);
                     }else {
                         counter+=1;

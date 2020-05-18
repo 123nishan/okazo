@@ -73,6 +73,13 @@ public class APIResponse {
     @Expose
     private ArrayList<Comment> commentArray;
 
+    @SerializedName("event_array")
+    @Expose
+    private ArrayList<EventDetail> evetnArray;
+
+    public ArrayList<EventDetail> getEvetnArray() {
+        return evetnArray;
+    }
 
     @SerializedName("user_array")
     @Expose

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="5dp"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <View
+        android:layout_marginTop="5dp"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:background="@drawable/ribbon"/>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/card_ticket_qr_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"/>
+        <LinearLayout
+            android:layout_marginTop="4dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/card_ticket_qr_id"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="id"
+                android:textSize="18dp"
+                android:textStyle="italic"/>
+            <TextView
+                android:id="@+id/card_ticket_qr_name"
+                android:gravity="end"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="name"
+                android:textSize="18dp"
+                android:textStyle="italic"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

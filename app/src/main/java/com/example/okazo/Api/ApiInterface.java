@@ -126,7 +126,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("eventDetail/ticket.php")
-    Call<ArrayList<EventDetail>> getAllTicket(
+    Call<APIResponse> getAllTicket(
             @Field("event_id") String eventId
 
     );
@@ -136,6 +136,31 @@ public interface ApiInterface {
     Call<APIResponse> checkEventType(
 
             @Field("type") String type
+    );
+
+    @FormUrlEncoded
+    @POST("ticket/add_to_cart.php")
+    Call<APIResponse> addToCart(
+
+            @Field("user_id") String userId,
+            @Field("ticket_id") String ticketId,
+            @Field("quantity") String quantity
+    );
+
+    @FormUrlEncoded
+    @POST("ticket/all_event_ticket.php")
+    Call<APIResponse> allEventTicket(
+
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
+    @POST("ticket/remove_event_ticket.php")
+    Call<APIResponse> removeEventTickets(
+
+            @Field("event_id") String eventId
+
     );
 
     @FormUrlEncoded
@@ -151,6 +176,55 @@ public interface ApiInterface {
 
             @Field("receiver_id") String receiverId,
             @Field("sender_id") String senderId
+    );
+
+    @FormUrlEncoded
+    @POST("user/payment_info.php")
+    Call<APIResponse> getPaymentInfo(
+
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
+    @POST("ticket/all_user_ticket.php")
+    Call<APIResponse> getUserAllTicket(
+
+            @Field("user_id") String userId,
+            @Field("event_id") String eventId
+    );
+
+    @FormUrlEncoded
+    @POST("user/buy_ticket.php")
+    Call<APIResponse> buyTicket(
+            @Field("amount") String amount,
+            @Field("user_id") String userId,
+            @Field("ticket_id") String ticketIdString,
+            @Field("option") String paymentOption,
+            @Field("t_money") String tMoney,
+            @Field("quantity") String ticketQuantityString,
+            @Field("per_amount") String ticketPriceString,
+            @Field("ticket_name") String ticketNameString,
+            @Field("event_id") String eventId
+    );
+
+
+    @FormUrlEncoded
+    @POST("ticket/update_quantity.php")
+    Call<APIResponse> updateQuantity(
+
+            @Field("ticket_id") String ticketId,
+            @Field("type") String type,
+            @Field("quantity") String quantity
+    );
+
+    @FormUrlEncoded
+    @POST("ticket/remove_ticket.php")
+    Call<APIResponse> removeTicket(
+            @Field("user_id") String userId,
+            @Field("ticket_id") String ticketId
+
+
     );
 
     @FormUrlEncoded
@@ -311,6 +385,14 @@ Call<APIResponse> setEventResponse(
             @Field("user_id") String userId,
             @Field("event_id") String eventId
     );
+
+    @FormUrlEncoded
+    @POST("ticket/bought_user_ticket.php")
+    Call<APIResponse> boughtTicket(
+            @Field("user_id") String userId
+
+    );
+
 
 @FormUrlEncoded
 @POST("user/like.php")
