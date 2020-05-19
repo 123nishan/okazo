@@ -793,15 +793,47 @@ going=false;
         buttonFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                buttonFollow.setVisibility(View.GONE);
-                buttonFollowing.setVisibility(View.VISIBLE);
+
+                apiInterface.eventFollow(userId,eventId,"follow").enqueue(new Callback<APIResponse>() {
+                    @Override
+                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                        APIResponse apiResponse=response.body();
+                        if(!apiResponse.getError()){
+                            buttonFollow.setVisibility(View.GONE);
+                            buttonFollowing.setVisibility(View.VISIBLE);
+                        }else {
+                            DynamicToast.makeWarning(EventActivity.this,apiResponse.getErrorMsg()).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                    }
+                });
             }
         });
         buttonFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                buttonFollowing.setVisibility(View.GONE);
-                buttonFollow.setVisibility(View.VISIBLE);
+                apiInterface.eventFollow(userId,eventId,"unfollow").enqueue(new Callback<APIResponse>() {
+                    @Override
+                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                        APIResponse apiResponse=response.body();
+                        if(!apiResponse.getError()){
+                            buttonFollowing.setVisibility(View.GONE);
+                            buttonFollow.setVisibility(View.VISIBLE);
+                        }else {
+                            DynamicToast.makeWarning(EventActivity.this,apiResponse.getErrorMsg()).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                    }
+                });
+
             }
         });
 
@@ -1217,7 +1249,7 @@ going=false;
                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                     APIResponse apiResponse=response.body();
                     if(!apiResponse.getError()){
-                        DynamicToast.makeSuccess(EventActivity.this,"Event closed!").show();
+
                         Intent intent=new Intent(EventActivity.this,MainActivity.class);
 
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -1271,8 +1303,8 @@ going=false;
                         buttonFollow.setVisibility(View.GONE);
                         buttonFollowing.setVisibility(View.VISIBLE);
                     }else {
-                        buttonFollow.setVisibility(View.GONE);
-                        buttonFollowing.setVisibility(View.VISIBLE);
+                        buttonFollow.setVisibility(View.VISIBLE);
+                        buttonFollowing.setVisibility(View.GONE);
                     }
 
                     if(eventResponse.equals("3")){

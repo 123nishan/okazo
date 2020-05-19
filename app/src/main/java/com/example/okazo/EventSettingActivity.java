@@ -127,7 +127,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         savedInstance=savedInstanceState;
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
        // getActionBar().hide();
         setContentView(R.layout.activity_event_setting);
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);

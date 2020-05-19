@@ -14,20 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.okazo.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 
-public class ModeratorListAdapter extends RecyclerView.Adapter<ModeratorListAdapter.MyViewHolder> {
-    OnClickListener onClickListener;
-    OnCardClickListener onCardClickListener;
+public class FollowingListAdapter extends RecyclerView.Adapter<FollowingListAdapter.MyViewHolder> {
+   OnClickListener onClickListener;
+   OnCardClickListener onCardClickListener;
     ArrayList<String> eventName,image;
     Context context;
-    public ModeratorListAdapter(ArrayList<String> eventName,ArrayList<String>image,Context context){
+    public FollowingListAdapter(ArrayList<String> eventName,ArrayList<String>image,Context context){
         this.eventName=eventName;
         this.image=image;
         this.context=context;
@@ -35,8 +33,8 @@ public class ModeratorListAdapter extends RecyclerView.Adapter<ModeratorListAdap
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.card_moderator_list,parent,false);
-        return new ModeratorListAdapter.MyViewHolder(view);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.card_following_list,parent,false);
+        return new  FollowingListAdapter.MyViewHolder(view);
     }
 
     @Override
@@ -55,15 +53,10 @@ public class ModeratorListAdapter extends RecyclerView.Adapter<ModeratorListAdap
     public int getItemCount() {
         return eventName.size();
     }
-    public void removeItem(int position) {
-        eventName.remove(position);
-        image.remove(position);
-        notifyItemRemoved(position);
-    }
     public interface OnClickListener{
         void onClick(int position);
     }
-    public interface  OnCardClickListener{
+    public interface OnCardClickListener{
         void onCardClick(int position);
     }
     public void setOnCardClickListener(OnCardClickListener onCardClickListener){
@@ -72,17 +65,22 @@ public class ModeratorListAdapter extends RecyclerView.Adapter<ModeratorListAdap
     public void setOnClickListener(OnClickListener onClickListener){
         this.onClickListener=onClickListener;
     }
-    class MyViewHolder extends RecyclerView.ViewHolder{
-            CircleImageView circleImageViewProfile,circleImageViewLeave;
-            TextView textViewName;
-            CardView cardView;
+    public void removeItem(int position) {
+        eventName.remove(position);
+        image.remove(position);
 
+        notifyItemRemoved(position);
+    }
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        CircleImageView circleImageViewProfile,circleImageViewLeave;
+        CardView cardView;
+        TextView textViewName;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            cardView=itemView.findViewById(R.id.card_moderator_list_card);
-            circleImageViewLeave=itemView.findViewById(R.id.card_moderator_list_leave);
-            circleImageViewProfile=itemView.findViewById(R.id.card_moderator_list_event_image);
-            textViewName=itemView.findViewById(R.id.card_moderator_list_event_name);
+            cardView=itemView.findViewById(R.id.card_following_list_card);
+            circleImageViewLeave=itemView.findViewById(R.id.card_following_list_leave);
+            circleImageViewProfile=itemView.findViewById(R.id.card_following_list_event_image);
+            textViewName=itemView.findViewById(R.id.card_following_list_event_name);
             circleImageViewLeave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -30,7 +30,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".NotificationActivity"></activity>
+        <activity android:name=".FollowingEventActivity"></activity>
+        <activity android:name=".NotificationActivity" />
         <activity android:name=".ModeratorListActivity" />
         <activity android:name=".TicketQrActivity" />
         <activity android:name=".CheckOutActivity" />
@@ -40,19 +41,20 @@
         <activity android:name=".TicketActivity" />
         <activity
             android:name=".EventSettingActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ModeratorActivity" />
         <activity
             android:name=".MessageActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ChatActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EventActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ForeLocationActivity" />
         <activity
             android:name=".EventDetailPreviewActivity"
@@ -82,8 +84,8 @@
         <activity android:name=".OtpActivity" />
         <activity
             android:name=".LoginActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -91,13 +93,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"
-            android:windowSoftInputMode="adjustResize"
-            />
+        <activity
+            android:name=".RegisterActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".EditorActivity" />
-        <activity android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.gms.version"

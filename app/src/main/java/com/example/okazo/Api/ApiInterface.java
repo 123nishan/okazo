@@ -106,11 +106,27 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("user/following.php")
+    Call<APIResponse> getFollowingList(
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
     @POST("moderator/check_moderator.php")
     Call<APIResponse> getModerator(
             @Field("user_id") String userId,
             @Field("event_id") String eventId
     );
+
+    @FormUrlEncoded
+    @POST("user/event_follow.php")
+    Call<APIResponse> eventFollow(
+            @Field("user_id") String userId,
+            @Field("event_id") String eventId,
+            @Field("request") String request
+    );
+
 
     @GET("eventDetail/eventType.php")
     Call<ArrayList<EventDetail>> getEventType();

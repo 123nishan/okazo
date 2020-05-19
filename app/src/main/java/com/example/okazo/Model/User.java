@@ -27,6 +27,14 @@ public class User {
     @Expose
     private String followingCount;
 
+    @SerializedName("money")
+    @Expose
+    private String money;
+
+    public String getMoney() {
+        return money;
+    }
+
     @SerializedName("moderator_count")
     @Expose
     private String moderatorCount;

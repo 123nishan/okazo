@@ -74,7 +74,7 @@ public class NotificationActivity extends AppCompatActivity {
                                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                                     APIResponse apiResponse1=response.body();
                                     if(!apiResponse1.getError()){
-                                            DynamicToast.makeSuccess(getApplicationContext(),"Successfully accepted request").show();
+                                            DynamicToast.makeSuccess(NotificationActivity.this,"Successfully accepted request").show();
                                             adapter.removeItem(position);
                                             adapter.notifyDataSetChanged();
                                     }else {

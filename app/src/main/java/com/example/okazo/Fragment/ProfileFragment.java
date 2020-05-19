@@ -31,6 +31,7 @@ import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.EventActivity;
 import com.example.okazo.EventDetailPreviewActivity;
+import com.example.okazo.FollowingEventActivity;
 import com.example.okazo.LoginActivity;
 import com.example.okazo.Model.Note;
 import com.example.okazo.Model.User;
@@ -39,6 +40,7 @@ import com.example.okazo.ModeratorListActivity;
 import com.example.okazo.MyTicketActivity;
 import com.example.okazo.NotificationActivity;
 import com.example.okazo.R;
+import com.example.okazo.util.FollowingListAdapter;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.io.File;
@@ -228,6 +230,8 @@ public class ProfileFragment extends Fragment {
                     textViewFollowing.setText(user.getFollowingCount());
                     textViewModerator.setText(user.getModeratorCount());
                     moderatorRequest=Integer.valueOf(user.getModeratorRequest());
+                    textViewTMoney.setText(user.getMoney());
+
                     if(moderatorRequest>0){
                         circleImageViewDot.setVisibility(View.VISIBLE);
                     }else {
@@ -254,9 +258,22 @@ public class ProfileFragment extends Fragment {
                         public void onClick(View view) {
                             int count=Integer.valueOf(user.getModeratorCount());
                             if(count==0){
-                                DynamicToast.makeError(getActivity().getApplicationContext(),"you are not moderator in any group").show();
+                                DynamicToast.makeWarning(getActivity().getApplicationContext(),"you are not moderator in any group").show();
                             }else {
                                 Intent intent=new Intent(getActivity().getApplicationContext(), ModeratorListActivity.class);
+                                intent.putExtra(KEY_USER_ID,userId);
+                                startActivity(intent);
+                            }
+                        }
+                    });
+                    linearLayoutFollowing.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int count=Integer.valueOf(user.getFollowingCount());
+                            if(count==0){
+                                DynamicToast.makeWarning(getActivity().getApplicationContext(),"you have 0 following").show();
+                            }else {
+                                Intent intent=new Intent(getActivity().getApplicationContext(), FollowingEventActivity.class);
                                 intent.putExtra(KEY_USER_ID,userId);
                                 startActivity(intent);
                             }

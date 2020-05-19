@@ -90,7 +90,7 @@ public class MessageActivity extends AppCompatActivity {
                                             }
                                             recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
 
-                                            apiInterface.sendInboxNotification(sendMessage,senderId).enqueue(new Callback<APIResponse>() {
+                                            apiInterface.sendInboxNotification(sendMessage,senderId,currentUser).enqueue(new Callback<APIResponse>() {
                                                 @Override
                                                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
 
@@ -104,10 +104,10 @@ public class MessageActivity extends AppCompatActivity {
                                             editText.clearFocus();
                                             editText.setText("");
                                             button.setVisibility(View.GONE);
-                                            for (String test:arrayListMessage
-                                                 ) {
-                                                Log.d("MESSAGE",test);
-                                            }
+//                                            for (String test:arrayListMessage
+//                                                 ) {
+//                                                Log.d("MESSAGE",test);
+//                                            }
 //                                            adapter.notifyDataSetChanged();
 //                                            recyclerView.scrollToPosition(arrayListMessage.size()-1);
                                         }else {

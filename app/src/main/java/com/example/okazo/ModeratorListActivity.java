@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.okazo.Api.APIResponse;
@@ -23,6 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
 import static com.example.okazo.util.constants.KEY_USER_ID;
 
 public class ModeratorListActivity extends AppCompatActivity implements ConfirmationDialog.orderConfirmationListener {
@@ -59,6 +61,32 @@ public class ModeratorListActivity extends AppCompatActivity implements Confirma
                     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerView.setLayoutManager(linearLayoutManager);
                     recyclerView.setAdapter(adapter);
+
+                    adapter.setOnCardClickListener(new ModeratorListAdapter.OnCardClickListener() {
+                        @Override
+                        public void onCardClick(int position) {
+                            String selectEventId=eventId.get(position);
+                            apiInterface.primaryEventInfo(selectEventId,userId).enqueue(new Callback<APIResponse>() {
+                                @Override
+                                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                    APIResponse apiResponse1=response.body();
+                                    if(!apiResponse1.getError()){
+                                        Intent intent=new Intent(ModeratorListActivity.this,EventActivity.class);
+                                        intent.putExtra(KEY_EVENT_DETAIL,apiResponse1.getEvent());
+                                        intent.putExtra(KEY_USER_ID,userId);
+                                        startActivity(intent);
+                                    }else {
+                                        DynamicToast.makeWarning(ModeratorListActivity.this,apiResponse1.getErrorMsg()).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                }
+                            });
+                        }
+                    });
                     adapter.setOnClickListener(new ModeratorListAdapter.OnClickListener() {
                         @Override
                         public void onClick(int position) {
@@ -99,7 +127,7 @@ public class ModeratorListActivity extends AppCompatActivity implements Confirma
                             if(!apiResponse1.getError()){
                                     adapter.removeItem(positionAdapter);
                                     eventId.remove(positionAdapter);
-                                    DynamicToast.makeSuccess(getApplicationContext(),"Left the event").show();
+                                    DynamicToast.makeSuccess(ModeratorListActivity.this,"Left the event").show();
                             }else {
                                 DynamicToast.makeError(getApplicationContext(),apiResponse1.getErrorMsg()).show();
                             }
@@ -111,7 +139,7 @@ public class ModeratorListActivity extends AppCompatActivity implements Confirma
                         }
                     });
                 }else {
-                    DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
+                    DynamicToast.makeError(ModeratorListActivity.this,apiResponse.getErrorMsg()).show();
                 }
             }
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_moderator_list_card"
+    android:id="@+id/card_following_list_card"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="5dp"
     android:layout_marginRight="15dp"
@@ -13,33 +14,33 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-      android:padding="5dp"
+        android:padding="5dp"
 
-     >
+        >
         <de.hdodenhof.circleimageview.CircleImageView
 
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
-            android:id="@+id/card_moderator_list_event_image"/>
+            android:id="@+id/card_following_list_event_image"/>
         <TextView
             android:layout_centerInParent="true"
-            android:layout_toRightOf="@+id/card_moderator_list_event_image"
-            android:id="@+id/card_moderator_list_event_name"
+            android:layout_toRightOf="@+id/card_following_list_event_image"
+            android:id="@+id/card_following_list_event_name"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Event Name"
             android:textSize="18dp"
             android:textStyle="bold"
-           />
+            />
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_centerInParent="true"
             android:layout_marginRight="10dp"
             android:layout_alignParentEnd="true"
-            android:id="@+id/card_moderator_list_leave"
+            android:id="@+id/card_following_list_leave"
             android:layout_width="25dp"
             android:layout_height="24dp"
-            android:background="@drawable/ic_leave"/>
+            android:background="@drawable/ic_remove_user"/>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
