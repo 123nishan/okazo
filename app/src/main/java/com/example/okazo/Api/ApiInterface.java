@@ -354,6 +354,16 @@ public interface ApiInterface {
 
     );
 
+    @FormUrlEncoded
+    @POST("eventDetail/create_post.php")
+    Call<APIResponse> createPost(
+            @Field("event_id") String eventId,
+            @Field("user_id") String user_id,
+            @Field("detail") String detail,
+            @Field("image") String image
+
+
+    );
 
     @FormUrlEncoded
     @POST("otp.php")
@@ -482,6 +492,10 @@ Call<APIResponse> setLike(
             @Part MultipartBody.Part file,@Part ("file") RequestBody name
     );
 
-
+    @Multipart
+    @POST("eventDetail/event_profile_image.php")
+    Call<APIResponse> uploadPostImage(
+            @Part MultipartBody.Part file,@Part ("file") RequestBody name
+    );
 
 }

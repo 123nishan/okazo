@@ -175,7 +175,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
                 }else {
-                    DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
+                   // DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
                 }
             }
 

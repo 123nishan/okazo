@@ -49,22 +49,7 @@ public class ModeratorActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         //viewPager.getAdapter().notifyDataSetChanged();
-viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-});
         //simpleSearchView.showSearch();
         // Adding padding to the animation because of the hidden menu item
 
@@ -106,4 +91,9 @@ viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

@@ -49,6 +49,15 @@
          android:layout_height="wrap_content"
          android:id="@+id/card_feed_description"
          android:text="nishan \nline break "/>
+        <ImageView
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_gravity="center"
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:visibility="gone"
+            android:id="@+id/card_feed_post_image"
+          />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,11 +76,7 @@
                 android:id="@+id/card_feed_total_comment"
                 />
         </RelativeLayout>
-        <ImageView
-            android:layout_marginTop="3dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/card_feed_post_image"/>
+
       <ImageView
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

@@ -20,7 +20,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/colorPrimary"
                 android:orientation="vertical">
                 <androidx.coordinatorlayout.widget.CoordinatorLayout
                     android:layout_marginTop="8dp"
@@ -148,13 +148,20 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </RelativeLayout>
+        <androidx.core.widget.NestedScrollView
+            android:layout_marginTop="15dp"
+
+            android:layout_gravity="center_horizontal"
+            android:layout_width="250dp"
+            android:layout_height="match_parent">
         <LinearLayout
-            android:layout_width="360dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="center"
-            android:layout_marginTop="45dp">
+
+           >
             <LinearLayout
+
                 android:orientation="horizontal"
                 android:paddingLeft="25dp"
                 android:layout_width="match_parent"
@@ -231,27 +238,34 @@
                     android:textStyle="bold" />
             </LinearLayout>
             <LinearLayout
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal"
-                android:paddingLeft="25dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/ic_leave"
-                    />
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:paddingLeft="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_leave"
+                />
 
-                <TextView
-                    android:id="@+id/profile_fragment_logout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingLeft="20dp"
-                    android:text="Logout"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/profile_fragment_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:text="Logout"
+                android:textStyle="bold" />
         </LinearLayout>
+
+
+
+
+
+
+        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 

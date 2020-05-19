@@ -44,12 +44,14 @@
         <activity android:name=".ModeratorActivity" />
         <activity
             android:name=".MessageActivity"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ChatActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".EventActivity"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ForeLocationActivity" />
         <activity
@@ -80,6 +82,7 @@
         <activity android:name=".OtpActivity" />
         <activity
             android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -88,9 +91,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".RegisterActivity"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity android:name=".EditorActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
 
         <meta-data
             android:name="com.google.android.gms.version"

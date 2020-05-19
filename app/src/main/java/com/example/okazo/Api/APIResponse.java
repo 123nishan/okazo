@@ -61,6 +61,14 @@ public class APIResponse {
     @Expose
     private Comment comment;
 
+    @SerializedName("post")
+    @Expose
+    private Posts post;
+
+    public Posts getPost() {
+        return post;
+    }
+
     public Chat getChat() {
         return chat;
     }

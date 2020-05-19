@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -50,6 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
     ApiInterface apiInterface;
     Boolean emailStatus=false,passwordStatus=false,nameStatus=false,mobileStatus=false;
     Pattern pattern;
+    private ImageButton imageButtonLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         editTextPassword=findViewById(R.id.register_password);
         editTextEmail=findViewById(R.id.register_email);
         btnRegister=findViewById(R.id.register_button);
+        imageButtonLogin=findViewById(R.id.back_to_login);
         btnRegister.setVisibility(View.GONE);
         GifDrawable gifChecking = null;
         try {
@@ -80,6 +83,14 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
         });
+        imageButtonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
         editTextPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

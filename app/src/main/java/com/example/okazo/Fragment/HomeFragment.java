@@ -104,8 +104,8 @@ public class HomeFragment extends Fragment {
 
         SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
         MainActivity mainActivity= (MainActivity) this.getActivity();
-        ActionBar bar=mainActivity.getSupportActionBar();
-        bar.hide();
+//        ActionBar bar=mainActivity.getSupportActionBar();
+//        bar.hide();
        // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
@@ -300,8 +300,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-          Intent intent=new Intent(getActivity().getApplicationContext(), GeoFenceActivity.class);
-          //Intent intent=new Intent(getActivity().getApplicationContext(), eventDetail.class);
+         // Intent intent=new Intent(getActivity().getApplicationContext(), GeoFenceActivity.class);
+          Intent intent=new Intent(getActivity().getApplicationContext(), eventDetail.class);
             startActivity(intent);
             }
         });

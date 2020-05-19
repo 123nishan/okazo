@@ -51,12 +51,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,6 +70,9 @@ import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
 import static com.example.okazo.util.constants.KEY_EVENT_ID;
 import static com.example.okazo.util.constants.KEY_ID_FOR_CHAT;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
+import static com.example.okazo.util.constants.KEY_RECEIVER_ID;
+import static com.example.okazo.util.constants.KEY_SENDER_ID;
+import static com.example.okazo.util.constants.KEY_SENDER_NAME;
 import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
 import static com.example.okazo.util.constants.KEY_USER_ID;
 import static com.example.okazo.util.constants.KEY_USER_ROLE;
@@ -110,6 +117,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
     private Boolean followButtonFlag=false;
     private HorizontalScrollView horizontalScrollView;
     private CircleImageView circleImageViewDot;
+    private ImageView imageViewSendMessage;
         private int temp=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,6 +163,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
         buttonMessage=findViewById(R.id.event_activity_moderator_action_message);
         buttonModerator=findViewById(R.id.event_activity_moderator_action_moderator);
         buttonNotification=findViewById(R.id.event_activity_moderator_action_notification);
+        imageViewSendMessage=findViewById(R.id.event_activity_send_message);
         ticketStatus=eventDetail.getTicketStatus();
     //for admin side and moderator
         cardViewPost=findViewById(R.id.event_activity_create_post_card);
@@ -240,17 +249,32 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
 
                        }
                        else if(role.equals("Editor")){
+                           buttonMessage.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View view) {
+                                   Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
+                                   intent.putExtra(KEY_ID_FOR_CHAT,eventId);
+                                   startActivity(intent);
+                               }
+                           });
                            userRole="Editor";
                            checkeventStatus();
                            Toast.makeText(EventActivity.this, "Editor", Toast.LENGTH_SHORT).show();
                        }else {
-
+                           buttonMessage.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View view) {
+                                   Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
+                                   intent.putExtra(KEY_ID_FOR_CHAT,eventId);
+                                   startActivity(intent);
+                               }
+                           });
                            userRole="Moderator";
                            checkeventStatus();
                             buttonReport.setClickable(false);
                            buttonReport.setBackground(getDrawable(R.drawable.disable_round_button));
-                           buttonModerator.setClickable(false);
-                           buttonModerator.setBackground(getDrawable(R.drawable.disable_round_button));
+//                           buttonModerator.setClickable(false);
+                           //buttonModerator.setBackground(getDrawable(R.drawable.disable_round_button));
 
                        }
                        //for non admin moderator only
@@ -305,11 +329,12 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                         arrayListLikes.add(value.getLikes());
                         arrayListUserLike.add(value.getUserLike());
                         arrayListComment.add(value.getComment());
+                        arrayListImage.add(value.getImage());
                        // arrayListEventId.add(value.getId());
 
                     }
                     adapter=new FeedAdapter(arrayListEventTitle,arrayListProfileImage,arrayListDetail,arrayListCreatedDate,
-                            EventActivity.this,arrayListPostId,arrayListLikes,arrayListUserLike,null,arrayListComment);
+                            EventActivity.this,arrayListPostId,arrayListLikes,arrayListUserLike,null,arrayListComment,arrayListImage);
                     LinearLayoutManager linearLayoutManager=new LinearLayoutManager(EventActivity.this);
                     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerViewFeed.setLayoutManager(linearLayoutManager);
@@ -824,7 +849,62 @@ going=false;
         }
 
     getFollowing();
+    imageViewSendMessage.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
 
+//            apiInterface.makeSeen(,sender_id.get(position)).enqueue(new Callback<APIResponse>() {
+//                @Override
+//                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+//                    APIResponse apiResponse=response.body();
+//
+//                    if(!apiResponse.getError()){
+//                        ((Button)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_chat_room_unseen) ).setVisibility(View.GONE);
+//                        Intent intent=new Intent(ChatActivity.this,MessageActivity.class);
+//                        intent.putExtra(KEY_SENDER_ID,sender_id.get(position));
+//                        intent.putExtra(KEY_RECEIVER_ID,id);
+//                        intent.putExtra(KEY_SENDER_NAME,arrayListName.get(position));
+//                        startActivity(intent);
+//                    }else {
+//                        DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<APIResponse> call, Throwable t) {
+//
+//                }
+//            });
+
+
+            apiInterface.getUserName(userId,"home").enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    APIResponse apiResponse=response.body();
+                    if(!apiResponse.getError()){
+                        String userName=apiResponse.getUser().getName();
+                        Log.d("TESTNAME",userName+"asd");
+                        Intent intent=new Intent(EventActivity.this,MessageActivity.class);
+                        intent.putExtra(KEY_SENDER_ID,eventId);
+                        intent.putExtra(KEY_RECEIVER_ID,userId);
+                        intent.putExtra(KEY_SENDER_NAME,eventDetail.getTitle());
+
+                        startActivity(intent);
+                    }else {
+
+                        DynamicToast.makeWarning(EventActivity.this,"There was problem loading data").show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                }
+            });
+
+           // Toast.makeText(EventActivity.this, "send message", Toast.LENGTH_SHORT).show();
+        }
+    });
         userRole="User";
         apiInterface.getEventStatus(eventId).enqueue(new Callback<APIResponse>() {
             @Override
@@ -952,7 +1032,63 @@ going=false;
             @Override
             public void onClick(View view) {
                 String postDetail=editTextPostDetail.getText().toString();
-                Log.d("postCheck",postDetail+"||||||"+path);
+                String addImage="0";
+                if(path!=null){
+                        addImage="1";
+                }
+                String finalAddImage = addImage;
+                apiInterface.createPost(eventId,userId,postDetail,addImage).enqueue(new Callback<APIResponse>() {
+                    @Override
+                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                        APIResponse apiResponse=response.body();
+                        if(!apiResponse.getError()){
+                                if(finalAddImage.equals("1")){
+                                    String postId=apiResponse.getPost().getPostId();
+                                    File file = new File(path);
+
+                                    String imageName=(postId)+"_"+"profile"+".png";
+                                    RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+                                    RequestBody fileName = RequestBody.create(MediaType.parse("text/plain"), imageName);
+                                    MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+                                    apiInterface.uploadPostImage(fileToUpload,fileName).enqueue(new Callback<APIResponse>() {
+                                        @Override
+                                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                            APIResponse response1=response.body();
+                                            if(!response1.getError()){
+                                                DynamicToast.makeSuccess(EventActivity.this,"Post created").show();
+                                                editTextPostDetail.setText("");
+                                                imageViewPost.setBackground(getDrawable(R.drawable.ic_add_image));
+                                                buttonPost.setVisibility(View.GONE);
+                                            }else {
+                                                DynamicToast.makeWarning(EventActivity.this,"Post created but problem while uploading image").show();
+                                                editTextPostDetail.setText("");
+                                                imageViewPost.setBackground(getDrawable(R.drawable.ic_add_image));
+                                                buttonPost.setVisibility(View.GONE);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<APIResponse> call, Throwable t) {
+                                            DynamicToast.makeWarning(EventActivity.this,t.getLocalizedMessage()).show();
+                                        }
+                                    });
+                                }else {
+                                    DynamicToast.makeSuccess(EventActivity.this,"Post created").show();
+                                    editTextPostDetail.setText("");
+                                    imageViewPost.setBackground(getDrawable(R.drawable.ic_add_image));
+                                    buttonPost.setVisibility(View.GONE);
+                                }
+                        }else {
+                            DynamicToast.makeError(EventActivity.this,apiResponse.getErrorMsg()).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                    }
+                });
+               // Log.d("postCheck",postDetail+"||||||"+path);
                 //TODo create post
             }
         });

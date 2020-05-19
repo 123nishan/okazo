@@ -75,6 +75,7 @@ import retrofit2.Retrofit;
 import static android.content.Context.MODE_PRIVATE;
 import static android.util.Log.d;
 import static com.example.okazo.util.constants.ERROR_DIALOG_REQUEST;
+import static com.example.okazo.util.constants.KEY_ID_FOR_CHAT;
 import static com.example.okazo.util.constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 import static com.example.okazo.util.constants.PERMISSION_REQUEST_ENABLE_GPS;
 
@@ -145,7 +146,7 @@ String userEmail,userId;
 
         SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences(constants.KEY_SHARED_PREFERENCE, MODE_PRIVATE);
         if(sharedPreferences1.getString("user_id","")!=null && !sharedPreferences1.getString("user_id","").isEmpty()){
-
+            userId=sharedPreferences1.getString("user_id","");
         }else {
 
 
@@ -232,8 +233,8 @@ String userEmail,userId;
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
         resideMenu.setScaleValue(0.6f);
         resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        String titles[] = { "Home", "Ticket", "Calendar", "Settings" };
-        int icon[] = { R.drawable.ic_home, R.drawable.ic_tickets, R.drawable.ic_calendar, R.drawable.ic_setting };
+        String titles[] = { "Home", "Ticket", "Message", "Settings" };
+        int icon[] = { R.drawable.ic_home, R.drawable.ic_tickets, R.drawable.ic_message, R.drawable.ic_setting };
 
         for (int i = 0; i < titles.length; i++){
             ResideMenuItem item = new ResideMenuItem(this, icon[i], titles[i]);
@@ -250,6 +251,12 @@ String userEmail,userId;
                         case "Ticket":
                             Intent intent=new Intent(MainActivity.this,MyTicketActivity.class);
                             startActivity(intent);
+                            break;
+                        case "Message":
+                            Intent intent1=new Intent(MainActivity.this,ChatActivity.class);
+                            intent1.putExtra(KEY_ID_FOR_CHAT,userId);
+                            Log.d("CHECKHERE",userId);
+                            startActivity(intent1);
                             break;
                     }
 

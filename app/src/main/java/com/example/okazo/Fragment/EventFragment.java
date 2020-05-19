@@ -201,8 +201,8 @@ private  List<Symbol> symbolList=new ArrayList<>();
         hashMap.put("automobile","car-15");
 
         MainActivity mainActivity= (MainActivity) this.getActivity();
-        ActionBar bar=mainActivity.getSupportActionBar();
-        bar.hide();
+//        ActionBar bar=mainActivity.getSupportActionBar();
+//        bar.hide();
         mapView = v.findViewById(R.id.event_fragent_map);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
