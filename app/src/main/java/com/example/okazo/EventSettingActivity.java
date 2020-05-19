@@ -701,6 +701,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                 }else {
                     if(apiResponse.getErrorMsg().equals("Banned")){
                         DynamicToast.makeError(EventSettingActivity.this,"This event has been blcked").show();
+                        finish();
                         //TODO intent to main activity
                     }else {
                         DynamicToast.makeError(EventSettingActivity.this,"Unable to get data").show();

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class EventDetail implements Serializable {
+public class EventDetail implements Serializable,Comparable {
     @SerializedName("event_type")
     @Expose
     private String eventType;
@@ -172,6 +172,14 @@ public class EventDetail implements Serializable {
     @Expose
     private ArrayList<String> quantity;
 
+    @SerializedName("distance")
+    @Expose
+    private String distance;
+
+    public String getDistance() {
+        return distance;
+    }
+
     public ArrayList<String> getQuantity() {
         return quantity;
     }
@@ -272,4 +280,8 @@ public class EventDetail implements Serializable {
     }
 
 
+    @Override
+    public int compareTo(Object o) {
+      return (((EventDetail) o).getDistance()).compareTo(this.getDistance());
+    }
 }

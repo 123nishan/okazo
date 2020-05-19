@@ -949,8 +949,16 @@ going=false;
 
                         linearLayout.setVisibility(View.GONE);
                         textViewEventClosed.setVisibility(View.VISIBLE);
-                        buttonFollow.setClickable(false);
+                        buttonFollow.setOnClickListener(null);
                         linearLayoutResponseLayout.setVisibility(View.GONE);
+                        textViewTicket.setOnClickListener(null);
+                        cardViewSecondInterested.setOnClickListener(null);
+                        cardViewFirstInterested.setOnClickListener(null);
+                        cardViewFirst.setOnClickListener(null);
+                        cardViewMessage.setOnClickListener(null);
+
+
+
 //                                        cardViewFirst.setClickable(false);
 //                                        cardViewFirstInterested.setClickable(false);
 //                                        cardViewSecondInterested.setClickable(false);
@@ -1136,11 +1144,17 @@ going=false;
                     String statusCheck=apiResponse.getEvent().getStatus();
                     if(statusCheck.equals("2")){
                         textViewEventClosedAdmin.setVisibility(View.VISIBLE);
+                        buttonMessage.setOnClickListener(null);
+                        buttonModerator.setOnClickListener(null);
+                        buttonNotification.setOnClickListener(null);
+                        textViewTicket.setOnClickListener(null);
                     }else if(statusCheck.equals("4")) {
                         // linearLayout.setVisibility(View.GONE);
                         textViewEventClosedAdmin.setVisibility(View.VISIBLE);
-
-
+                        buttonMessage.setOnClickListener(null);
+                        buttonModerator.setOnClickListener(null);
+                        buttonNotification.setOnClickListener(null);
+                        textViewTicket.setOnClickListener(null);
 
 
                         buttonFollow.setClickable(false);
@@ -1180,6 +1194,7 @@ going=false;
                 if(userRole.equals("Moderator")){
                         DynamicToast.makeError(EventActivity.this,"You dont have permission to this feature").show();
                 }else {
+
                    temp+=1;
                     Intent intent = new Intent(EventActivity.this, EventSettingActivity.class);
                     intent.putExtra(KEY_EVENT_ID,eventId);

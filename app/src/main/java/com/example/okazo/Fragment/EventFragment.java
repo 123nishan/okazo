@@ -157,7 +157,7 @@ private  List<Symbol> symbolList=new ArrayList<>();
     private EventDetail eventDetailIntent;
     private String mapEventType;
     private EventTypeCollectionAdapter collectionAdapter;
-
+    String totalEvent="";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -207,39 +207,7 @@ private  List<Symbol> symbolList=new ArrayList<>();
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-       // Log.d("checkHere",lat.size()+"nishan"+lng.size());
 
-
-//        if(savedInstanceState==null){
-//            final FragmentTransaction transaction=getChildFragmentManager().beginTransaction();
-//            MapboxMapOptions options=MapboxMapOptions.createFromAttributes(getActivity(),null);
-//            options.camera(new CameraPosition.Builder().target(new LatLng(38.899895,-7703401))
-//            .zoom(13)
-//                    .build()
-//            );
-//            mapFragment=SupportMapFragment.newInstance(options);
-//            transaction.add(R.id.map_box_frame,mapFragment,"com.mapbox.map");
-//            transaction.commit();
-//
-//
-//        }else {
-//            mapFragment= (SupportMapFragment) getChildFragmentManager().findFragmentByTag("com.mapbox.map");
-//        }
-//        if(mapFragment!=null){
-//            mapFragment.getMapAsync(new OnMapReadyCallback() {
-//                @Override
-//                public void onMapReady(@NonNull MapboxMap mapboxMap) {
-//                   EventFragment.this.mapboxMap=mapboxMap;
-//                   mapboxMap.setStyle(Style.OUTDOORS, new Style.OnStyleLoaded() {
-//                       @Override
-//                       public void onStyleLoaded(@NonNull Style style) {
-//                        enableLocationComponent(style);
-//                          // MarkerViewManager markerViewManager = new MarkerViewManager(mapFragment, mapboxMap);
-//                       }
-//                   });
-//                }
-//            });
-//        }
         apiInterface.getMapEventType().enqueue(new Callback<ArrayList<EventDetail>>() {
             @Override
             public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
@@ -323,188 +291,108 @@ private  List<Symbol> symbolList=new ArrayList<>();
             public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
                 ArrayList<EventDetail> eventDetail=response.body();
                 //List<Feature> symbolLayerIconFeatureList = new ArrayList<>();
+
                 for (EventDetail value: eventDetail
                 ) {
-                    lat.add(Double.valueOf(value.getLatitude()));
-                    lng.add(Double.valueOf(value.getLongitude()));
+                  totalEvent=value.getTotalEvent();
+                    if(Integer.valueOf(totalEvent)>0) {
+                        lat.add(Double.valueOf(value.getLatitude()));
+                        lng.add(Double.valueOf(value.getLongitude()));
+                    }
+
                 }
-                          mapboxMap.setStyle(Style.DARK, new Style.OnStyleLoaded() {
-                    @Override
-                    public void onStyleLoaded(@NonNull Style style) {
-                        enableLocationComponent(style);
-                       // HashMap <String,Symbol> symbolHashMap=new HashMap<>();
-                        mapboxMap.addOnMapClickListener(EventFragment.this::onMapClick);
-                        UiSettings uiSettings=mapboxMap.getUiSettings();
-                        uiSettings.setLogoEnabled(false);
-                        uiSettings.setCompassEnabled(false);
 
-                        List<SymbolOptions> symbolOptions=new ArrayList<>();
-                        addSymbol(style,eventDetail,symbolOptions);
-//                       for(int i=0;i<lat.size();i++){
-//                           int counter=i;
-//                         symbolManager=new SymbolManager(mapView,mapboxMap,style);
-//                           symbolManager.setIconAllowOverlap(true);
-//                           symbolManager.setIconIgnorePlacement(true);
-//                           if(eventDetail.get(i).getStatus().equals("1")) {
-//                               if (eventDetail.get(i).getTagCount() > 1) {
-//
-//                                   symbolOptions.add(new SymbolOptions()
-//                                           .withLatLng(new LatLng(lat.get(i), lng.get(i)))
-//                                           .withIconImage("town-hall-15")
-//                                           .withIconSize(2.0f));
-//                               } else {
-//
-//                                   String eventType = (eventDetail.get(i).getTags()).toLowerCase();
-//                                   String value = hashMap.get(eventType);
-//
-//                                   symbolOptions.add(new SymbolOptions()
-//                                           .withLatLng(new LatLng(lat.get(i), lng.get(i)))
-//                                           .withIconImage(value)
-//                                           .withIconSize(2.0f));
-//                               }
-//
-//                               cardView.setOnClickListener(new View.OnClickListener() {
-//                                   @Override
-//                                   public void onClick(View view) {
-//                                        Intent intent=new Intent(getActivity().getApplicationContext(), EventActivity.class);
-//                                        intent.putExtra(KEY_EVENT_DETAIL,eventDetailIntent);
-//                                        intent.putExtra(KEY_USER_ID,userId);
-//                                        startActivity(intent);
-//
-//                                   }
-//                               });
-//                           }
-//                       }
-                       symbolManager.create(symbolOptions);
-                       symbolClick(eventDetail);
+                    mapboxMap.setStyle(Style.DARK, new Style.OnStyleLoaded() {
+                        @Override
+                        public void onStyleLoaded(@NonNull Style style) {
+                            enableLocationComponent(style);
+                            // HashMap <String,Symbol> symbolHashMap=new HashMap<>();
+                            mapboxMap.addOnMapClickListener(EventFragment.this::onMapClick);
+                            UiSettings uiSettings=mapboxMap.getUiSettings();
+                            uiSettings.setLogoEnabled(false);
+                            uiSettings.setCompassEnabled(false);
 
-//                       symbolManager.addClickListener(new OnSymbolClickListener() {
-//                           @Override
-//                           public void onAnnotationClick(Symbol symbol) {
-//                               int latLen,lngLen;
-//                               String selectedLat= String.valueOf(symbol.getLatLng().getLatitude());
-//                               String selectedLng= String.valueOf(symbol.getLatLng().getLongitude());
-//                               latLen=selectedLat.length();
-//                               lngLen=selectedLng.length();
-//
-//                            if(latLen<9){
-//                                selectedLat=selectedLng+0;
-//
-//                            }
-//                            if(lngLen<9){
-//
-//                                selectedLng=selectedLng+0;
-//                            }
-//
-//                               for (EventDetail val:eventDetail
-//                                    ) {
-//                                   String lat=val.getLatitude();
-//                                   String lng=val.getLongitude();
-//                                   if(selectedLat.equals(lat) && selectedLng.equals(lng)){
-//                                       eventDetailIntent=val;
-//                                            cardView.setVisibility(View.VISIBLE);
-//                                            textViewTitle.setText(val.getTitle());
-//                                            textViewStartDate.setText(val.getStartDate());
-//                                            textViewStartTime.setText(val.getStartTime());
-//                                            textViewLocation.setText(val.getPlace());
-//                                            textViewHost.setText(val.getHostName());
-//                                       String imagePath=KEY_IMAGE_ADDRESS+(val.getImage());
-//                                       Glide.with(getActivity().getApplicationContext())
-//                                               .load(Uri.parse(imagePath))
-//                                               .placeholder(R.drawable.ic_place_holder_background)
-//                                               //.error(R.drawable.ic_image_not_found_background)
-//                                               .centerCrop()
-//                                               .into(imageView);
-//
-//                                       break;
-//                                   }
-//                               }
-//
-//                           }
-//                       });
-                        RecyclerView recyclerView=getView().findViewById(R.id.event_fragment_recycler_view);
-                        String parentClass="eventFragment";
-                        Context context=getActivity().getApplicationContext();
-                        adapter=new MapEventTypeAdapter(eventType,eventTypeImage,context);
-                        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
-                        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                        recyclerView.setLayoutManager(linearLayoutManager);
-                        recyclerView.setItemAnimator(new DefaultItemAnimator());
-                        recyclerView.setAdapter(adapter);
-                        adapter.setOnClickListener(new MapEventTypeAdapter.OnClickListener() {
-                            @Override
-                            public void OnClick(int position, ArrayList<String> eventDetail) {
+                            List<SymbolOptions> symbolOptions=new ArrayList<>();
+                            addSymbol(style,eventDetail,symbolOptions);
+                            if(Integer.valueOf(totalEvent)>0) {
+                                symbolManager.create(symbolOptions);
+                                symbolClick(eventDetail);
+                                RecyclerView recyclerView=getView().findViewById(R.id.event_fragment_recycler_view);
+                                String parentClass="eventFragment";
+                                Context context=getActivity().getApplicationContext();
+                                adapter=new MapEventTypeAdapter(eventType,eventTypeImage,context);
+                                LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
+                                linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                                recyclerView.setLayoutManager(linearLayoutManager);
+                                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                                recyclerView.setAdapter(adapter);
+                                adapter.setOnClickListener(new MapEventTypeAdapter.OnClickListener() {
+                                    @Override
+                                    public void OnClick(int position, ArrayList<String> eventDetail) {
 
-                                String eventTypeString=eventDetail.get(position);
-                                if(eventTypeString.equals("More")){
-                                    allEventType.clear();
-                                    allEventTypeImage.clear();
-                                    View dialog=getLayoutInflater().inflate(R.layout.bottom_sheet_event_type,null);
-                                    BottomSheetDialog sheetDialog=new BottomSheetDialog(getContext());
-                                    sheetDialog.setContentView(dialog);
-                                    sheetDialog.show();
-                                    apiInterface.getEventType().enqueue(new Callback<ArrayList<EventDetail>>() {
-                                        @Override
-                                        public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
-                                            ArrayList<EventDetail> eventDetails=response.body();
-                                            RecyclerView recyclerView1=dialog.findViewById(R.id.bottom_sheet_event_type_recycleview);
-                                            for (EventDetail val:eventDetails
-                                                 ) {
-                                                allEventType.add(val.getEventType());
-                                                allEventTypeImage.add(val.getEventTypeImage());
-
-                                            }
-                                            collectionAdapter=new EventTypeCollectionAdapter(allEventType,allEventTypeImage,getActivity().getApplicationContext());
-                                            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(dialog.getContext(), 2);
-                                            recyclerView1.setLayoutManager(mLayoutManager);
-                                            recyclerView1.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-                                            recyclerView1.setItemAnimator(new DefaultItemAnimator());
-                                            recyclerView1.setAdapter(collectionAdapter);
-                                            collectionAdapter.setOnClickListener(new EventTypeCollectionAdapter.OnClickListener() {
+                                        String eventTypeString=eventDetail.get(position);
+                                        if(eventTypeString.equals("More")){
+                                            allEventType.clear();
+                                            allEventTypeImage.clear();
+                                            View dialog=getLayoutInflater().inflate(R.layout.bottom_sheet_event_type,null);
+                                            BottomSheetDialog sheetDialog=new BottomSheetDialog(getContext());
+                                            sheetDialog.setContentView(dialog);
+                                            sheetDialog.show();
+                                            apiInterface.getEventType().enqueue(new Callback<ArrayList<EventDetail>>() {
                                                 @Override
-                                                public void OnClick(int position, ArrayList<String> eventType) {
-                                                    String selectedEventType=eventType.get(position);
-                                                    selectEventType(selectedEventType,symbolOptions,style);
-                                                    sheetDialog.hide();
+                                                public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
+                                                    ArrayList<EventDetail> eventDetails=response.body();
+                                                    RecyclerView recyclerView1=dialog.findViewById(R.id.bottom_sheet_event_type_recycleview);
+                                                    for (EventDetail val:eventDetails
+                                                    ) {
+                                                        allEventType.add(val.getEventType());
+                                                        allEventTypeImage.add(val.getEventTypeImage());
+
+                                                    }
+                                                    collectionAdapter=new EventTypeCollectionAdapter(allEventType,allEventTypeImage,getActivity().getApplicationContext());
+                                                    RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(dialog.getContext(), 2);
+                                                    recyclerView1.setLayoutManager(mLayoutManager);
+                                                    recyclerView1.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+                                                    recyclerView1.setItemAnimator(new DefaultItemAnimator());
+                                                    recyclerView1.setAdapter(collectionAdapter);
+                                                    collectionAdapter.setOnClickListener(new EventTypeCollectionAdapter.OnClickListener() {
+                                                        @Override
+                                                        public void OnClick(int position, ArrayList<String> eventType) {
+                                                            String selectedEventType=eventType.get(position);
+                                                            selectEventType(selectedEventType,symbolOptions,style);
+                                                            sheetDialog.hide();
+                                                        }
+                                                    });
+
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<ArrayList<EventDetail>> call, Throwable t) {
+
                                                 }
                                             });
+                                        }else {
 
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<ArrayList<EventDetail>> call, Throwable t) {
-
-                                        }
-                                    });
-                                }else {
-
-                                    cardView.setVisibility(View.GONE);
+                                            cardView.setVisibility(View.GONE);
 
                                             selectEventType(eventTypeString,symbolOptions,style);
 
 
-                                    //symbolManager.create(symbolOptions);
-////                        Toast.makeText(context, "a"+position, Toast.LENGTH_SHORT).show();
-//                        Log.d("omen",symbolList.get(0)+" a");
-//                       // cardView.setVisibility(View.VISIBLE);
-                                }
+                                        }
+                                    }
+                                });
                             }
-                        });
-                    //    Log.d("nishan",eventType.get(0));
-//                        SymbolManager symbolManager=new SymbolManager(mapView,mapboxMap,style);
-//                        symbolManager.setIconAllowOverlap(true);
-//                        symbolManager.setIconIgnorePlacement(true);
-//                        Symbol symbol = symbolManager.create(new SymbolOptions()
-//                                .withLatLng(new LatLng(27.699399, 85.312736))
-//                                .withIconImage(ICON_ID)
-//                                .withIconSize(1.0f));
 
-//                          MarkerViewManager markerViewManager = new MarkerViewManager(mapView, mapboxMap);
-//
-//                           MarkerView markerView=new MarkerView(new LatLng(27.699933,85.312736),);
-                    }
 
-                });
+
+
+
+
+                        }
+
+                    });
+
+
 //
 
                 //Toast.makeText(getActivity(), "here", Toast.LENGTH_SHORT).show();
@@ -717,89 +605,12 @@ private  List<Symbol> symbolList=new ArrayList<>();
                                     Log.d("hereNishan", value.getTitle());
 
                                 }
-                                // List<SymbolOptions> symbolOptions=new ArrayList<>();
+
                                 addSymbol(style, eventDetail, symbolOptions);
-//                                          for(int i=0;i<lat.size();i++){
-//
-//                                              symbolManager=new SymbolManager(mapView,mapboxMap,style);
-//                                              symbolManager.setIconAllowOverlap(true);
-//                                              symbolManager.setIconIgnorePlacement(true);
-//                                              if(eventDetail.get(i).getStatus().equals("1")) {
-//                                                  if (eventDetail.get(i).getTagCount() > 1) {
-//
-//                                                      symbolOptions.add(new SymbolOptions()
-//                                                              .withLatLng(new LatLng(lat.get(i), lng.get(i)))
-//                                                              .withIconImage("town-hall-15")
-//                                                              .withIconSize(2.0f));
-//                                                  } else {
-//
-//                                                      String eventType = (eventDetail.get(i).getTags()).toLowerCase();
-//                                                      String value = hashMap.get(eventType);
-//
-//                                                      symbolOptions.add(new SymbolOptions()
-//                                                              .withLatLng(new LatLng(lat.get(i), lng.get(i)))
-//                                                              .withIconImage(value)
-//                                                              .withIconSize(2.0f));
-//                                                  }
-//
-//                                                  cardView.setOnClickListener(new View.OnClickListener() {
-//                                                      @Override
-//                                                      public void onClick(View view) {
-//                                                          Intent intent=new Intent(getActivity().getApplicationContext(), EventActivity.class);
-//                                                          intent.putExtra(KEY_EVENT_DETAIL,eventDetailIntent);
-//                                                          intent.putExtra(KEY_USER_ID,userId);
-//                                                          startActivity(intent);
-//
-//                                                      }
-//                                                  });
-//                                              }
-//                                          }
+
                                 symbolManager.create(symbolOptions);
                                 symbolClick(eventDetail);
-//                                          symbolManager.addClickListener(new OnSymbolClickListener() {
-//                                              @Override
-//                                              public void onAnnotationClick(Symbol symbol) {
-//                                                  int latLen,lngLen;
-//                                                  String selectedLat= String.valueOf(symbol.getLatLng().getLatitude());
-//                                                  String selectedLng= String.valueOf(symbol.getLatLng().getLongitude());
-//                                                  latLen=selectedLat.length();
-//                                                  lngLen=selectedLng.length();
-//
-//                                                  if(latLen<9){
-//                                                      selectedLat=selectedLng+0;
-//
-//                                                  }
-//                                                  if(lngLen<9){
-//
-//                                                      selectedLng=selectedLng+0;
-//                                                  }
-//
-//                                                  for (EventDetail val:eventDetail
-//                                                  ) {
-//                                                      String lat=val.getLatitude();
-//                                                      String lng=val.getLongitude();
-//                                                      if(selectedLat.equals(lat) && selectedLng.equals(lng)){
-//                                                          eventDetailIntent=val;
-//                                                          cardView.setVisibility(View.VISIBLE);
-//                                                          textViewTitle.setText(val.getTitle());
-//                                                          textViewStartDate.setText(val.getStartDate());
-//                                                          textViewStartTime.setText(val.getStartTime());
-//                                                          textViewLocation.setText(val.getPlace());
-//                                                          textViewHost.setText(val.getHostName());
-//                                                          String imagePath=KEY_IMAGE_ADDRESS+(val.getImage());
-//                                                          Glide.with(getActivity().getApplicationContext())
-//                                                                  .load(Uri.parse(imagePath))
-//                                                                  .placeholder(R.drawable.ic_place_holder_background)
-//                                                                  //.error(R.drawable.ic_image_not_found_background)
-//                                                                  .centerCrop()
-//                                                                  .into(imageView);
-//
-//                                                          break;
-//                                                      }
-//                                                  }
-//
-//                                              }
-//                                          });
+
 
                             }
 

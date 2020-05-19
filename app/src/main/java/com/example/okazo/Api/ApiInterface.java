@@ -131,6 +131,8 @@ public interface ApiInterface {
     @GET("eventDetail/eventType.php")
     Call<ArrayList<EventDetail>> getEventType();
 
+
+
     @GET("geofence/activate_geofence.php")
     Call<ArrayList<Geofence>> getGeofenceStatus();
 
@@ -139,6 +141,14 @@ public interface ApiInterface {
     Call<ArrayList<EventDetail>> getEventLocation(
             @Field("user_id") String userId,
             @Field("type") String type
+    );
+
+
+    @FormUrlEncoded
+    @POST("eventDetail/discover_event.php")
+    Call<ArrayList<EventDetail>> discoverEvent(
+            @Field("user_id") String userId
+
     );
 
     @FormUrlEncoded
