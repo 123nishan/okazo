@@ -16,4 +16,12 @@
         android:title="Leave event">
 
     </item>
+    <item
+        android:id="@+id/event_setting_3"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_close_event"
+        android:title="Close Event">
+
+    </item>
+
 </menu>

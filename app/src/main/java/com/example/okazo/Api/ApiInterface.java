@@ -86,7 +86,8 @@ public interface ApiInterface {
     @POST("fcm.php")
     Call<APIResponse> sendInboxNotification(
             @Field("message") String message,
-            @Field("id") String id
+            @Field("send_to") String id,
+            @Field("send_from") String sendfrom
     );
 
     @FormUrlEncoded
@@ -287,6 +288,15 @@ public interface ApiInterface {
 
             @Field("receiver_id") String receiverId,
             @Field("sender_id") String senderId
+
+    );
+
+    @FormUrlEncoded
+    @POST("eventDetail/close_event.php")
+    Call<APIResponse> closeEvent(
+
+            @Field("event_id") String eventId
+
 
     );
 

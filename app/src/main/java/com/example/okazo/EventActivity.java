@@ -119,6 +119,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
     private CircleImageView circleImageViewDot;
     private ImageView imageViewSendMessage;
         private int temp=0;
+        private String confirmationDialogType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1162,29 +1163,67 @@ going=false;
                 }else {
                     message="Do you want to leave group?";
                 }
+                confirmationDialogType="2";
                 ConfirmationDialog confirmationDialog=new ConfirmationDialog(message);
                 confirmationDialog.show(getSupportFragmentManager(),"Confirmation");
 
                 break;
-
+            case R.id.event_setting_3:
+                if(userRole.equals("Moderator")){
+                    DynamicToast.makeError(EventActivity.this,"You dont have permission to this feature").show();
+                }else {
+                    confirmationDialogType="3";
+                    ConfirmationDialog confirmationDialog1=new ConfirmationDialog("Do you want to close the event?");
+                    confirmationDialog1.show(getSupportFragmentManager(),"Confirmation");
+                }
+                break;
         }
         return false;
     }
 
     @Override
     public void OnYesClicked() {
-        if(checkConnection()) {
-            apiInterface.leaveEvent(moderatorId,eventId,userRole).enqueue(new Callback<APIResponse>() {
+        if(confirmationDialogType.equals("2")){
+            if(checkConnection()) {
+                apiInterface.leaveEvent(moderatorId,eventId,userRole).enqueue(new Callback<APIResponse>() {
+                    @Override
+                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                        APIResponse apiResponse=response.body();
+                        if(!apiResponse.getError()){
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            DynamicToast.makeSuccess(getApplicationContext(),"You left the event").show();
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            startActivity(intent);
+                        }else{
+                            DynamicToast.makeError(EventActivity.this,apiResponse.getErrorMsg()).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                    }
+                });
+
+            }
+            else {
+                DynamicToast.makeWarning(this,"No internet connection").show();
+
+            }
+        }
+        else {
+            apiInterface.closeEvent(eventId).enqueue(new Callback<APIResponse>() {
                 @Override
                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                     APIResponse apiResponse=response.body();
                     if(!apiResponse.getError()){
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        DynamicToast.makeSuccess(getApplicationContext(),"You left the event").show();
+                        DynamicToast.makeSuccess(EventActivity.this,"Event closed!").show();
+                        Intent intent=new Intent(EventActivity.this,MainActivity.class);
+
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(intent);
-                    }else{
-                        DynamicToast.makeError(EventActivity.this,apiResponse.getErrorMsg()).show();
+                    }else {
+                        DynamicToast.makeWarning(EventActivity.this,apiResponse.getErrorMsg()).show();
                     }
                 }
 
@@ -1193,12 +1232,8 @@ going=false;
 
                 }
             });
-
         }
-        else {
-            DynamicToast.makeWarning(this,"No internet connection").show();
 
-        }
 
     }
 

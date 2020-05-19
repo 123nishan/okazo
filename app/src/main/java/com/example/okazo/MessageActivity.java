@@ -89,13 +89,11 @@ public class MessageActivity extends AppCompatActivity {
                                                 arrayListMessage.add(val.getMessage());
                                             }
                                             recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
-                                            apiInterface.sendInboxNotification(sendMessage,currentUser).enqueue(new Callback<APIResponse>() {
+
+                                            apiInterface.sendInboxNotification(sendMessage,senderId).enqueue(new Callback<APIResponse>() {
                                                 @Override
                                                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                                    APIResponse response1=response.body();
-                                                    if(!response1.getError()){
 
-                                                    }
                                                 }
 
                                                 @Override
