@@ -92,6 +92,13 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("eventDetail/report.php")
+    Call<APIResponse> report(
+            @Field("event_id") String eventId
+
+    );
+
+    @FormUrlEncoded
     @POST("fcm.php")
     Call<APIResponse> sendInboxNotification(
             @Field("message") String message,

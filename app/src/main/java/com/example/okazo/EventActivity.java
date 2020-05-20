@@ -1,20 +1,35 @@
 package com.example.okazo;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.pdf.PdfDocument;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
@@ -49,13 +64,30 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
+import com.karumi.dexter.listener.single.PermissionListener;
+import com.karumi.dexter.listener.single.SnackbarOnDeniedPermissionListener;
+import com.mapbox.android.core.permissions.PermissionsListener;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -65,6 +97,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.okazo.util.constants.FILELOCATION;
 import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
 
 import static com.example.okazo.util.constants.KEY_EVENT_ID;
@@ -120,10 +153,264 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
     private ImageView imageViewSendMessage;
         private int temp=0;
         private String confirmationDialogType;
+private Date eventDate;
+private Bitmap bmp,scaledbmp;
+    Date currentDateTimeString = Calendar.getInstance().getTime();
+    private ArrayList<String> reportTicketName=new ArrayList<>(),reportTicketPrice=new ArrayList<>(),reportTicketQuantity=new ArrayList<>(),reportTotalSoldType=new ArrayList<>();
+    private String reportFollowingCount,reportModeratorCount,reportGoingCount,reportInterestedCount,reportTicketStatus;
+    private int pageWidth=1200;
+    private SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+    public void createPdf(){
+
+        PdfDocument pdfDocument = new PdfDocument();
+        Paint myPaint=new Paint();
+        Paint titlePaint=new Paint();
+        Paint subTitlePaint=new Paint();
+        Paint infoPaint=new Paint();
+
+
+        PdfDocument.PageInfo pageInfo=new PdfDocument.PageInfo.Builder(1200,2010,1).create();
+        PdfDocument.Page page=pdfDocument.startPage(pageInfo);
+        Canvas canvas=page.getCanvas();
+
+        //content
+        canvas.drawBitmap(scaledbmp,50,50,myPaint);
+        //title
+        titlePaint.setTextAlign(Paint.Align.CENTER);
+        titlePaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
+        titlePaint.setTextSize(70);
+        titlePaint.setColor(getColor(R.color.colorPrimary));
+        canvas.drawText(eventDetail.getTitle().toUpperCase(),pageWidth/2,250,titlePaint);
+
+       //event detail
+        myPaint.setTextSize(20f);
+//        myPaint.setTextAlign(Paint.Align.RIGHT);
+        canvas.drawText("Event Date: "+eventDetail.getStartDate(),50,350,myPaint);
+        canvas.drawText("Event Time: "+eventDetail.getStartTime(),1000,350,myPaint);
+        canvas.drawText("Location: "+eventDetail.getPlace(),50,390,myPaint);
+        //sub title
+        infoPaint.setTextAlign(Paint.Align.CENTER);
+        infoPaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
+        infoPaint.setTextSize(30);
+        infoPaint.setColor(getColor(R.color.colorPrimary));
+        canvas.drawText("Event Summary",pageWidth/2,500,infoPaint);
+
+        canvas.drawText("Total Following: ",50,530,myPaint);
+        canvas.drawText(reportFollowingCount,210,530,myPaint);
+
+        canvas.drawText("Total Moderator: ",50,570,myPaint);
+        canvas.drawText(reportModeratorCount,210,570,myPaint);
+
+
+        canvas.drawText("Response",pageWidth/2,620,infoPaint);
+
+        canvas.drawText("Going: ",50,680,myPaint);
+        canvas.drawText(reportGoingCount,120,680,myPaint);
+
+        canvas.drawText("Interested: ",200,680,myPaint);
+        canvas.drawText(reportInterestedCount,300,680,myPaint);
+
+
+        canvas.drawText("Ticket",pageWidth/2,730,infoPaint);
+        if(Integer.valueOf(reportTicketStatus)>0){
+            //yes ticket
+            myPaint.setStyle(Paint.Style.STROKE);
+            myPaint.setStrokeWidth(2);
+            canvas.drawRect(20,780,pageWidth-20,860,myPaint);
+
+            myPaint.setTextAlign(Paint.Align.LEFT);
+            myPaint.setStyle(Paint.Style.FILL);
+            //columns
+            canvas.drawText("SN.",40,820,myPaint);
+            canvas.drawText("Ticket Name",200,820,myPaint);
+            canvas.drawText("Price",700,820,myPaint);
+            canvas.drawText("Total Qty.",900,820,myPaint);
+            canvas.drawText("Sold Qty.",1050,820,myPaint);
+
+            canvas.drawLine(180,790,180,830,myPaint);
+            canvas.drawLine(680,790,680,830,myPaint);
+            canvas.drawLine(880,790,880,830,myPaint);
+            canvas.drawLine(1030,790,1030,830,myPaint);
+            int height=930;
+            int counter=1;
+            int totalQty=0,totalSoldQty=0;
+            for(int i=0;i<reportTicketName.size();i++){
+
+                canvas.drawText(counter+". ",40,height,myPaint);
+                canvas.drawText(reportTicketName.get(i),200,height,myPaint);
+                canvas.drawText(reportTicketPrice.get(i),700,height,myPaint);
+                canvas.drawText(reportTicketQuantity.get(i),900,height,myPaint);
+                canvas.drawText(reportTotalSoldType.get(i),1050,height,myPaint);
+                totalQty=totalQty+Integer.valueOf(reportTicketQuantity.get(i));
+                totalSoldQty=totalSoldQty+Integer.valueOf(reportTotalSoldType.get(i));
+                height=height+50;
+                counter++;
+
+            }
+            canvas.drawLine(680,height+50,pageWidth-20,height+50,myPaint);
+            canvas.drawText("Total Qty: ",700,height+90,myPaint);
+            canvas.drawText(String.valueOf(totalQty),900,height+90,myPaint);
+            canvas.drawText(String.valueOf(totalSoldQty),1050,height+90,myPaint);
+
+            canvas.drawText("Unsold Ticket: ",700,height+120,myPaint);
+            myPaint.setTextAlign(Paint.Align.RIGHT);
+            canvas.drawText(String.valueOf(totalQty-totalSoldQty),pageWidth-40,height+120,myPaint);
+
+
+        }
+        else {
+            canvas.drawText("Free Entry",40,780,myPaint);
+            //no ticket
+        }
+//        canvas.drawText();
+
+        pdfDocument.finishPage(page);
+
+
+
+
+        String FILE = FILELOCATION + "/" + eventDetail.getTitle() + ".pdf";
+        try{
+            pdfDocument.writeTo(new FileOutputStream(FILE));
+            DynamicToast.makeSuccess(getApplicationContext(),"Please check download folder").show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.d("PDF","2");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("PDF","3");
+        }
+        pdfDocument.close();
+        File file=new File(FILE);
+        Intent intent=new Intent(Intent.ACTION_VIEW);
+        Uri fileURI= FileProvider.getUriForFile(EventActivity.this,BuildConfig.APPLICATION_ID+".provider",file);
+        intent.setDataAndType(fileURI,"application/pdf");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        Intent open = Intent.createChooser(intent, "Open File");
+        try {
+//                    Toast.makeText(HistoryCompletedActivity.this, "opening pdf", Toast.LENGTH_SHORT).show();
+            startActivity(open);
+        } catch (ActivityNotFoundException e) {
+            //prompts the user to install adobe reader
+            boolean isAdobeInstalled = isPackageInstalled("com.adobe.reader", getPackageManager());
+            if (isAdobeInstalled) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.adobe.reader")));
+            }
+        }
+
+    }
+    private boolean isPackageInstalled(String packagename, PackageManager packageManager) {
+        try {
+            packageManager.getPackageInfo(packagename, 0);
+            return true;
+
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+      public  void generateReport(){
+          buttonReport.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                if(eventDate.compareTo(currentDateTimeString)<0){
+                    Dexter.withActivity(EventActivity.this)
+                            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+                            .withListener(new MultiplePermissionsListener() {
+                                @Override
+                                public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                            if(report.areAllPermissionsGranted()){
+                                                apiInterface.report(eventId).enqueue(new Callback<APIResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                                        APIResponse apiResponse=response.body();
+                                                        if(!apiResponse.getError()){
+                                                            EventDetail eventDetail=apiResponse.getEvent();
+                                                            reportTicketName=eventDetail.getTicketName();
+                                                            reportTicketPrice=eventDetail.getTicketPrice();
+                                                            reportTicketQuantity=eventDetail.getTicketQuantity();
+                                                            reportTotalSoldType=eventDetail.getTicketSoldType();
+                                                            reportFollowingCount=eventDetail.getFollowingCount();
+                                                            reportModeratorCount=eventDetail.getModeratorCount();
+                                                            reportGoingCount=eventDetail.getGoingCount();
+                                                            reportInterestedCount=eventDetail.getInterestedCount();
+                                                            reportTicketStatus=eventDetail.getTicketStatus();
+                                                            Log.d("REPORT",reportFollowingCount);
+                                                            bmp= BitmapFactory.decodeResource(getResources(),R.drawable.logo);
+                                                            scaledbmp=Bitmap.createScaledBitmap(bmp,200,100,false);
+                                                            createPdf();
+                                                            DynamicToast.makeWarning(getApplicationContext(),"Please wait opening pdf").show();
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                                    }
+                                                });
+
+                                            }
+                                            if(report.isAnyPermissionPermanentlyDenied()) {
+                                              showSettingsDialog();
+                                            }
+
+
+                                }
+
+                                @Override
+                                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                                        token.continuePermissionRequest();
+                                }
+                            }).onSameThread().check();
+
+                    // generate report
+
+
+//                    PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(new Rect(0, 0, 100, 100), 1).create();
+
+//                    DynamicToast.make(EventActivity.this,"GENERATING").show();
+
+                }else {
+                   // Toast.makeText(EventActivity.this, "ASDASDASD", Toast.LENGTH_SHORT).show();
+                    DynamicToast.make(getApplicationContext(),"no").show();
+                }
+
+              }
+          });
+      }
+
+    private void showSettingsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(EventActivity.this);
+        builder.setTitle("Need Permissions");
+        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
+        builder.setPositiveButton("GOTO SETTINGS", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                openSettings();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+
+    }
+    private void openSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivityForResult(intent, 101);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+
+
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
         collapsingToolbarLayout=findViewById(R.id.event_activity_collapsing_tool_bar);
         textViewCountDown=findViewById(R.id.event_activity_countdown);
@@ -237,6 +524,13 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                       //for admin only
                        if(role.equals("Admin")){
 
+                           try {
+                                eventDate=simpleDateFormat.parse(eventDetail.getStartDate());
+                           } catch (ParseException e) {
+                               e.printStackTrace();
+                           }
+
+                           generateReport();
                            buttonMessage.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View view) {
@@ -250,6 +544,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
 
                        }
                        else if(role.equals("Editor")){
+                           generateReport();
                            buttonMessage.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View view) {

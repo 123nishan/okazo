@@ -1,5 +1,9 @@
 package com.example.okazo.util;
 
+import android.os.Environment;
+
+import java.io.File;
+
 public class constants {
     public static final int ERROR_DIALOG_REQUEST=9001;
     public static final int PERMISSION_REQUEST_ENABLE_GPS=9002;
@@ -55,6 +59,7 @@ public class constants {
     public static final String KEY_TOTAL_AMOUNT="totalAmount";
     public static final String KEY_TICKET_NAME="ticketName";
     public static final String KEY_TICKET_QUANTITY="ticketQuantity";
+    public static final File FILELOCATION = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) ;
 
 
 
