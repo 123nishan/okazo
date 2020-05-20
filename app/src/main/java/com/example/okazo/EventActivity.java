@@ -13,7 +13,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -70,6 +76,9 @@ import com.mapbox.android.core.permissions.PermissionsListener;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -142,9 +151,69 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
         private int temp=0;
         private String confirmationDialogType;
 private Date eventDate;
+private Bitmap bmp,scaledbmp;
     Date currentDateTimeString = Calendar.getInstance().getTime();
+    private ArrayList<String> reportTicketName=new ArrayList<>(),reportTicketPrice=new ArrayList<>(),reportTicketQuantity=new ArrayList<>(),reportTotalSoldType=new ArrayList<>();
+    private String reportFollowingCount,reportModeratorCount,reportGoingCount,reportInterestedCount,reportTicketStatus;
+    private int pageWidth=1200;
     private SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+    public void createPdf(){
 
+        PdfDocument pdfDocument = new PdfDocument();
+        Paint myPaint=new Paint();
+        Paint titlePaint=new Paint();
+        Paint subTitlePaint=new Paint();
+
+
+        PdfDocument.PageInfo pageInfo=new PdfDocument.PageInfo.Builder(1200,2010,1).create();
+        PdfDocument.Page page=pdfDocument.startPage(pageInfo);
+        Canvas canvas=page.getCanvas();
+
+        //content
+        canvas.drawBitmap(scaledbmp,50,50,myPaint);
+        //title
+        titlePaint.setTextAlign(Paint.Align.CENTER);
+        titlePaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
+        titlePaint.setTextSize(70);
+        titlePaint.setColor(getColor(R.color.colorPrimary));
+        canvas.drawText(eventDetail.getTitle().toUpperCase(),pageWidth/2,250,titlePaint);
+
+       //event detail
+        myPaint.setTextSize(20f);
+//        myPaint.setTextAlign(Paint.Align.RIGHT);
+        canvas.drawText("Event Date: "+eventDetail.getStartDate(),50,350,myPaint);
+        canvas.drawText("Event Time: "+eventDetail.getStartTime(),1000,350,myPaint);
+        canvas.drawText("Location: "+eventDetail.getPlace(),50,390,myPaint);
+        //sub title
+        subTitlePaint.setTextAlign(Paint.Align.CENTER);
+        subTitlePaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
+        subTitlePaint.setTextSize(50);
+        subTitlePaint.setColor(getColor(R.color.colorPrimary));
+        canvas.drawText("User Details",pageWidth/2,500,titlePaint);
+
+        canvas.drawText("Total Following: ",pageWidth/2,530,myPaint);
+
+//        canvas.drawText();
+
+        pdfDocument.finishPage(page);
+
+
+
+
+        String FILE = FILELOCATION + "/" + eventDetail.getTitle() + ".pdf";
+        try{
+            pdfDocument.writeTo(new FileOutputStream(FILE));
+            DynamicToast.makeSuccess(getApplicationContext(),"Please check download folder").show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.d("PDF","2");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("PDF","3");
+        }
+        pdfDocument.close();
+
+    }
       public  void generateReport(){
           buttonReport.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -156,7 +225,33 @@ private Date eventDate;
                                 @Override
                                 public void onPermissionsChecked(MultiplePermissionsReport report) {
                                             if(report.areAllPermissionsGranted()){
+                                                apiInterface.report(eventId).enqueue(new Callback<APIResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                                        APIResponse apiResponse=response.body();
+                                                        if(!apiResponse.getError()){
+                                                            EventDetail eventDetail=apiResponse.getEvent();
+                                                            reportTicketName=eventDetail.getTicketName();
+                                                            reportTicketPrice=eventDetail.getTicketPrice();
+                                                            reportTicketQuantity=eventDetail.getTicketQuantity();
+                                                            reportTotalSoldType=eventDetail.getTicketSoldType();
+                                                            reportFollowingCount=eventDetail.getFollowingCount();
+                                                            reportModeratorCount=eventDetail.getModeratorCount();
+                                                            reportGoingCount=eventDetail.getGoingCount();
+                                                            reportInterestedCount=eventDetail.getInterestedCount();
+                                                            reportTicketStatus=eventDetail.getTicketStatus();
 
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                                    }
+                                                });
+                                                bmp= BitmapFactory.decodeResource(getResources(),R.drawable.logo);
+                                                scaledbmp=Bitmap.createScaledBitmap(bmp,200,100,false);
+                                                createPdf();
                                             }
                                             if(report.isAnyPermissionPermanentlyDenied()) {
                                               showSettingsDialog();
@@ -172,8 +267,8 @@ private Date eventDate;
                             }).onSameThread().check();
 
                     // generate report
-                    String FILE = FILELOCATION + "/" + eventId + ".pdf";
-                    PdfDocument document = new PdfDocument();
+
+
 //                    PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(new Rect(0, 0, 100, 100), 1).create();
 
 //                    DynamicToast.make(EventActivity.this,"GENERATING").show();
@@ -217,6 +312,8 @@ private Date eventDate;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+
+
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
         collapsingToolbarLayout=findViewById(R.id.event_activity_collapsing_tool_bar);
         textViewCountDown=findViewById(R.id.event_activity_countdown);

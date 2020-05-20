@@ -23,7 +23,13 @@ public class EventDetail implements Serializable {
     @Expose
     private String totalEvent;
 
+    @SerializedName("following_count")
+    @Expose
+    private String followingCount;
 
+    @SerializedName("moderator_count")
+    @Expose
+    private String moderatorCount;
 
     public String getTotalEvent() {
         return totalEvent;
@@ -155,6 +161,22 @@ public class EventDetail implements Serializable {
     @SerializedName("ticket_price")
     @Expose
     private ArrayList<String> ticketPrice;
+
+    @SerializedName("total_sold_type")
+    @Expose
+    private ArrayList<String> ticketSoldType;
+
+    public String getFollowingCount() {
+        return followingCount;
+    }
+
+    public String getModeratorCount() {
+        return moderatorCount;
+    }
+
+    public ArrayList<String> getTicketSoldType() {
+        return ticketSoldType;
+    }
 
     @SerializedName("ticket_quantity")
     @Expose
