@@ -4,14 +4,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -163,6 +166,7 @@ private Bitmap bmp,scaledbmp;
         Paint myPaint=new Paint();
         Paint titlePaint=new Paint();
         Paint subTitlePaint=new Paint();
+        Paint infoPaint=new Paint();
 
 
         PdfDocument.PageInfo pageInfo=new PdfDocument.PageInfo.Builder(1200,2010,1).create();
@@ -185,14 +189,79 @@ private Bitmap bmp,scaledbmp;
         canvas.drawText("Event Time: "+eventDetail.getStartTime(),1000,350,myPaint);
         canvas.drawText("Location: "+eventDetail.getPlace(),50,390,myPaint);
         //sub title
-        subTitlePaint.setTextAlign(Paint.Align.CENTER);
-        subTitlePaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
-        subTitlePaint.setTextSize(50);
-        subTitlePaint.setColor(getColor(R.color.colorPrimary));
-        canvas.drawText("User Details",pageWidth/2,500,titlePaint);
+        infoPaint.setTextAlign(Paint.Align.CENTER);
+        infoPaint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD));
+        infoPaint.setTextSize(30);
+        infoPaint.setColor(getColor(R.color.colorPrimary));
+        canvas.drawText("Event Summary",pageWidth/2,500,infoPaint);
 
-        canvas.drawText("Total Following: ",pageWidth/2,530,myPaint);
+        canvas.drawText("Total Following: ",50,530,myPaint);
+        canvas.drawText(reportFollowingCount,210,530,myPaint);
 
+        canvas.drawText("Total Moderator: ",50,570,myPaint);
+        canvas.drawText(reportModeratorCount,210,570,myPaint);
+
+
+        canvas.drawText("Response",pageWidth/2,620,infoPaint);
+
+        canvas.drawText("Going: ",50,680,myPaint);
+        canvas.drawText(reportGoingCount,120,680,myPaint);
+
+        canvas.drawText("Interested: ",200,680,myPaint);
+        canvas.drawText(reportInterestedCount,300,680,myPaint);
+
+
+        canvas.drawText("Ticket",pageWidth/2,730,infoPaint);
+        if(Integer.valueOf(reportTicketStatus)>0){
+            //yes ticket
+            myPaint.setStyle(Paint.Style.STROKE);
+            myPaint.setStrokeWidth(2);
+            canvas.drawRect(20,780,pageWidth-20,860,myPaint);
+
+            myPaint.setTextAlign(Paint.Align.LEFT);
+            myPaint.setStyle(Paint.Style.FILL);
+            //columns
+            canvas.drawText("SN.",40,820,myPaint);
+            canvas.drawText("Ticket Name",200,820,myPaint);
+            canvas.drawText("Price",700,820,myPaint);
+            canvas.drawText("Total Qty.",900,820,myPaint);
+            canvas.drawText("Sold Qty.",1050,820,myPaint);
+
+            canvas.drawLine(180,790,180,830,myPaint);
+            canvas.drawLine(680,790,680,830,myPaint);
+            canvas.drawLine(880,790,880,830,myPaint);
+            canvas.drawLine(1030,790,1030,830,myPaint);
+            int height=930;
+            int counter=1;
+            int totalQty=0,totalSoldQty=0;
+            for(int i=0;i<reportTicketName.size();i++){
+
+                canvas.drawText(counter+". ",40,height,myPaint);
+                canvas.drawText(reportTicketName.get(i),200,height,myPaint);
+                canvas.drawText(reportTicketPrice.get(i),700,height,myPaint);
+                canvas.drawText(reportTicketQuantity.get(i),900,height,myPaint);
+                canvas.drawText(reportTotalSoldType.get(i),1050,height,myPaint);
+                totalQty=totalQty+Integer.valueOf(reportTicketQuantity.get(i));
+                totalSoldQty=totalSoldQty+Integer.valueOf(reportTotalSoldType.get(i));
+                height=height+50;
+                counter++;
+
+            }
+            canvas.drawLine(680,height+50,pageWidth-20,height+50,myPaint);
+            canvas.drawText("Total Qty: ",700,height+90,myPaint);
+            canvas.drawText(String.valueOf(totalQty),900,height+90,myPaint);
+            canvas.drawText(String.valueOf(totalSoldQty),1050,height+90,myPaint);
+
+            canvas.drawText("Unsold Ticket: ",700,height+120,myPaint);
+            myPaint.setTextAlign(Paint.Align.RIGHT);
+            canvas.drawText(String.valueOf(totalQty-totalSoldQty),pageWidth-40,height+120,myPaint);
+
+
+        }
+        else {
+            canvas.drawText("Free Entry",40,780,myPaint);
+            //no ticket
+        }
 //        canvas.drawText();
 
         pdfDocument.finishPage(page);
@@ -212,7 +281,33 @@ private Bitmap bmp,scaledbmp;
             Log.d("PDF","3");
         }
         pdfDocument.close();
+        File file=new File(FILE);
+        Intent intent=new Intent(Intent.ACTION_VIEW);
+        Uri fileURI= FileProvider.getUriForFile(EventActivity.this,BuildConfig.APPLICATION_ID+".provider",file);
+        intent.setDataAndType(fileURI,"application/pdf");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        Intent open = Intent.createChooser(intent, "Open File");
+        try {
+//                    Toast.makeText(HistoryCompletedActivity.this, "opening pdf", Toast.LENGTH_SHORT).show();
+            startActivity(open);
+        } catch (ActivityNotFoundException e) {
+            //prompts the user to install adobe reader
+            boolean isAdobeInstalled = isPackageInstalled("com.adobe.reader", getPackageManager());
+            if (isAdobeInstalled) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.adobe.reader")));
+            }
+        }
 
+    }
+    private boolean isPackageInstalled(String packagename, PackageManager packageManager) {
+        try {
+            packageManager.getPackageInfo(packagename, 0);
+            return true;
+
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
       public  void generateReport(){
           buttonReport.setOnClickListener(new View.OnClickListener() {
@@ -240,7 +335,11 @@ private Bitmap bmp,scaledbmp;
                                                             reportGoingCount=eventDetail.getGoingCount();
                                                             reportInterestedCount=eventDetail.getInterestedCount();
                                                             reportTicketStatus=eventDetail.getTicketStatus();
-
+                                                            Log.d("REPORT",reportFollowingCount);
+                                                            bmp= BitmapFactory.decodeResource(getResources(),R.drawable.logo);
+                                                            scaledbmp=Bitmap.createScaledBitmap(bmp,200,100,false);
+                                                            createPdf();
+                                                            DynamicToast.makeWarning(getApplicationContext(),"Please wait opening pdf").show();
                                                         }
                                                     }
 
@@ -249,9 +348,7 @@ private Bitmap bmp,scaledbmp;
 
                                                     }
                                                 });
-                                                bmp= BitmapFactory.decodeResource(getResources(),R.drawable.logo);
-                                                scaledbmp=Bitmap.createScaledBitmap(bmp,200,100,false);
-                                                createPdf();
+
                                             }
                                             if(report.isAnyPermissionPermanentlyDenied()) {
                                               showSettingsDialog();
