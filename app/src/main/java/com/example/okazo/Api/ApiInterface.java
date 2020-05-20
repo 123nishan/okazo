@@ -62,6 +62,15 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("eventDetail/search_event.php")
+    Call<ArrayList<EventDetail>> searchEvent(
+            @Field("search") Editable search,
+            @Field("user_id") String userId,
+            @Field("user_lat") String user_lat,
+            @Field("user_lng") String user_lng
+    );
+
+    @FormUrlEncoded
     @POST("eventDetail/all_detail.php")
     Call<APIResponse> getEventAllDetail(
 
@@ -147,7 +156,10 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("eventDetail/discover_event.php")
     Call<ArrayList<EventDetail>> discoverEvent(
-            @Field("user_id") String userId
+            @Field("user_id") String userId,
+            @Field("user_lat") String latitude,
+            @Field("user_lng") String longitude,
+            @Field("order") String order
 
     );
 

@@ -304,6 +304,9 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 
                     pagePrivate=eventDetail.getPageStatus();
                     ticketStatus=eventDetail.getTicketStatus();
+                    changeTicketStatus=ticketStatus;
+                    changePageStatus=pagePrivate;
+                    Log.d("CHECKTICKET",ticketStatus+"asd  ");
                     if(pagePrivate.equals("1")){
                         switchPrivate.setChecked(true);
                     }else {
@@ -1247,8 +1250,8 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
             changeLongitude=detail.getLongitude();
         }
 
-        Log.d("ALLCHECK",changeTitle+"\n"+changeDescription+"\n"+changeStartDate+"\n"+changeEndDate+"\n"
-                +changeStartTime+"\n"+changeEndTime+"\n"+changeLocation+"\n"+changeLatitude+"\n"+changeLongitude);
+//        Log.d("ALLCHECK",changeTitle+"\n"+changeDescription+"\n"+changeStartDate+"\n"+changeEndDate+"\n"
+//                +changeStartTime+"\n"+changeEndTime+"\n"+changeLocation+"\n"+changeLatitude+"\n"+changeLongitude);
         if(changeTicketStatus.equals("1")){
 
 //            if(){
@@ -1346,8 +1349,9 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                                        APIResponse response1=response.body();
                                        if(!response1.getError()){
-                                           progressCircle.beginFinalAnimation();
                                            DynamicToast.makeSuccess(EventSettingActivity.this,"Detail updated").show();
+                                           progressCircle.beginFinalAnimation();
+
                                            progressCircle.hide();
                                            finish();
                                        }else {

@@ -26,12 +26,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Looper;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -114,13 +117,15 @@ public class EventSearchFragment extends Fragment {
     DecimalFormat decimalFormat;
     private ImageView imageViewFilter;
     private CardView cardViewFilter;
-    private TextView textViewFilterCategory,textViewFilterReset;
+    private TextView textViewFilterCategory,textViewFilterReset,textViewDescending,textViewSearchError;
     ArrayList<String>allEventType=new ArrayList<>(),allEventTypeImage=new ArrayList<>();
     private EventTypeCollectionAdapter collectionAdapter;
     private String totalCount="";
     private ImageView imageViewFilterClose;
     private EventDetail eventDetailIntent;
     private ArrayList<EventDetail> arrayListEventDetail=new ArrayList<>();
+    private EditText editTextSearchText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -134,6 +139,9 @@ public class EventSearchFragment extends Fragment {
         textViewFilterCategory=view.findViewById(R.id.event_search_fragment_filter_category);
         imageViewFilterClose=view.findViewById(R.id.event_search_fragment_filter_close);
         textViewFilterReset=view.findViewById(R.id.event_search_fragment_filter_all);
+        textViewDescending= view.findViewById(R.id.event_search_fragment_filter_dsc);
+        editTextSearchText=view.findViewById(R.id.event_search_fragment_search_text);
+        textViewSearchError=view.findViewById(R.id.event_search_fragment_search_error);
         SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
         if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
             userId=sharedPreferences.getString("user_id","");
@@ -142,16 +150,21 @@ public class EventSearchFragment extends Fragment {
 //            mSettingsClient=LocationServices.getSettingsClient(getActivity().getApplicationContext());
 //            mRequestingLocationUpdates = false;
 //            mLastUpdateTime = "";
+
+            searchEvent(editTextSearchText);
+
+
             imageViewFilter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    //close filter
                     imageViewFilterClose.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             cardViewFilter.setVisibility(View.GONE);
                         }
                     });
-
+                    //reset filter
                     textViewFilterReset.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -165,10 +178,30 @@ public class EventSearchFragment extends Fragment {
                             arrayListLongitude.clear();
                             arrayListLatitude.clear();
                             arrayListDistance.clear();
-                            discoverEvent();
+                            discoverEvent("ASC");
+                            editTextSearchText.setText("");
                             cardViewFilter.setVisibility(View.GONE);
                         }
                     });
+                    //filter by distance
+                    textViewDescending.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            arrayListId.clear();
+                            arrayListTitle.clear();
+                            arrayListLocation.clear();
+                            arrayListImage.clear();
+                            arrayListHost.clear();
+                            arrayListDate.clear();
+                            arrayListTime.clear();
+                            arrayListLongitude.clear();
+                            arrayListLatitude.clear();
+                            arrayListDistance.clear();
+                            discoverEvent("DESC");
+                            cardViewFilter.setVisibility(View.GONE);
+                        }
+                    });
+                    //filter by category
                     cardViewFilter.setVisibility(View.VISIBLE);
                     textViewFilterCategory.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -217,7 +250,7 @@ public class EventSearchFragment extends Fragment {
                 }
             });
             apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
-            discoverEvent();
+
 
         }else {
             DynamicToast.makeError(getActivity().getApplicationContext(),"Something went wrong").show();
@@ -234,8 +267,75 @@ public class EventSearchFragment extends Fragment {
 
         return view;
     }
-    private void discoverEvent(){
-        apiInterface.discoverEvent(userId).enqueue(new Callback<ArrayList<EventDetail>>() {
+
+    private void searchEvent(EditText editTextSearchText) {
+        editTextSearchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.length()>1){
+                        apiInterface.searchEvent(editable,userId,userLatitude.toString(),userLongitude.toString()).enqueue(new Callback<ArrayList<EventDetail>>() {
+                            @Override
+                            public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
+                                ArrayList<EventDetail> apiResponse=response.body();
+
+                                    arrayListId.clear();
+                                    arrayListTitle.clear();
+                                    arrayListLocation.clear();
+                                    arrayListImage.clear();
+                                    arrayListHost.clear();
+                                    arrayListDate.clear();
+                                    arrayListTime.clear();
+                                    arrayListLongitude.clear();
+                                    arrayListLatitude.clear();
+                                    arrayListDistance.clear();
+                                    for (EventDetail value: apiResponse){
+                                        String totalEvent=value.getTotalEvent();
+                                        if(Integer.valueOf(totalEvent)>0) {
+                                            arrayListId.add(value.getId());
+                                            arrayListTitle.add(value.getTitle());
+                                            arrayListImage.add(value.getImage());
+                                            arrayListLocation.add(value.getPlace());
+                                            arrayListDate.add(value.getStartDate());
+                                            arrayListTime.add(value.getStartTime());
+                                            arrayListHost.add(value.getHostName());
+                                            arrayListLatitude.add(value.getLatitude());
+                                            arrayListLongitude.add(value.getLongitude());
+                                            arrayListDistance.add(decimalFormat.format(Double.valueOf(value.getDistance())));
+
+                                        }else {
+                                            recyclerView.setVisibility(View.GONE);
+                                            textViewSearchError.setVisibility(View.VISIBLE);
+                                        }
+
+
+
+                                    }
+                                    discoverAdapter.notifyDataSetChanged();
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<ArrayList<EventDetail>> call, Throwable t) {
+
+                            }
+                        });
+                }
+            }
+        });
+    }
+
+    private void discoverEvent(String order){
+        apiInterface.discoverEvent(userId,userLatitude.toString(),userLongitude.toString(),order).enqueue(new Callback<ArrayList<EventDetail>>() {
             @Override
             public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
                 ArrayList<EventDetail> apiResponse=response.body();
@@ -252,11 +352,15 @@ public class EventSearchFragment extends Fragment {
                         arrayListHost.add(value.getHostName());
                         arrayListLatitude.add(value.getLatitude());
                         arrayListLongitude.add(value.getLongitude());
-                        Location l1 = new Location("");
-                        l1.setLatitude(Double.parseDouble(value.getLatitude()));
-                        l1.setLongitude(Double.parseDouble(value.getLongitude()));
-                        float distanceInMeter = l1.distanceTo(userLocation);
-                        arrayListDistance.add(decimalFormat.format((distanceInMeter / 1000)));
+                        arrayListDistance.add(decimalFormat.format(Double.valueOf(value.getDistance())));
+//                        Location l1 = new Location("");
+//                        l1.setLatitude(Double.parseDouble(value.getLatitude()));
+//                        l1.setLongitude(Double.parseDouble(value.getLongitude()));
+//                        float distanceInMeter = l1.distanceTo(userLocation);
+//                        arrayListDistance.add(decimalFormat.format((distanceInMeter / 1000)));
+                    }else {
+                        recyclerView.setVisibility(View.GONE);
+                        textViewSearchError.setVisibility(View.VISIBLE);
                     }
 
 
@@ -305,6 +409,17 @@ public class EventSearchFragment extends Fragment {
                                     userLatitude=location.getLatitude();
                                     userLongitude=location.getLongitude();
                                     Log.d("l1",userLatitude+"   ");
+                                    arrayListId.clear();
+                                    arrayListTitle.clear();
+                                    arrayListLocation.clear();
+                                    arrayListImage.clear();
+                                    arrayListHost.clear();
+                                    arrayListDate.clear();
+                                    arrayListTime.clear();
+                                    arrayListLongitude.clear();
+                                    arrayListLatitude.clear();
+                                    arrayListDistance.clear();
+                                    discoverEvent("ASC");
 //                                    latTextView.setText(location.getLatitude()+"");
 //                                    lonTextView.setText(location.getLongitude()+"");
                                 }
@@ -346,6 +461,17 @@ public class EventSearchFragment extends Fragment {
              userLatitude=userLocation.getLatitude();
              userLongitude=userLocation.getLongitude();
             Log.d("l2",userLatitude+"   ");
+            arrayListId.clear();
+            arrayListTitle.clear();
+            arrayListLocation.clear();
+            arrayListImage.clear();
+            arrayListHost.clear();
+            arrayListDate.clear();
+            arrayListTime.clear();
+            arrayListLongitude.clear();
+            arrayListLatitude.clear();
+            arrayListDistance.clear();
+            discoverEvent("ASC");
 
 
         }

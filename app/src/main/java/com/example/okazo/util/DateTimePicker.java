@@ -85,6 +85,7 @@ public class DateTimePicker implements DatePickerDialog.OnDateSetListener{
             dayOfWeekTxt = "SUN";
         }
         String dateTxt =dayOfWeekTxt+ " "+ year+"-" + (month+1)+ "-"+dayOfMonth;
+        //String dateTxt =year+"-" + (month+1)+ "-"+dayOfMonth;
         selectedDate = dateTxt;
 
         finalTxt.setText(selectedDate);

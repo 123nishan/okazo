@@ -190,7 +190,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                    String status=apiResponse.getModerator().getStatus();
                    String role=apiResponse.getModerator().getRole();
                    moderatorId=apiResponse.getModerator().getId();
-
+                    Log.d("MODDETAIL",status+"  "+role+"  "+moderatorId);
                    if(status.equals("Accepted")){
                        apiInterface.checkInbox(eventId).enqueue(new Callback<APIResponse>() {
                            @Override
