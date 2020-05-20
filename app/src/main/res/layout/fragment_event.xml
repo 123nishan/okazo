@@ -32,7 +32,7 @@
 
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="20dp"
 
 
         mapbox:cardBackgroundColor="#b0a9ff"

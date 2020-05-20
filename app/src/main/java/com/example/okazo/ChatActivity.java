@@ -114,6 +114,7 @@ public class ChatActivity extends AppCompatActivity {
 
     }
     private void getAllChat(){
+
         apiInterface.getChatRoom(id).enqueue(new Callback<APIResponse>() {
             @Override
             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
@@ -136,8 +137,9 @@ public class ChatActivity extends AppCompatActivity {
                     if(apiResponse.getErrorMsg().equals("NO CHAT")){
                         textView.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);
+
                     }else {
-                        DynamicToast.makeError(ChatActivity.this,apiResponse.getErrorMsg()).show();
+                        DynamicToast.makeError(ChatActivity.this,"HERE").show();
                     }
                 }
             }

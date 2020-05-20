@@ -91,7 +91,7 @@ public class OtpActivity extends AppCompatActivity {
                             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                                 APIResponse result = response.body();
                                 if (result.getError()) {
-                                    DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
+                                    DynamicToast.makeError(OtpActivity.this, result.getErrorMsg()).show();
                                 } else {
                                     String code = result.getUser().getCode();
 
@@ -102,7 +102,7 @@ public class OtpActivity extends AppCompatActivity {
                                              public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                                                  APIResponse result=response.body();
                                                  if(result.getError()){
-                                                     DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
+                                                     DynamicToast.makeError(OtpActivity.this, result.getErrorMsg()).show();
                                                      Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
                                                      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                                                     startActivity(intent);

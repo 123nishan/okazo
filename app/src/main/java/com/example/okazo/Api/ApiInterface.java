@@ -62,6 +62,15 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("eventDetail/search_event.php")
+    Call<ArrayList<EventDetail>> searchEvent(
+            @Field("search") Editable search,
+            @Field("user_id") String userId,
+            @Field("user_lat") String user_lat,
+            @Field("user_lng") String user_lng
+    );
+
+    @FormUrlEncoded
     @POST("eventDetail/all_detail.php")
     Call<APIResponse> getEventAllDetail(
 
@@ -86,7 +95,8 @@ public interface ApiInterface {
     @POST("fcm.php")
     Call<APIResponse> sendInboxNotification(
             @Field("message") String message,
-            @Field("id") String id
+            @Field("send_to") String id,
+            @Field("send_from") String sendfrom
     );
 
     @FormUrlEncoded
@@ -105,14 +115,32 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("user/following.php")
+    Call<APIResponse> getFollowingList(
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
     @POST("moderator/check_moderator.php")
     Call<APIResponse> getModerator(
             @Field("user_id") String userId,
             @Field("event_id") String eventId
     );
 
+    @FormUrlEncoded
+    @POST("user/event_follow.php")
+    Call<APIResponse> eventFollow(
+            @Field("user_id") String userId,
+            @Field("event_id") String eventId,
+            @Field("request") String request
+    );
+
+
     @GET("eventDetail/eventType.php")
     Call<ArrayList<EventDetail>> getEventType();
+
+
 
     @GET("geofence/activate_geofence.php")
     Call<ArrayList<Geofence>> getGeofenceStatus();
@@ -124,10 +152,45 @@ public interface ApiInterface {
             @Field("type") String type
     );
 
+
+    @FormUrlEncoded
+    @POST("eventDetail/discover_event.php")
+    Call<ArrayList<EventDetail>> discoverEvent(
+            @Field("user_id") String userId,
+            @Field("user_lat") String latitude,
+            @Field("user_lng") String longitude,
+            @Field("order") String order
+
+    );
+
     @FormUrlEncoded
     @POST("eventDetail/ticket.php")
     Call<APIResponse> getAllTicket(
             @Field("event_id") String eventId
+
+    );
+
+
+    @FormUrlEncoded
+    @POST("user/profile_info.php")
+    Call<APIResponse> getProfileInfo(
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
+    @POST("user/update_image.php")
+    Call<APIResponse> updateUserImage(
+            @Field("user_id") String userId,
+            @Field("file_name") String fileName
+
+    );
+
+    @FormUrlEncoded
+    @POST("user/primary_event_info.php")
+    Call<APIResponse> primaryEventInfo(
+            @Field("event_id") String eventId,
+            @Field("user_id") String userId
 
     );
 
@@ -267,6 +330,15 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("eventDetail/close_event.php")
+    Call<APIResponse> closeEvent(
+
+            @Field("event_id") String eventId
+
+
+    );
+
+    @FormUrlEncoded
     @POST("moderator/leave_event.php")
     Call<APIResponse> leaveEvent(
 
@@ -278,12 +350,13 @@ public interface ApiInterface {
     @GET("map/event_type.php")
     Call<ArrayList<EventDetail>> getMapEventType();
 
+
+
     @FormUrlEncoded
-    @POST("save.php")
-    Call<Note> saveNote(
-            @Field("latitude") Double latitude,
-            @Field("longitude") Double longitude,
-            @Field("name") String name
+    @POST("user/list_moderator.php")
+    Call<APIResponse> getModeratorListUser(
+            @Field("user_id") String userId
+
     );
 
     @FormUrlEncoded
@@ -329,6 +402,16 @@ public interface ApiInterface {
 
     );
 
+    @FormUrlEncoded
+    @POST("eventDetail/create_post.php")
+    Call<APIResponse> createPost(
+            @Field("event_id") String eventId,
+            @Field("user_id") String user_id,
+            @Field("detail") String detail,
+            @Field("image") String image
+
+
+    );
 
     @FormUrlEncoded
     @POST("otp.php")
@@ -363,6 +446,22 @@ Call<APIResponse> getUserName(
   @Field("id") String userId,
   @Field("request") String request
 );
+
+    @FormUrlEncoded
+    @POST("user/moderator_request.php")
+    Call<APIResponse> getRequestNotification(
+            @Field("user_id") String userId
+
+    );
+
+    @FormUrlEncoded
+    @POST("user/moderator_response.php")
+    Call<APIResponse> moderatorResponse(
+            @Field("user_id") String userId,
+            @Field("type") String type,
+            @Field("event_id") String eventId
+
+    );
 
 @FormUrlEncoded
 @POST("user/feed.php")
@@ -441,6 +540,10 @@ Call<APIResponse> setLike(
             @Part MultipartBody.Part file,@Part ("file") RequestBody name
     );
 
-
+    @Multipart
+    @POST("eventDetail/event_profile_image.php")
+    Call<APIResponse> uploadPostImage(
+            @Part MultipartBody.Part file,@Part ("file") RequestBody name
+    );
 
 }

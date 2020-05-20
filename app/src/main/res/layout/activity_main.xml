@@ -4,34 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/activity_main"
+
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
+
         android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/frame_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:layout_above="@+id/bottom_nav_bar"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-        <!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-        <!--        android:id="@+id/swipe_refresh"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="wrap_content">-->
 
-
-        <!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
-        <!--<TextView-->
-        <!--    android:layout_width="match_parent"-->
-        <!--    android:layout_height="wrap_content"-->
-        <!--    android:id="@+id/textview"-->
-        <!--    android:text="Here:"-->
-        <!--    android:textSize="16dp"-->
-        <!--    ></TextView>-->
 
         <com.ismaeldivita.chipnavigation.ChipNavigationBar
             android:id="@+id/bottom_nav_bar"
@@ -39,7 +29,8 @@
             android:layout_gravity="bottom"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/rounded_bottom_nav"
+            android:background="@color/colorPrimary"
+
             app:cnb_addBottomInset="false"
             app:cnb_addLeftInset="false"
             app:cnb_addRightInset="false"
@@ -50,28 +41,6 @@
             app:cnb_orientationMode="horizontal"
 
             />
-<!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:id="@+id/bottm_nav"-->
-<!--            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="bottom"-->
-<!--            android:background="@color/colorPrimaryDark"-->
-<!--            app:menu="@menu/bottom_nav_menu"-->
-<!--            app:itemIconTint="@color/white"-->
-<!--            app:itemTextColor="@color/white"-->
-<!--            ></com.google.android.material.bottomnavigation.BottomNavigationView>-->
+
     </RelativeLayout>
-
-
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/add"-->
-<!--        android:layout_margin="16dp"-->
-<!--        android:layout_gravity="bottom|end"-->
-<!--        -->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:src="@drawable/ic_add"/>-->
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

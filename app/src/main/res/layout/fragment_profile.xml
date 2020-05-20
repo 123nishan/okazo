@@ -1,56 +1,272 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragment.ProfileFragment">
 
-    <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_margin="15dp"
-    android:layout_height="match_parent">
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/latitude"
-        android:textSize="25dp"
-        android:inputType="textCapSentences"
-        tools:ignore="Autofill"
+    <LinearLayout
 
-        android:hint="latitude"
-         />
-    <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/longitude"
-        android:hint="@string/Longitude"
-        android:layout_below="@id/latitude"
-        android:gravity="top|start"
-        android:inputType="textCapSentences"
-        tools:ignore="Autofill"
-        android:layout_marginTop="15dp"
-        />
-        <EditText
+        android:layout_height="match_parent"
+        tools:context="com.demotxt.droidsrce.profileui.MainActivity"
+        android:background="@color/space_white"
+        android:orientation="vertical">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/name"
-            android:hint="name"
-            android:layout_below="@id/longitude"
-            android:gravity="top|start"
+            android:layout_height="405dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:background="@color/colorPrimary"
+                android:orientation="vertical">
+                <androidx.coordinatorlayout.widget.CoordinatorLayout
+                    android:layout_marginTop="8dp"
+                   android:layout_gravity="right"
+                    android:layout_marginRight="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_fragment_notification"
+                    android:layout_width="25dp"
+
+                    android:layout_toLeftOf="@+id/primary_fragment_dot"
+                    android:layout_height="25dp"
+                   android:layout_gravity="end"
+                    android:background="@drawable/ic_notification"/>
+                    <de.hdodenhof.circleimageview.CircleImageView
+
+                        android:visibility="gone"
+                        android:layout_marginTop="2dp"
+                        android:id="@+id/primary_fragment_dot"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:src="@drawable/ic_notification_dot"
+                        android:layout_gravity="end"/>
+                </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_fragment_image"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="25dp"
+                    android:src="@drawable/ribbon" />
+
+                <TextView
+                    android:id="@+id/profile_fragment_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="Wiliam Snoe"
+                    android:textColor="#fff"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="400dp"
+                android:layout_height="120dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="275dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+                    <LinearLayout
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="T Money"
+                            android:textSize="20sp"
+                            />
+                        <TextView
+                            android:id="@+id/profile_fragment_t_money"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="125"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:paddingTop="10dp"
+                            android:textColor="@color/red"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/profile_fragment_moderator_list"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Moderator"
+                            android:textSize="20sp"
+                            />
+                        <TextView
+                            android:id="@+id/profile_fragment_moderator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1205"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:paddingTop="10dp"
+                            android:textColor="@color/red"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/profile_fragment_following_list"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Following"
+                            android:textSize="20sp"
+                            />
+                        <TextView
+                            android:id="@+id/profile_fragment_following"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="360"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:paddingTop="10dp"
+                            android:textColor="@color/red"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+        <androidx.core.widget.NestedScrollView
             android:layout_marginTop="15dp"
-            android:inputType="textCapSentences"
-            tools:ignore="Autofill"
-            />
-        <Button
+
+            android:layout_gravity="center_horizontal"
+            android:layout_width="250dp"
+            android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/name"
-            android:text="Submit"
-            android:id="@+id/form_submit"
-            android:textColor="@color/colorPrimaryDark"></Button>
+            android:orientation="vertical"
+
+           >
+            <LinearLayout
+
+                android:orientation="horizontal"
+                android:paddingLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_mail"/>
+                <TextView
+                    android:id="@+id/profile_fragment_user_email"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Wiliam@gmail.com"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:paddingLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_phone"/>
+                <TextView
+                    android:id="@+id/profile_fragment_user_phone"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="+266 225 225"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:paddingLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_reward"/>
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:text="Reward"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:paddingLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/ic_tickets"
+                    />
+
+                <TextView
+                    android:id="@+id/profile_fragment_ticket_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:text="Tickets"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <LinearLayout
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:paddingLeft="25dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_leave"
+                />
+
+            <TextView
+                android:id="@+id/profile_fragment_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:text="Logout"
+                android:textStyle="bold" />
+        </LinearLayout>
 
 
 
-</RelativeLayout>
+
+
+
+        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
 
 </FrameLayout>

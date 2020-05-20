@@ -127,7 +127,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         savedInstance=savedInstanceState;
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
        // getActionBar().hide();
         setContentView(R.layout.activity_event_setting);
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
@@ -304,6 +304,9 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 
                     pagePrivate=eventDetail.getPageStatus();
                     ticketStatus=eventDetail.getTicketStatus();
+                    changeTicketStatus=ticketStatus;
+                    changePageStatus=pagePrivate;
+                    Log.d("CHECKTICKET",ticketStatus+"asd  ");
                     if(pagePrivate.equals("1")){
                         switchPrivate.setChecked(true);
                     }else {
@@ -701,6 +704,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                 }else {
                     if(apiResponse.getErrorMsg().equals("Banned")){
                         DynamicToast.makeError(EventSettingActivity.this,"This event has been blcked").show();
+                        finish();
                         //TODO intent to main activity
                     }else {
                         DynamicToast.makeError(EventSettingActivity.this,"Unable to get data").show();
@@ -1246,8 +1250,8 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
             changeLongitude=detail.getLongitude();
         }
 
-        Log.d("ALLCHECK",changeTitle+"\n"+changeDescription+"\n"+changeStartDate+"\n"+changeEndDate+"\n"
-                +changeStartTime+"\n"+changeEndTime+"\n"+changeLocation+"\n"+changeLatitude+"\n"+changeLongitude);
+//        Log.d("ALLCHECK",changeTitle+"\n"+changeDescription+"\n"+changeStartDate+"\n"+changeEndDate+"\n"
+//                +changeStartTime+"\n"+changeEndTime+"\n"+changeLocation+"\n"+changeLatitude+"\n"+changeLongitude);
         if(changeTicketStatus.equals("1")){
 
 //            if(){
@@ -1345,8 +1349,9 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
                                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                                        APIResponse response1=response.body();
                                        if(!response1.getError()){
-                                           progressCircle.beginFinalAnimation();
                                            DynamicToast.makeSuccess(EventSettingActivity.this,"Detail updated").show();
+                                           progressCircle.beginFinalAnimation();
+
                                            progressCircle.hide();
                                            finish();
                                        }else {

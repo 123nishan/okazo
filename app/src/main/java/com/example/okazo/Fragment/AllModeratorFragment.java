@@ -3,6 +3,7 @@ package com.example.okazo.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -85,7 +86,42 @@ public class AllModeratorFragment extends Fragment {
                     if(!apiResponse.getError()){
                         User user=apiResponse.getUser();
                         userName=user.getName();
+                        apiInterface.getAllModerator(eventId,"1").enqueue(new Callback<APIResponse>() {
+                            @Override
+                            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                APIResponse apiResponse=response.body();
+                                if(!apiResponse.getError()){
+                                    ArrayList<User> users=apiResponse.getUserArray();
+                                    for (User user:users
+                                    ) {
+                                        if(userName.equals(user.getName())){
+                                            textViewName.setText("You");
+                                        }else {
+                                            textViewName.setText(user.getName());
+                                        }
+                                        textViewEmail.setText(user.getEmail());
 
+                                        String imagePath=KEY_IMAGE_ADDRESS+(user.getImage());
+                                        Glide.with(getActivity().getApplicationContext())
+                                                .load(Uri.parse(imagePath))
+                                                .placeholder(R.drawable.ic_place_holder_background)
+                                                //.error(R.drawable.ic_image_not_found_background)
+                                                .centerCrop()
+                                                .into(circleImageView);
+
+                                    }
+
+
+                                }else {
+                                    DynamicToast.makeError(getActivity().getApplicationContext(),"ERROR GETTING DATA").show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<APIResponse> call, Throwable t) {
+                                DynamicToast.makeError(getActivity().getApplicationContext(),t.getLocalizedMessage()).show();
+                            }
+                        });
                     }
                 }
 
@@ -194,42 +230,7 @@ public class AllModeratorFragment extends Fragment {
 
       //  Toast.makeText(getActivity().getApplicationContext(), moderatorType, Toast.LENGTH_SHORT).show();
 
-        apiInterface.getAllModerator(eventId,"1").enqueue(new Callback<APIResponse>() {
-            @Override
-            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                APIResponse apiResponse=response.body();
-                if(!apiResponse.getError()){
-                    ArrayList<User> users=apiResponse.getUserArray();
-                    for (User user:users
-                         ) {
-                        if(userName.equals(user.getName())){
-                            textViewName.setText("You");
-                        }else {
-                            textViewName.setText(user.getName());
-                        }
-                        textViewEmail.setText(user.getEmail());
 
-                        String imagePath=KEY_IMAGE_ADDRESS+(user.getImage());
-                        Glide.with(getActivity().getApplicationContext())
-                                .load(Uri.parse(imagePath))
-                                .placeholder(R.drawable.ic_place_holder_background)
-                                //.error(R.drawable.ic_image_not_found_background)
-                                .centerCrop()
-                                .into(circleImageView);
-
-                    }
-
-
-                }else {
-                    DynamicToast.makeError(getActivity().getApplicationContext(),"ERROR GETTING DATA").show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<APIResponse> call, Throwable t) {
-                DynamicToast.makeError(getActivity().getApplicationContext(),t.getLocalizedMessage()).show();
-            }
-        });
 
         return v;
     }
@@ -256,8 +257,8 @@ public class AllModeratorFragment extends Fragment {
                             arrayListModeratorStatus.add(user.getStatus());
                         }
                     }
-                    adapterEditor.notifyDataSetChanged();
-                    adapterModerator.notifyDataSetChanged();
+//                    adapterEditor.notifyDataSetChanged();
+//                    adapterModerator.notifyDataSetChanged();
 
                 }else {
                     if(modType.equals("2")){
@@ -277,14 +278,5 @@ public class AllModeratorFragment extends Fragment {
         });
     }
 
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
-        if(menuVisible){
-            getActivity().getSupportFragmentManager().beginTransaction().detach(this).attach(this).commit();
-           // Toast.makeText(getActivity().getApplicationContext(), menuVisible+"", Toast.LENGTH_SHORT).show();
-        }else {
-           // Toast.makeText(getActivity().getApplicationContext(), menuVisible+"", Toast.LENGTH_SHORT).show();
-        }
-    }
+
 }

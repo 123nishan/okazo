@@ -11,9 +11,19 @@ public class EventDetail implements Serializable {
     @Expose
     private String eventType;
 
+    @SerializedName("role_name")
+    @Expose
+    private String roleName;
+
+    public String getRoleName() {
+        return roleName;
+    }
+
     @SerializedName("total_event")
     @Expose
     private String totalEvent;
+
+
 
     public String getTotalEvent() {
         return totalEvent;
@@ -150,6 +160,8 @@ public class EventDetail implements Serializable {
     @Expose
     private ArrayList<String> ticketQuantity;
 
+
+
     @SerializedName("ticket_name")
     @Expose
     private ArrayList<String> ticketName;
@@ -161,6 +173,14 @@ public class EventDetail implements Serializable {
     @SerializedName("quantity")
     @Expose
     private ArrayList<String> quantity;
+
+    @SerializedName("distance")
+    @Expose
+    private String distance;
+
+    public String getDistance() {
+        return distance;
+    }
 
     public ArrayList<String> getQuantity() {
         return quantity;
@@ -260,6 +280,7 @@ public class EventDetail implements Serializable {
     public String getEventType() {
         return eventType;
     }
+
 
 
 }

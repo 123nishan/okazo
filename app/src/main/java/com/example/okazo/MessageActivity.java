@@ -88,13 +88,12 @@ public class MessageActivity extends AppCompatActivity {
                                                 arrayListCreatedAt.add(val.getCreated_at());
                                                 arrayListMessage.add(val.getMessage());
                                             }
-                                            apiInterface.sendInboxNotification(sendMessage,currentUser).enqueue(new Callback<APIResponse>() {
+                                            recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount()-1);
+
+                                            apiInterface.sendInboxNotification(sendMessage,senderId,currentUser).enqueue(new Callback<APIResponse>() {
                                                 @Override
                                                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                                    APIResponse response1=response.body();
-                                                    if(!response1.getError()){
 
-                                                    }
                                                 }
 
                                                 @Override
@@ -105,10 +104,10 @@ public class MessageActivity extends AppCompatActivity {
                                             editText.clearFocus();
                                             editText.setText("");
                                             button.setVisibility(View.GONE);
-                                            for (String test:arrayListMessage
-                                                 ) {
-                                                Log.d("MESSAGE",test);
-                                            }
+//                                            for (String test:arrayListMessage
+//                                                 ) {
+//                                                Log.d("MESSAGE",test);
+//                                            }
 //                                            adapter.notifyDataSetChanged();
 //                                            recyclerView.scrollToPosition(arrayListMessage.size()-1);
                                         }else {
@@ -148,9 +147,11 @@ public class MessageActivity extends AppCompatActivity {
         adapter=new MessageAdapter(arrayListMessage,arrayListCreatedAt,arrayListSenderId,arrayListReceiverId,currentUser,getApplicationContext(),arrayListImage);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(MessageActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         recyclerView.setLayoutManager(linearLayoutManager);
+
        recyclerView.setAdapter(adapter);
-       recyclerView.smoothScrollToPosition(arrayListMessage.size()-1);
+
 
     }
     private void getMessage(){
@@ -172,7 +173,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
                 }else {
-                    DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
+                   // DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
                 }
             }
 

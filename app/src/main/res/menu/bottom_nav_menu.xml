@@ -6,19 +6,18 @@
         android:icon="@drawable/ic_home"
         android:enabled="true"
         app:showAsAction="ifRoom"
-
-
         android:title="@string/home"/>
+    <item android:id="@+id/nav_event_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        android:title="Search"/>
     <item android:id="@+id/nav_event"
         android:icon="@drawable/ic_place"
         android:enabled="true"
         app:showAsAction="ifRoom"
         android:title="@string/event"/>
-<!--    <item android:id="@+id/nav_shop"-->
-<!--        android:icon="@drawable/ic_shopping_cart"-->
-<!--        android:enabled="true"-->
-<!--        app:showAsAction="ifRoom"-->
-<!--        android:title="@string/shop"/>-->
+
     <item android:id="@+id/nav_profile"
         android:icon="@drawable/ic_person_outline"
         android:enabled="true"

@@ -51,12 +51,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -66,6 +70,9 @@ import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
 import static com.example.okazo.util.constants.KEY_EVENT_ID;
 import static com.example.okazo.util.constants.KEY_ID_FOR_CHAT;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
+import static com.example.okazo.util.constants.KEY_RECEIVER_ID;
+import static com.example.okazo.util.constants.KEY_SENDER_ID;
+import static com.example.okazo.util.constants.KEY_SENDER_NAME;
 import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
 import static com.example.okazo.util.constants.KEY_USER_ID;
 import static com.example.okazo.util.constants.KEY_USER_ROLE;
@@ -110,7 +117,9 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
     private Boolean followButtonFlag=false;
     private HorizontalScrollView horizontalScrollView;
     private CircleImageView circleImageViewDot;
+    private ImageView imageViewSendMessage;
         private int temp=0;
+        private String confirmationDialogType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,6 +164,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
         buttonMessage=findViewById(R.id.event_activity_moderator_action_message);
         buttonModerator=findViewById(R.id.event_activity_moderator_action_moderator);
         buttonNotification=findViewById(R.id.event_activity_moderator_action_notification);
+        imageViewSendMessage=findViewById(R.id.event_activity_send_message);
         ticketStatus=eventDetail.getTicketStatus();
     //for admin side and moderator
         cardViewPost=findViewById(R.id.event_activity_create_post_card);
@@ -180,7 +190,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                    String status=apiResponse.getModerator().getStatus();
                    String role=apiResponse.getModerator().getRole();
                    moderatorId=apiResponse.getModerator().getId();
-
+                    Log.d("MODDETAIL",status+"  "+role+"  "+moderatorId);
                    if(status.equals("Accepted")){
                        apiInterface.checkInbox(eventId).enqueue(new Callback<APIResponse>() {
                            @Override
@@ -240,17 +250,32 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
 
                        }
                        else if(role.equals("Editor")){
+                           buttonMessage.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View view) {
+                                   Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
+                                   intent.putExtra(KEY_ID_FOR_CHAT,eventId);
+                                   startActivity(intent);
+                               }
+                           });
                            userRole="Editor";
                            checkeventStatus();
                            Toast.makeText(EventActivity.this, "Editor", Toast.LENGTH_SHORT).show();
                        }else {
-
+                           buttonMessage.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View view) {
+                                   Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
+                                   intent.putExtra(KEY_ID_FOR_CHAT,eventId);
+                                   startActivity(intent);
+                               }
+                           });
                            userRole="Moderator";
                            checkeventStatus();
                             buttonReport.setClickable(false);
                            buttonReport.setBackground(getDrawable(R.drawable.disable_round_button));
-                           buttonModerator.setClickable(false);
-                           buttonModerator.setBackground(getDrawable(R.drawable.disable_round_button));
+//                           buttonModerator.setClickable(false);
+                           //buttonModerator.setBackground(getDrawable(R.drawable.disable_round_button));
 
                        }
                        //for non admin moderator only
@@ -305,11 +330,12 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                         arrayListLikes.add(value.getLikes());
                         arrayListUserLike.add(value.getUserLike());
                         arrayListComment.add(value.getComment());
+                        arrayListImage.add(value.getImage());
                        // arrayListEventId.add(value.getId());
 
                     }
                     adapter=new FeedAdapter(arrayListEventTitle,arrayListProfileImage,arrayListDetail,arrayListCreatedDate,
-                            EventActivity.this,arrayListPostId,arrayListLikes,arrayListUserLike,null,arrayListComment);
+                            EventActivity.this,arrayListPostId,arrayListLikes,arrayListUserLike,null,arrayListComment,arrayListImage);
                     LinearLayoutManager linearLayoutManager=new LinearLayoutManager(EventActivity.this);
                     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerViewFeed.setLayoutManager(linearLayoutManager);
@@ -767,15 +793,47 @@ going=false;
         buttonFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                buttonFollow.setVisibility(View.GONE);
-                buttonFollowing.setVisibility(View.VISIBLE);
+
+                apiInterface.eventFollow(userId,eventId,"follow").enqueue(new Callback<APIResponse>() {
+                    @Override
+                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                        APIResponse apiResponse=response.body();
+                        if(!apiResponse.getError()){
+                            buttonFollow.setVisibility(View.GONE);
+                            buttonFollowing.setVisibility(View.VISIBLE);
+                        }else {
+                            DynamicToast.makeWarning(EventActivity.this,apiResponse.getErrorMsg()).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                    }
+                });
             }
         });
         buttonFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                buttonFollowing.setVisibility(View.GONE);
-                buttonFollow.setVisibility(View.VISIBLE);
+                apiInterface.eventFollow(userId,eventId,"unfollow").enqueue(new Callback<APIResponse>() {
+                    @Override
+                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                        APIResponse apiResponse=response.body();
+                        if(!apiResponse.getError()){
+                            buttonFollowing.setVisibility(View.GONE);
+                            buttonFollow.setVisibility(View.VISIBLE);
+                        }else {
+                            DynamicToast.makeWarning(EventActivity.this,apiResponse.getErrorMsg()).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                    }
+                });
+
             }
         });
 
@@ -824,7 +882,62 @@ going=false;
         }
 
     getFollowing();
+    imageViewSendMessage.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
 
+//            apiInterface.makeSeen(,sender_id.get(position)).enqueue(new Callback<APIResponse>() {
+//                @Override
+//                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+//                    APIResponse apiResponse=response.body();
+//
+//                    if(!apiResponse.getError()){
+//                        ((Button)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_chat_room_unseen) ).setVisibility(View.GONE);
+//                        Intent intent=new Intent(ChatActivity.this,MessageActivity.class);
+//                        intent.putExtra(KEY_SENDER_ID,sender_id.get(position));
+//                        intent.putExtra(KEY_RECEIVER_ID,id);
+//                        intent.putExtra(KEY_SENDER_NAME,arrayListName.get(position));
+//                        startActivity(intent);
+//                    }else {
+//                        DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<APIResponse> call, Throwable t) {
+//
+//                }
+//            });
+
+
+            apiInterface.getUserName(userId,"home").enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    APIResponse apiResponse=response.body();
+                    if(!apiResponse.getError()){
+                        String userName=apiResponse.getUser().getName();
+                        Log.d("TESTNAME",userName+"asd");
+                        Intent intent=new Intent(EventActivity.this,MessageActivity.class);
+                        intent.putExtra(KEY_SENDER_ID,eventId);
+                        intent.putExtra(KEY_RECEIVER_ID,userId);
+                        intent.putExtra(KEY_SENDER_NAME,eventDetail.getTitle());
+
+                        startActivity(intent);
+                    }else {
+
+                        DynamicToast.makeWarning(EventActivity.this,"There was problem loading data").show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                }
+            });
+
+           // Toast.makeText(EventActivity.this, "send message", Toast.LENGTH_SHORT).show();
+        }
+    });
         userRole="User";
         apiInterface.getEventStatus(eventId).enqueue(new Callback<APIResponse>() {
             @Override
@@ -836,8 +949,16 @@ going=false;
 
                         linearLayout.setVisibility(View.GONE);
                         textViewEventClosed.setVisibility(View.VISIBLE);
-                        buttonFollow.setClickable(false);
+                        buttonFollow.setOnClickListener(null);
                         linearLayoutResponseLayout.setVisibility(View.GONE);
+                        textViewTicket.setOnClickListener(null);
+                        cardViewSecondInterested.setOnClickListener(null);
+                        cardViewFirstInterested.setOnClickListener(null);
+                        cardViewFirst.setOnClickListener(null);
+                        cardViewMessage.setOnClickListener(null);
+
+
+
 //                                        cardViewFirst.setClickable(false);
 //                                        cardViewFirstInterested.setClickable(false);
 //                                        cardViewSecondInterested.setClickable(false);
@@ -952,7 +1073,64 @@ going=false;
             @Override
             public void onClick(View view) {
                 String postDetail=editTextPostDetail.getText().toString();
-                Log.d("postCheck",postDetail+"||||||"+path);
+                String addImage="0";
+                if(path!=null){
+                        addImage="1";
+                }
+                String finalAddImage = addImage;
+                apiInterface.createPost(eventId,userId,postDetail,addImage).enqueue(new Callback<APIResponse>() {
+                    @Override
+                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                        APIResponse apiResponse=response.body();
+                        if(!apiResponse.getError()){
+                                if(finalAddImage.equals("1")){
+                                    String postId=apiResponse.getPost().getPostId();
+                                    File file = new File(path);
+
+                                    String imageName=(postId)+"_"+"profile"+".png";
+                                    RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+                                    RequestBody fileName = RequestBody.create(MediaType.parse("text/plain"), imageName);
+                                    MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+                                    apiInterface.uploadPostImage(fileToUpload,fileName).enqueue(new Callback<APIResponse>() {
+                                        @Override
+                                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                            APIResponse response1=response.body();
+                                            if(!response1.getError()){
+                                                DynamicToast.makeSuccess(EventActivity.this,"Post created").show();
+                                                editTextPostDetail.setText("");
+                                                imageViewPost.setBackground(getDrawable(R.drawable.ic_add_image));
+                                                buttonPost.setVisibility(View.GONE);
+                                            }else {
+                                                DynamicToast.makeWarning(EventActivity.this,"Post created but problem while uploading image").show();
+                                                editTextPostDetail.setText("");
+                                                imageViewPost.setBackground(getDrawable(R.drawable.ic_add_image));
+                                                buttonPost.setVisibility(View.GONE);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<APIResponse> call, Throwable t) {
+                                            DynamicToast.makeWarning(EventActivity.this,t.getLocalizedMessage()).show();
+                                        }
+                                    });
+                                }else {
+                                    DynamicToast.makeSuccess(EventActivity.this,"Post created").show();
+                                    editTextPostDetail.setText("");
+                                    imageViewPost.setBackground(getDrawable(R.drawable.ic_add_image));
+                                    buttonPost.setVisibility(View.GONE);
+                                }
+                        }else {
+                            DynamicToast.makeError(EventActivity.this,apiResponse.getErrorMsg()).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                    }
+                });
+               // Log.d("postCheck",postDetail+"||||||"+path);
+                //TODo create post
             }
         });
     }
@@ -966,11 +1144,17 @@ going=false;
                     String statusCheck=apiResponse.getEvent().getStatus();
                     if(statusCheck.equals("2")){
                         textViewEventClosedAdmin.setVisibility(View.VISIBLE);
+                        buttonMessage.setOnClickListener(null);
+                        buttonModerator.setOnClickListener(null);
+                        buttonNotification.setOnClickListener(null);
+                        textViewTicket.setOnClickListener(null);
                     }else if(statusCheck.equals("4")) {
                         // linearLayout.setVisibility(View.GONE);
                         textViewEventClosedAdmin.setVisibility(View.VISIBLE);
-
-
+                        buttonMessage.setOnClickListener(null);
+                        buttonModerator.setOnClickListener(null);
+                        buttonNotification.setOnClickListener(null);
+                        textViewTicket.setOnClickListener(null);
 
 
                         buttonFollow.setClickable(false);
@@ -1010,6 +1194,7 @@ going=false;
                 if(userRole.equals("Moderator")){
                         DynamicToast.makeError(EventActivity.this,"You dont have permission to this feature").show();
                 }else {
+
                    temp+=1;
                     Intent intent = new Intent(EventActivity.this, EventSettingActivity.class);
                     intent.putExtra(KEY_EVENT_ID,eventId);
@@ -1025,29 +1210,67 @@ going=false;
                 }else {
                     message="Do you want to leave group?";
                 }
+                confirmationDialogType="2";
                 ConfirmationDialog confirmationDialog=new ConfirmationDialog(message);
                 confirmationDialog.show(getSupportFragmentManager(),"Confirmation");
 
                 break;
-
+            case R.id.event_setting_3:
+                if(userRole.equals("Moderator")){
+                    DynamicToast.makeError(EventActivity.this,"You dont have permission to this feature").show();
+                }else {
+                    confirmationDialogType="3";
+                    ConfirmationDialog confirmationDialog1=new ConfirmationDialog("Do you want to close the event?");
+                    confirmationDialog1.show(getSupportFragmentManager(),"Confirmation");
+                }
+                break;
         }
         return false;
     }
 
     @Override
     public void OnYesClicked() {
-        if(checkConnection()) {
-            apiInterface.leaveEvent(moderatorId,eventId,userRole).enqueue(new Callback<APIResponse>() {
+        if(confirmationDialogType.equals("2")){
+            if(checkConnection()) {
+                apiInterface.leaveEvent(moderatorId,eventId,userRole).enqueue(new Callback<APIResponse>() {
+                    @Override
+                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                        APIResponse apiResponse=response.body();
+                        if(!apiResponse.getError()){
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            DynamicToast.makeSuccess(getApplicationContext(),"You left the event").show();
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            startActivity(intent);
+                        }else{
+                            DynamicToast.makeError(EventActivity.this,apiResponse.getErrorMsg()).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                    }
+                });
+
+            }
+            else {
+                DynamicToast.makeWarning(this,"No internet connection").show();
+
+            }
+        }
+        else {
+            apiInterface.closeEvent(eventId).enqueue(new Callback<APIResponse>() {
                 @Override
                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                     APIResponse apiResponse=response.body();
                     if(!apiResponse.getError()){
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        DynamicToast.makeSuccess(getApplicationContext(),"You left the event").show();
+
+                        Intent intent=new Intent(EventActivity.this,MainActivity.class);
+
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(intent);
-                    }else{
-                        DynamicToast.makeError(EventActivity.this,apiResponse.getErrorMsg()).show();
+                    }else {
+                        DynamicToast.makeWarning(EventActivity.this,apiResponse.getErrorMsg()).show();
                     }
                 }
 
@@ -1056,12 +1279,8 @@ going=false;
 
                 }
             });
-
         }
-        else {
-            DynamicToast.makeWarning(this,"No internet connection").show();
 
-        }
 
     }
 
@@ -1099,8 +1318,8 @@ going=false;
                         buttonFollow.setVisibility(View.GONE);
                         buttonFollowing.setVisibility(View.VISIBLE);
                     }else {
-                        buttonFollow.setVisibility(View.GONE);
-                        buttonFollowing.setVisibility(View.VISIBLE);
+                        buttonFollow.setVisibility(View.VISIBLE);
+                        buttonFollowing.setVisibility(View.GONE);
                     }
 
                     if(eventResponse.equals("3")){

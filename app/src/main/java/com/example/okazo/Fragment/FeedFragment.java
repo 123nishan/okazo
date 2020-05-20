@@ -105,12 +105,13 @@ private RecyclerView recyclerViewFeed;
                             arrayListUserLike.add(value.getUserLike());
                             arrayListEventId.add(value.getId());
                             arrayListComment.add(value.getComment());
+                            arrayListImage.add(value.getImage());
                             //TODO left for image on post
 
                        }
                      //  Log.d("title",arrayListEventTitle.size()+"=="+apiResponse.getEventArray().size());
                        adapter=new FeedAdapter(arrayListEventTitle,arrayListProfileImage,arrayListDetail,arrayListCreatedDate,
-                               getActivity().getApplicationContext(),arrayListPostId,arrayListLikes,arrayListUserLike,arrayListEventId,arrayListComment);
+                               getActivity().getApplicationContext(),arrayListPostId,arrayListLikes,arrayListUserLike,arrayListEventId,arrayListComment,arrayListImage);
                        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity().getApplicationContext());
                        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                        recyclerViewFeed.setLayoutManager(linearLayoutManager);

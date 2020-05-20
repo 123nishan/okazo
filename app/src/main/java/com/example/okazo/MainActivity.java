@@ -5,76 +5,45 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.okazo.Api.ApiClient;
-import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Fragment.EventFragment;
-import com.example.okazo.Fragment.EventLocationFragment;
+import com.example.okazo.Fragment.EventSearchFragment;
 import com.example.okazo.Fragment.HomeFragment;
 import com.example.okazo.Fragment.ProfileFragment;
-import com.example.okazo.Model.Note;
-import com.example.okazo.util.LocationUpdatesService;
-import com.example.okazo.util.LocationUtil;
 import com.example.okazo.util.constants;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
-import com.luseen.spacenavigation.SpaceItem;
-import com.luseen.spacenavigation.SpaceNavigationView;
-import com.luseen.spacenavigation.SpaceOnClickListener;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
-import static android.content.Context.MODE_PRIVATE;
 import static android.util.Log.d;
-import static com.example.okazo.util.constants.ERROR_DIALOG_REQUEST;
+import static com.example.okazo.util.constants.KEY_ID_FOR_CHAT;
 import static com.example.okazo.util.constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 import static com.example.okazo.util.constants.PERMISSION_REQUEST_ENABLE_GPS;
 
@@ -145,7 +114,7 @@ String userEmail,userId;
 
         SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences(constants.KEY_SHARED_PREFERENCE, MODE_PRIVATE);
         if(sharedPreferences1.getString("user_id","")!=null && !sharedPreferences1.getString("user_id","").isEmpty()){
-
+            userId=sharedPreferences1.getString("user_id","");
         }else {
 
 
@@ -194,10 +163,21 @@ String userEmail,userId;
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .setCustomAnimations(R.anim.pop_in, R.anim.pop_out, R.anim.pop_in, R.anim.pop_out)
-                                .replace(R.id.frame_container,new EventLocationFragment())
+                                .replace(R.id.frame_container,new ProfileFragment())
                                 .addToBackStack(null)
                                 .commit();
                         frameLayout.removeAllViewsInLayout();
+
+                        break;
+                    case R.id.nav_event_search:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.pop_in, R.anim.pop_out, R.anim.pop_in, R.anim.pop_out)
+                                .replace(R.id.frame_container,new EventSearchFragment())
+                                .addToBackStack(null)
+                                .commit();
+                        frameLayout.removeAllViewsInLayout();
+
                         break;
 //                    case R.id.nav_shop:
 //                        getSupportFragmentManager()
@@ -231,8 +211,8 @@ String userEmail,userId;
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
         resideMenu.setScaleValue(0.6f);
         resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        String titles[] = { "Home", "Ticket", "Calendar", "Settings" };
-        int icon[] = { R.drawable.ic_home, R.drawable.ic_tickets, R.drawable.ic_calendar, R.drawable.ic_setting };
+        String titles[] = { "Home", "Ticket", "Message", "Settings" };
+        int icon[] = { R.drawable.ic_home, R.drawable.ic_tickets, R.drawable.ic_message, R.drawable.ic_setting };
 
         for (int i = 0; i < titles.length; i++){
             ResideMenuItem item = new ResideMenuItem(this, icon[i], titles[i]);
@@ -249,6 +229,12 @@ String userEmail,userId;
                         case "Ticket":
                             Intent intent=new Intent(MainActivity.this,MyTicketActivity.class);
                             startActivity(intent);
+                            break;
+                        case "Message":
+                            Intent intent1=new Intent(MainActivity.this,ChatActivity.class);
+                            intent1.putExtra(KEY_ID_FOR_CHAT,userId);
+                            Log.d("CHECKHERE",userId);
+                            startActivity(intent1);
                             break;
                     }
 

@@ -23,9 +23,41 @@ public class User {
     @Expose
     private String phone;
 
+    @SerializedName("following_count")
+    @Expose
+    private String followingCount;
+
+    @SerializedName("money")
+    @Expose
+    private String money;
+
+    public String getMoney() {
+        return money;
+    }
+
+    @SerializedName("moderator_count")
+    @Expose
+    private String moderatorCount;
+
+    public String getFollowingCount() {
+        return followingCount;
+    }
+
+    public String getModeratorCount() {
+        return moderatorCount;
+    }
+
     @SerializedName("code")
     @Expose
     private String code;
+
+    @SerializedName("moderator_request")
+    @Expose
+    private String moderatorRequest;
+
+    public String getModeratorRequest() {
+        return moderatorRequest;
+    }
 
     @SerializedName("created_at")
     @Expose

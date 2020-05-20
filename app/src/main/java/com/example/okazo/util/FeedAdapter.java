@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.okazo.R;
 
 import java.text.ParseException;
@@ -27,13 +28,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
-ArrayList<String> eventTitle,eventProfile,postDetail,postCreatedDate,postId,postLikes,userPostLike,eventId,postComment;
+ArrayList<String> eventTitle,eventProfile,postDetail,postCreatedDate,postId,postLikes,userPostLike,eventId,postComment,postImage;
 Context context;
 public FeedAdapter.OnLikeClickListener onLikeClickListener;
 private FeedAdapter.OnCommentClickListener onCommentClickListener;
 public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
                    ArrayList<String> postDetail, ArrayList<String> postCreatedDate, Context context,
-                   ArrayList<String> postId,ArrayList<String> postLikes,ArrayList<String> userPostLike,ArrayList<String> eventId,ArrayList<String> postComment){
+                   ArrayList<String> postId,ArrayList<String> postLikes,ArrayList<String> userPostLike,ArrayList<String> eventId,ArrayList<String> postComment,ArrayList<String> postImage){
     this.eventTitle=eventTitle;
     this.eventProfile=eventProfile;
     this.postCreatedDate=postCreatedDate;
@@ -44,6 +45,7 @@ public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
     this.userPostLike=userPostLike;
     this.eventId=eventId;
     this.postComment=postComment;
+    this.postImage=postImage;
 }
     @NonNull
     @Override
@@ -59,6 +61,18 @@ public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
         holder.textViewDescription.setText(postDetail.get(position));
        holder.textViewTotalLike.setText(postLikes.get(position)+" Likes");
        holder.textViewTotalComment.setText(postComment.get(position)+" Comments");
+       if(postImage.get(position).equals("null") || postImage==null){
+           holder.imageViewPostImage.setVisibility(View.GONE);
+       }else {
+           holder.imageViewPostImage.setVisibility(View.VISIBLE);
+           String postImagePath=KEY_IMAGE_ADDRESS+(postImage.get(position));
+           Glide.with(context)
+                   .load(Uri.parse(postImagePath))
+                   .placeholder(R.drawable.ic_place_holder_background)
+                   //.error(R.drawable.ic_image_not_found_background)
+                   .fitCenter()
+                   .into(holder.imageViewPostImage);
+       }
         if(userPostLike.get(position).equals("1")){
             holder.imageViewLike.setImageResource(R.drawable.ic_like_red);
         }else {
@@ -109,7 +123,7 @@ public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
     class MyViewHolder extends RecyclerView.ViewHolder{
         TextView textViewTitle,textViewDate,textViewDescription,textViewTotalLike,textViewTotalComment;
         CircleImageView imageViewProfile;
-        ImageView imageViewLike;
+        ImageView imageViewLike,imageViewPostImage;
         LinearLayout linearLayout,linearLayoutCommnet;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -122,6 +136,7 @@ public FeedAdapter(ArrayList<String> eventTitle, ArrayList<String> eventProfile,
             imageViewLike=itemView.findViewById(R.id.card_feed_post_like_black);
             linearLayout=itemView.findViewById(R.id.card_feed_post_like_layout);
             linearLayoutCommnet=itemView.findViewById(R.id.card_feed_post_comment_layout);
+            imageViewPostImage=itemView.findViewById(R.id.card_feed_post_image);
             linearLayoutCommnet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
