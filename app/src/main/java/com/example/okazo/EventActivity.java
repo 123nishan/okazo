@@ -55,6 +55,7 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -120,6 +121,26 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
     private ImageView imageViewSendMessage;
         private int temp=0;
         private String confirmationDialogType;
+private Date eventDate;
+    Date currentDateTimeString = Calendar.getInstance().getTime();
+    private SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+
+      public  void generateReport(){
+          buttonReport.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View view) {
+                if(eventDate.compareTo(currentDateTimeString)<0){
+                    // generate report
+                    DynamicToast.make(EventActivity.this,"GENERATING").show();
+
+                }else {
+                   // Toast.makeText(EventActivity.this, "ASDASDASD", Toast.LENGTH_SHORT).show();
+                    DynamicToast.make(getApplicationContext(),"GENERATING").show();
+                }
+
+              }
+          });
+      }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -237,6 +258,13 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
                       //for admin only
                        if(role.equals("Admin")){
 
+                           try {
+                                eventDate=simpleDateFormat.parse(eventDetail.getStartDate());
+                           } catch (ParseException e) {
+                               e.printStackTrace();
+                           }
+
+                           generateReport();
                            buttonMessage.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View view) {
@@ -250,6 +278,7 @@ private LinearLayout linearLayout,linearLayoutResponseLayout;
 
                        }
                        else if(role.equals("Editor")){
+                           generateReport();
                            buttonMessage.setOnClickListener(new View.OnClickListener() {
                                @Override
                                public void onClick(View view) {
