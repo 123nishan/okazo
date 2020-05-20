@@ -211,7 +211,7 @@ String userEmail,userId;
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
         resideMenu.setScaleValue(0.6f);
         resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        String titles[] = { "Home", "Ticket", "Message", "Settings" };
+        String titles[] = { "Home", "Ticket", "Message", "Reward" };
         int icon[] = { R.drawable.ic_home, R.drawable.ic_tickets, R.drawable.ic_message, R.drawable.ic_setting };
 
         for (int i = 0; i < titles.length; i++){
@@ -235,6 +235,12 @@ String userEmail,userId;
                             intent1.putExtra(KEY_ID_FOR_CHAT,userId);
                             Log.d("CHECKHERE",userId);
                             startActivity(intent1);
+                            break;
+                        case "Reward":
+                            Intent intent2=new Intent(MainActivity.this,GeoFenceActivity.class);
+                            intent2.putExtra(KEY_ID_FOR_CHAT,userId);
+                            Log.d("CHECKHERE",userId);
+                            startActivity(intent2);
                             break;
                     }
 

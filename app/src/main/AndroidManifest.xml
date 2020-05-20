@@ -76,6 +76,7 @@
 
         <activity
             android:name=".GeoFenceActivity"
+
             android:label="@string/title_activity_geo_fence" />
         <activity android:name=".EventDetailLocationActivity" />
         <activity

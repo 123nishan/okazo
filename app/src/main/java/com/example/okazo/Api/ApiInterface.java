@@ -99,6 +99,18 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("geofence/start_geofence.php")
+    Call<APIResponse> startGeofence(
+            @Field("event_id") String eventId
+
+    );
+    @FormUrlEncoded
+    @POST("geofence/close_geofence.php")
+    Call<APIResponse> closeGeofence(
+            @Field("event_id") String eventId
+
+    );
+    @FormUrlEncoded
     @POST("fcm.php")
     Call<APIResponse> sendInboxNotification(
             @Field("message") String message,
@@ -148,9 +160,11 @@ public interface ApiInterface {
     Call<ArrayList<EventDetail>> getEventType();
 
 
-
-    @GET("geofence/activate_geofence.php")
-    Call<ArrayList<Geofence>> getGeofenceStatus();
+    @FormUrlEncoded
+    @POST("geofence/activate_geofence.php")
+    Call<APIResponse> getGeofenceStatus(
+            @Field("user_id") String userId
+    );
 
     @FormUrlEncoded
     @POST("map/event_location.php")
