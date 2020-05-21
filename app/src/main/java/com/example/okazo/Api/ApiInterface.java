@@ -49,6 +49,20 @@ public interface ApiInterface {
     );
 
     @FormUrlEncoded
+    @POST("admin/event.php")
+    Call<APIResponse> eventStatus(
+            @Field("event_id") String eventId,
+            @Field("condition") String condition
+    );
+
+    @FormUrlEncoded
+    @POST("admin/search_event.php")
+    Call<ArrayList<EventDetail>> adminSearchEvent(
+            @Field("search") String search
+
+    );
+
+    @FormUrlEncoded
     @POST("eventDetail/all_moderator.php")
     Call<APIResponse> getAllModerator(
             @Field("event_id") String event_id,

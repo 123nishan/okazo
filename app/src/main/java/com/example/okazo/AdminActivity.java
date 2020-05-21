@@ -75,6 +75,14 @@ public class AdminActivity extends AppCompatActivity {
                 }
             });
         }
+        cardViewEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(AdminActivity.this,AdminEventActivity.class);
+                intent.putExtra(KEY_STAFF_ID,staffId);
+                startActivity(intent);
+            }
+        });
 
     }
 

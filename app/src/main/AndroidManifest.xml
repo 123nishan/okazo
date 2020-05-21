@@ -31,7 +31,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AdminActivity"></activity>
+        <activity android:name=".AdminEventActivity"></activity>
+        <activity android:name=".AdminActivity" />
         <activity android:name=".FollowingEventActivity" />
         <activity android:name=".NotificationActivity" />
         <activity android:name=".ModeratorListActivity" />
@@ -96,9 +97,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".RegisterActivity"
-             />
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".EditorActivity" />
         <activity
             android:name=".MainActivity"
