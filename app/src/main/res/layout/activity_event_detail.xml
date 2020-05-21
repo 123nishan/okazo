@@ -273,8 +273,8 @@
         android:layout_below="@+id/event_detail_event_type_spinner"
         android:id="@+id/event_detail_event_tag_error"/>
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_width="match_parent"
         android:id="@+id/event_detail_recycler_view"
         android:layout_height="wrap_content"
@@ -288,15 +288,15 @@
     android:layout_below="@+id/event_detail_recycler_view"
     android:id="@+id/event_page_status_layout">
     <TextView
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Page Private"
         android:textSize="18dp"/>
     <Switch
 
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textOff="Public"
@@ -308,8 +308,8 @@
 <LinearLayout
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
-android:layout_marginLeft="5dp"
-    android:layout_marginTop="5dp"
+android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
 android:orientation="horizontal"
 android:layout_below="@+id/event_page_status_layout"
 android:id="@+id/event_ticket_status_layout">
@@ -321,7 +321,7 @@ android:id="@+id/event_ticket_status_layout">
     android:textSize="18dp"/>
 <Switch
 
-    android:layout_marginRight="5dp"
+    android:layout_marginRight="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textOff="public"
