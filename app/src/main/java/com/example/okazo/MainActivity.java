@@ -39,11 +39,13 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
 import static android.util.Log.d;
 import static com.example.okazo.util.constants.KEY_ID_FOR_CHAT;
+import static com.example.okazo.util.constants.KEY_SHARED_PREFERENCE;
 import static com.example.okazo.util.constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 import static com.example.okazo.util.constants.PERMISSION_REQUEST_ENABLE_GPS;
 
@@ -211,8 +213,8 @@ String userEmail,userId;
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
         resideMenu.setScaleValue(0.6f);
         resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
-        String titles[] = { "Home", "Ticket", "Message", "Reward" };
-        int icon[] = { R.drawable.ic_home, R.drawable.ic_tickets, R.drawable.ic_message, R.drawable.ic_setting };
+        String titles[] = {  "Ticket", "Message", "Reward","Logout" };
+        int icon[] = { R.drawable.ic_ticket_filled, R.drawable.ic_message, R.drawable.ic_reward,R.drawable.ic_leave };
 
         for (int i = 0; i < titles.length; i++){
             ResideMenuItem item = new ResideMenuItem(this, icon[i], titles[i]);
@@ -222,10 +224,7 @@ String userEmail,userId;
                 @Override
                 public void onClick(View v) {
                     switch (titles[finalI]){
-                        case "Home":
-                            Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
-                            resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
-                            break;
+
                         case "Ticket":
                             Intent intent=new Intent(MainActivity.this,MyTicketActivity.class);
                             startActivity(intent);
@@ -241,6 +240,18 @@ String userEmail,userId;
                             intent2.putExtra(KEY_ID_FOR_CHAT,userId);
                             Log.d("CHECKHERE",userId);
                             startActivity(intent2);
+                            break;
+                        case "Logout":
+                            DynamicToast.makeWarning(getApplicationContext(),"Logging Out").show();
+                            SharedPreferences pref = getApplicationContext().getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.remove("user_email");
+                            editor.remove("user_id");
+                            editor.commit();
+
+                            Intent intent3=new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(intent3);
+                            resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
                             break;
                     }
 

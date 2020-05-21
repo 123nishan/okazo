@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:minWidth="130dp"
     app:cardCornerRadius="10dp"
-    android:elevation="5dp"
+    app:cardElevation="5dp"
     android:layout_margin="5dp"
     android:id="@+id/card_event_fragment_card"
     app:cardBackgroundColor="@color/colorPrimaryLight"

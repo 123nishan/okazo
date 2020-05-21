@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:fitsSystemWindows="true"
     tools:context=".eventDetail">
     <include
@@ -37,7 +38,8 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-
+       android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_below="@+id/event_detail_pointer"
         android:layout_height="wrap_content"
         android:id="@+id/event_name_layout">
@@ -54,6 +56,8 @@
         android:id="@+id/event_name_error"/>
 
 <LinearLayout
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/event_name_error"
@@ -61,6 +65,7 @@
     android:orientation="horizontal"
     android:weightSum="2">
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -188,6 +193,8 @@
 
 
 <LinearLayout
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -222,6 +229,8 @@
         android:layout_below="@+id/event_detail_location_layout"
         android:id="@+id/event_detail_event_location_error"/>
     <LinearLayout
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -264,6 +273,8 @@
         android:layout_below="@+id/event_detail_event_type_spinner"
         android:id="@+id/event_detail_event_tag_error"/>
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_width="match_parent"
         android:id="@+id/event_detail_recycler_view"
         android:layout_height="wrap_content"
@@ -277,7 +288,8 @@
     android:layout_below="@+id/event_detail_recycler_view"
     android:id="@+id/event_page_status_layout">
     <TextView
-
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Page Private"

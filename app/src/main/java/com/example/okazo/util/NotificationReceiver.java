@@ -1,5 +1,6 @@
 package com.example.okazo.util;
 
+import android.app.RemoteInput;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     private String userId,eventId;
     @Override
     public void onReceive(Context context, Intent intent) {
+
         String action=intent.getAction();
         Bundle bundle=intent.getExtras();
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);

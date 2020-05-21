@@ -6,6 +6,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -26,13 +28,17 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.okazo.Api.APIResponse;
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.util.GeofenceBroadcastReceiver;
+import com.example.okazo.util.RewardAdapter;
 import com.example.okazo.util.constants;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -98,17 +104,31 @@ public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventL
     ArrayList<Geofence> geofenceslist;
     private String userId,userEmail;
     private EventDetail eventDetail;
+    private androidx.appcompat.widget.Toolbar toolbar;
     private ArrayList<String> arrayListGeofenceId=new ArrayList<>(),arrayListEventId=new ArrayList<>(),arrayListReward=new ArrayList<>(),arrayListTitle=new ArrayList<>(),
         arrayListLatitude=new ArrayList<>(),arrayListLongitude=new ArrayList<>();
+    private ArrayList<String> rewardImage,rewardTitle,rewardDate,rewardAmount;
+    private RecyclerView recyclerView;
+    private TextView textViewError;
+    private RewardAdapter rewardAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo_fence);
-
+        toolbar= findViewById(R.id.geofence_toolbar);
+        recyclerView=findViewById(R.id.geofence_recyclerview);
+        textViewError=findViewById(R.id.geofence_error);
+        toolbar.setTitle("Rewards");
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
+
         SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences(constants.KEY_SHARED_PREFERENCE, MODE_PRIVATE);
         if(sharedPreferences1.getString("user_id","")!=null && !sharedPreferences1.getString("user_id","").isEmpty()) {
             userId = sharedPreferences1.getString("user_id", "");
+
+
+            getAllReward(userId);
+
+
             apiInterface.getGeofenceStatus(userId).enqueue(new Callback<APIResponse>() {
                 @Override
                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
@@ -190,6 +210,36 @@ public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventL
 
 
     }
+
+    private void getAllReward(String userId) {
+        apiInterface.getAllReward(userId).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse=response.body();
+                if(!apiResponse.getError()){
+                    rewardAmount=apiResponse.getEvent().getRewardArray();
+                    rewardDate=apiResponse.getEvent().getStartDateArray();
+                    rewardImage=apiResponse.getEvent().getImageArray();
+                    rewardTitle=apiResponse.getEvent().getTitleArray();
+                    rewardAdapter=new RewardAdapter(rewardImage,rewardTitle,rewardDate,rewardAmount,getApplicationContext());
+                    LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
+                    linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    recyclerView.setAdapter(rewardAdapter);
+
+                }else {
+                    textViewError.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void addGeofence(GeofencingClient geofencingClient, ArrayList<Geofence> geofenceslist){
         geofencingClient.addGeofences(getGeofencingRequest(geofenceslist),getGeofencePendingIntent())
                 .addOnSuccessListener(this, new OnSuccessListener<Void>() {

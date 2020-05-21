@@ -157,6 +157,7 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
             notificationChannel.setDescription("chaneel Description");
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
+
             notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
             notificationChannel.enableVibration(true);
             notificationManager.createNotificationChannel(notificationChannel);
@@ -167,7 +168,6 @@ public class GeofenceTransitionsJobIntentService extends JobIntentService {
         builder.setContentTitle(title)
                 .setContentText("Collect your reward for "+title+": "+reward+" T money")
                 .setAutoCancel(false)
-
                 .setContentIntent(notifyPendingIntent)
                 .setSmallIcon(R.mipmap.ic_okazo_logo);
 

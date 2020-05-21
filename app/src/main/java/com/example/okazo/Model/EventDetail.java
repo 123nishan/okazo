@@ -168,6 +168,15 @@ public class EventDetail implements Serializable {
     @Expose
     private ArrayList<String> ticketSoldType;
 //for geofence
+    @SerializedName("start_date_array")
+    @Expose
+    private ArrayList<String> startDateArray;
+
+    @SerializedName("image_array")
+    @Expose
+    private ArrayList<String> imageArray;
+
+
     @SerializedName("geo_id_array")
     @Expose
     private ArrayList<String> geoIdArray;
@@ -175,6 +184,14 @@ public class EventDetail implements Serializable {
     @SerializedName("event_id_array")
     @Expose
     private ArrayList<String> eventIdArray;
+
+    public ArrayList<String> getStartDateArray() {
+        return startDateArray;
+    }
+
+    public ArrayList<String> getImageArray() {
+        return imageArray;
+    }
 
     @SerializedName("reward_array")
     @Expose

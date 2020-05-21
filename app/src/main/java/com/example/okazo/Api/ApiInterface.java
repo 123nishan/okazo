@@ -173,6 +173,12 @@ public interface ApiInterface {
             @Field("type") String type
     );
 
+    @FormUrlEncoded
+    @POST("geofence/get_all_reward.php")
+    Call<APIResponse> getAllReward(
+            @Field("user_id") String userId
+
+    );
 
     @FormUrlEncoded
     @POST("geofence/assign_reward_user.php")
