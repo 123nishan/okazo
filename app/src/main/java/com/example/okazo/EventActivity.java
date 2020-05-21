@@ -529,7 +529,7 @@ private Bitmap bmp,scaledbmp;
                            } catch (ParseException e) {
                                e.printStackTrace();
                            }
-
+                           activateGeoFence();
                            generateReport();
                            buttonMessage.setOnClickListener(new View.OnClickListener() {
                                @Override
@@ -544,6 +544,7 @@ private Bitmap bmp,scaledbmp;
 
                        }
                        else if(role.equals("Editor")){
+                           activateGeoFence();
                            generateReport();
                            buttonMessage.setOnClickListener(new View.OnClickListener() {
                                @Override
@@ -1519,6 +1520,15 @@ going=false;
                     confirmationDialog1.show(getSupportFragmentManager(),"Confirmation");
                 }
                 break;
+            case R.id.event_setting_4:
+                if(userRole.equals("Moderator")){
+                    DynamicToast.makeError(EventActivity.this,"You dont have permission to this feature").show();
+                }else {
+                    confirmationDialogType="4";
+                    ConfirmationDialog confirmationDialog1=new ConfirmationDialog("Do you want to close the reward system?");
+                    confirmationDialog1.show(getSupportFragmentManager(),"Confirmation");
+                }
+                break;
         }
         return false;
     }
@@ -1552,6 +1562,30 @@ going=false;
                 DynamicToast.makeWarning(this,"No internet connection").show();
 
             }
+        }else if(confirmationDialogType.equals("4")){
+            //close geo fence
+            apiInterface.closeEvent(eventId).enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    APIResponse apiResponse=response.body();
+                    if(!apiResponse.getError()){
+                        DynamicToast.makeSuccess(getApplicationContext(),"Reward system has been closed").show();
+                    }else {
+                        if(apiResponse.getErrorMsg().equals("Already")){
+                            DynamicToast.makeWarning(getApplicationContext(),"Already Closed").show();
+                        }else if(apiResponse.getErrorMsg().equals("Cant")){
+                            DynamicToast.makeWarning(getApplicationContext(),"Not yet activated").show();
+                        }else {
+                            DynamicToast.makeError(getApplicationContext(),"Problem deactivating reward,please try later").show();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                }
+            });
         }
         else {
             apiInterface.closeEvent(eventId).enqueue(new Callback<APIResponse>() {
@@ -1736,5 +1770,31 @@ going=false;
             }
         });
     }
+public void activateGeoFence(){
+    buttonNotification.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            apiInterface.startGeofence(eventId).enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    APIResponse apiResponse=response.body();
+                    if(!apiResponse.getError()){
+                            DynamicToast.makeSuccess(getApplicationContext(),"reward system has been establish, please close it after 24 hour from setting").show();
+                    }else {
+                        if(apiResponse.getErrorMsg().equals("Already")){
+                            DynamicToast.makeWarning(getApplicationContext(),"Already Activated,please close from setting after 24 hour").show();
+                        }else {
+                            DynamicToast.makeWarning(getApplicationContext(),"It has been claimed").show();
+                        }
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                }
+            });
+        }
+    });
+}
 }

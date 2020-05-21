@@ -40,6 +40,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d("hello","working");
         GeofenceTransitionsJobIntentService.enqueueWork(context,intent);
+
 //        this.context=context;
 //        //GeofenceTransitionsJobIntentService.enqueueWork(context, intent);
 //        GeofencingEvent geofencingEvent=GeofencingEvent.fromIntent(intent);

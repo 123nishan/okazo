@@ -16,6 +16,7 @@ public class APIResponse {
     @SerializedName("error")
     @Expose
     private Boolean error;
+
     @SerializedName("uid")
     @Expose
     private String uid;

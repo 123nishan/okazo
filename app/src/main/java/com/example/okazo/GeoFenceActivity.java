@@ -6,6 +6,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -16,6 +18,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -25,11 +28,18 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
+import com.example.okazo.Api.APIResponse;
 import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
+import com.example.okazo.Model.EventDetail;
 import com.example.okazo.util.GeofenceBroadcastReceiver;
+import com.example.okazo.util.RewardAdapter;
+import com.example.okazo.util.constants;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -63,6 +73,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +87,7 @@ import static android.util.Log.d;
 import static com.example.okazo.util.constants.ERROR_DIALOG_REQUEST;
 import static com.example.okazo.util.constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 
-public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCallback, GeoQueryEventListener {
+public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventListener {
 
     private GoogleMap mMap;
     private LocationRequest locationRequest;
@@ -91,107 +102,144 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
     private GeofencingClient geofencingClient;
     private ApiInterface apiInterface;
     ArrayList<Geofence> geofenceslist;
+    private String userId,userEmail;
+    private EventDetail eventDetail;
+    private androidx.appcompat.widget.Toolbar toolbar;
+    private ArrayList<String> arrayListGeofenceId=new ArrayList<>(),arrayListEventId=new ArrayList<>(),arrayListReward=new ArrayList<>(),arrayListTitle=new ArrayList<>(),
+        arrayListLatitude=new ArrayList<>(),arrayListLongitude=new ArrayList<>();
+    private ArrayList<String> rewardImage,rewardTitle,rewardDate,rewardAmount;
+    private RecyclerView recyclerView;
+    private TextView textViewError;
+    private RewardAdapter rewardAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo_fence);
+        toolbar= findViewById(R.id.geofence_toolbar);
+        recyclerView=findViewById(R.id.geofence_recyclerview);
+        textViewError=findViewById(R.id.geofence_error);
+        toolbar.setTitle("Rewards");
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
-        apiInterface.getGeofenceStatus().enqueue(new Callback<ArrayList<com.example.okazo.Model.Geofence>>() {
-            @Override
-            public void onResponse(Call<ArrayList<com.example.okazo.Model.Geofence>> call, Response<ArrayList<com.example.okazo.Model.Geofence>> response) {
-                ArrayList<com.example.okazo.Model.Geofence> geofences=response.body();
 
-                for ( com.example.okazo.Model.Geofence status:geofences
-                     ) {
-                    if(status.getStatus()==0){
-                        Toast.makeText(GeoFenceActivity.this, "GEO OFF", Toast.LENGTH_SHORT).show();
-                    }else
-                    {
-                       // Toast.makeText(GeoFenceActivity.this, "GGEO ON", Toast.LENGTH_SHORT).show();
+        SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences(constants.KEY_SHARED_PREFERENCE, MODE_PRIVATE);
+        if(sharedPreferences1.getString("user_id","")!=null && !sharedPreferences1.getString("user_id","").isEmpty()) {
+            userId = sharedPreferences1.getString("user_id", "");
+
+
+            getAllReward(userId);
+
+
+            apiInterface.getGeofenceStatus(userId).enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    APIResponse apiResponse=response.body();
+                    if(!apiResponse.getError()){
+                        eventDetail=apiResponse.getEvent();
+                        arrayListEventId=eventDetail.getEventIdArray();
+                        arrayListTitle=eventDetail.getTitleArray();
+                        arrayListGeofenceId=eventDetail.getGeoIdArray();
+                        arrayListLatitude=eventDetail.getLatitudeArray();
+                        arrayListLongitude=eventDetail.getLongitudeArray();
+                        arrayListReward=eventDetail.getRewardArray();
+
                         geofencingClient=LocationServices.getGeofencingClient(GeoFenceActivity.this);
-                        String key=""+27.680438+"-"+85.335270;
-                        geofencePendingIntent=null;
                         geofenceslist=new ArrayList<>();
-                        //Geofence geofence=getGeofence(27.680438,85.335270,key);
-                        geofenceslist.add(new Geofence.Builder()
-                                .setRequestId(""+27.680438+"-"+85.335270)
-                                .setCircularRegion(
-                                        27.680438,85.335270,30
-                                )
-                                .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_DWELL)
-                                //.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
-                                .setLoiteringDelay(10000)
-                                .build()
-                        );
-                        geofencingClient.addGeofences(getGeofencingRequest(geofenceslist),getGeofencePendingIntent())
-                                .addOnSuccessListener(GeoFenceActivity.this, new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("hello","geoAdded");
-                                    }
-                                }).addOnFailureListener(GeoFenceActivity.this, new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(GeoFenceActivity.this, "Failed to add GEO FENCE"+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        //TODO permission check for android 10 or greater OF ACCESS_BACKGROUND_LOCATION
-                        //addGeofence(geofencingClient,geofenceslist);
+                        geofencePendingIntent=null;
+                        for(int i=0;i<arrayListGeofenceId.size();i++){
+                            //create geofence
+
+                            String key=arrayListEventId.get(i);
+                            Log.d("KEY",key);
+                            geofenceslist.add(new Geofence.Builder()
+                                    .setRequestId(key)
+                                    .setCircularRegion(
+                                            Double.valueOf(arrayListLatitude.get(i)),Double.valueOf(arrayListLongitude.get(i)),300
+                                    )
+                                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_DWELL)
+                                    //.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
+                                    .setLoiteringDelay(10000)
+                                    .build()
+                            );
+                            geofencingClient.addGeofences(getGeofencingRequest(geofenceslist),getGeofencePendingIntent())
+                                    .addOnSuccessListener(GeoFenceActivity.this, new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("GEOCHECK","geoAdded");
+                                        }
+                                    }).addOnFailureListener(GeoFenceActivity.this, new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(GeoFenceActivity.this, "Failed to add GEO FENCE"+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            geofenceslist.clear();
+                        }
+
+                        // Log.d("geofence",eventDetail.getGeoIdArray().get(0));
+                    }else {
+                        if(apiResponse.getErrorMsg().equals("No Reward")){
+                            DynamicToast.makeWarning(getApplicationContext(),"you dont have any reward to claim").show();
+                        }else {
+                            DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
+                        }
                     }
                 }
 
-            }
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
 
-            @Override
-            public void onFailure(Call<ArrayList<com.example.okazo.Model.Geofence>> call, Throwable t) {
-
-            }
-        });
-
-        if(isServicesOK()) {
-
-//            if(mLocationPermissionGranted){
-//
-//
-//            }else {
-//                getLocationPermission();
-//            }
-
-
-            Dexter.withActivity(this)
-                    .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                    .withListener(new PermissionListener() {
-                        @Override
-                        public void onPermissionGranted(PermissionGrantedResponse response) {
-//                            buildLocationRequest();
-//                            buildLocationCallBack();
-                            // Toast.makeText(GeoFenceActivity.this, "Granted", Toast.LENGTH_SHORT).show();
-                            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(GeoFenceActivity.this);
-                            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                                    .findFragmentById(R.id.map);
-                            mapFragment.getMapAsync(GeoFenceActivity.this);
-//                            initializeArea();
-//                            settingGeoFire();
-                        }
-
-                        @Override
-                        public void onPermissionDenied(PermissionDeniedResponse response) {
-                            if(response.isPermanentlyDenied()){
-                                showSettingDialog();
-                            }
-                        }
-
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                            token.continuePermissionRequest();
-                        }
-                    }).check();
+                }
+            });
+        }else {
+            DynamicToast.makeError(getApplicationContext(),"Something went wrong,Please login again").show();
+            SharedPreferences.Editor editor = sharedPreferences1.edit();
+//            editor.putString("user_email","");
+//            editor.putString("user_id","");
+            editor.remove("user_email");
+            editor.remove("user_id");
+            editor.commit();
+            Intent intent=new Intent(getApplicationContext(),LoginActivity.class);
+            startActivity(intent);
         }
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+
+
+                // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
 
     }
+
+    private void getAllReward(String userId) {
+        apiInterface.getAllReward(userId).enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse=response.body();
+                if(!apiResponse.getError()){
+                    rewardAmount=apiResponse.getEvent().getRewardArray();
+                    rewardDate=apiResponse.getEvent().getStartDateArray();
+                    rewardImage=apiResponse.getEvent().getImageArray();
+                    rewardTitle=apiResponse.getEvent().getTitleArray();
+                    rewardAdapter=new RewardAdapter(rewardImage,rewardTitle,rewardDate,rewardAmount,getApplicationContext());
+                    LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
+                    linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    recyclerView.setAdapter(rewardAdapter);
+
+                }else {
+                    textViewError.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void addGeofence(GeofencingClient geofencingClient, ArrayList<Geofence> geofenceslist){
         geofencingClient.addGeofences(getGeofencingRequest(geofenceslist),getGeofencePendingIntent())
                 .addOnSuccessListener(this, new OnSuccessListener<Void>() {
@@ -234,6 +282,7 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
 
         Intent intent=new Intent(GeoFenceActivity.this, GeofenceBroadcastReceiver.class);
         geofencePendingIntent= PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        Log.d("RETURN","HERER");
         return geofencePendingIntent;
 
     }
@@ -276,126 +325,23 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
         builder.show();
     }
 
-    private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
-//            getChatrooms();
-            //getLastKnowLocation();
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-        }
-    }
 
-    private void buildLocationRequest(){
-        locationRequest=new LocationRequest()
-;
-    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    locationRequest.setInterval(5000);
-    locationRequest.setFastestInterval(3000);
-    locationRequest.setSmallestDisplacement(10f);
-    }
-    private void buildLocationCallBack(){
-        locationCallBack=new LocationCallback(){
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if(mMap!=null){
 
-                geoFire.setLocation("you", new GeoLocation(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()), new GeoFire.CompletionListener() {
-                    @Override
-                    public void onComplete(String key, DatabaseError error) {
-                        if(currentUser!=null)currentUser.remove();
-                        currentUser=mMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(locationResult.getLastLocation().getLatitude(),locationResult.getLastLocation().getLongitude()))
-                                .title("YOU"));
-                        mMap.animateCamera(CameraUpdateFactory
-                                .newLatLngZoom(currentUser.getPosition(),12.0f));
-                    }
-                })
 
-                ;
-                }
-            }
-        };
 
-    }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.getUiSettings().setZoomControlsEnabled(true);
 
-//        if (fusedLocationProviderClient != null)
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-//                    return;
-//                }
-//
-////        // Add a marker in Sydney and move the camera
-////        LatLng sydney = new LatLng(-34, 151);
-////        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-////        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-//            }
-//        assert fusedLocationProviderClient != null;
-//        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, Looper.myLooper());
-//        //add circle for geofence
-//        for(LatLng latLng:area){
-//            mMap.addCircle(new CircleOptions().center(latLng).radius(500)//500m
-//                    .strokeColor(Color.BLUE)
-//                    .fillColor(0x220000FF)
-//                    .strokeWidth(5.0f) );
-//            //create geoquery when user is in the location
-//            GeoQuery geoQuery=geoFire.queryAtLocation(new GeoLocation(latLng.latitude,latLng.longitude),0.5f);
-//            geoQuery.addGeoQueryEventListener(GeoFenceActivity.this);
-//        }
-    }
 
     @Override
     protected void onStop() {
        // fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
         super.onStop();
     }
-    public boolean isServicesOK(){
-        d("map", "isServicesOK: checking google services version");
 
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(GeoFenceActivity.this);
-
-        if(available == ConnectionResult.SUCCESS){
-            //everything is fine and the user can make map requests
-            d("map", "isServicesOK: Google Play Services is working");
-            return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-            //an error occured but we can resolve it
-            d("map", "isServicesOK: an error occured but we can fix it");
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(GeoFenceActivity.this, available, ERROR_DIALOG_REQUEST);
-            dialog.show();
-        }else{
-            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
-        }
-        return false;
-    }
 
     @Override
     public void onKeyEntered(String key, GeoLocation location) {
-        sendNotification("hello",String.format("is entered",key));
+        sendNotification("GG",String.format("is entered",key));
     }
 
     @Override
@@ -409,6 +355,7 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     private void sendNotification(String title, String content) {
+        Log.d("NOTIFIACTION",content);
         String NOTIFICATION_CHANNEL_ID="location";
         NotificationManager notificationManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
@@ -444,43 +391,5 @@ public class GeoFenceActivity extends FragmentActivity implements OnMapReadyCall
         Toast.makeText(this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
 
     }
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           @NonNull String permissions[],
-//                                           @NonNull int[] grantResults) {
-//        mLocationPermissionGranted = false;
-//        switch (requestCode) {
-//            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    mLocationPermissionGranted = true;
-//                }
-//            }
-//        }
-//    }
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        d("map", "onActivityResult: called.");
-//        switch (requestCode) {
-//            case PERMISSION_REQUEST_ENABLE_GPS: {
-//                if(mLocationPermissionGranted){
-////                    getChatrooms();
-//                    //getLastKnowLocation();
-//                    buildLocationRequest();
-//                    buildLocationCallBack();
-//                    // Toast.makeText(GeoFenceActivity.this, "Granted", Toast.LENGTH_SHORT).show();
-//                    fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(GeoFenceActivity.this);
-//                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                            .findFragmentById(R.id.map);
-//                    mapFragment.getMapAsync(GeoFenceActivity.this);
-//                }
-//                else{
-//                    getLocationPermission();
-//                }
-//            }
-//        }
-//
-//    }
+
 }

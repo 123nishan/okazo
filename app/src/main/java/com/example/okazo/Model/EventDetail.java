@@ -150,6 +150,8 @@ public class EventDetail implements Serializable {
     @Expose
     private String following;
 
+
+
     @SerializedName("ticket_count")
     @Expose
     private String ticketCount;
@@ -165,6 +167,72 @@ public class EventDetail implements Serializable {
     @SerializedName("total_sold_type")
     @Expose
     private ArrayList<String> ticketSoldType;
+//for geofence
+    @SerializedName("start_date_array")
+    @Expose
+    private ArrayList<String> startDateArray;
+
+    @SerializedName("image_array")
+    @Expose
+    private ArrayList<String> imageArray;
+
+
+    @SerializedName("geo_id_array")
+    @Expose
+    private ArrayList<String> geoIdArray;
+
+    @SerializedName("event_id_array")
+    @Expose
+    private ArrayList<String> eventIdArray;
+
+    public ArrayList<String> getStartDateArray() {
+        return startDateArray;
+    }
+
+    public ArrayList<String> getImageArray() {
+        return imageArray;
+    }
+
+    @SerializedName("reward_array")
+    @Expose
+    private ArrayList<String> rewardArray;
+
+    @SerializedName("title_array")
+    @Expose
+    private ArrayList<String> titleArray;
+
+    @SerializedName("latitude_array")
+    @Expose
+    private ArrayList<String> latitudeArray;
+
+    @SerializedName("longitude_array")
+    @Expose
+    private ArrayList<String> longitudeArray;
+
+    public ArrayList<String> getGeoIdArray() {
+        return geoIdArray;
+    }
+
+    public ArrayList<String> getEventIdArray() {
+        return eventIdArray;
+    }
+
+    public ArrayList<String> getRewardArray() {
+        return rewardArray;
+    }
+
+    public ArrayList<String> getTitleArray() {
+        return titleArray;
+    }
+
+    public ArrayList<String> getLatitudeArray() {
+        return latitudeArray;
+    }
+
+    public ArrayList<String> getLongitudeArray() {
+        return longitudeArray;
+    }
+    //for gofence
 
     public String getFollowingCount() {
         return followingCount;

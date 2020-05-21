@@ -225,7 +225,7 @@
                 <ImageView
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:src="@drawable/ic_tickets"
+                    android:src="@drawable/ic_ticket_filled"
                     />
 
                 <TextView

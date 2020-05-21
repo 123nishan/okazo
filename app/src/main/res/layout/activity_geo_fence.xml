@@ -1,10 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:id="@+id/map"
     android:fitsSystemWindows="true"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GeoFenceActivity" />
+    tools:context=".GeoFenceActivity" >
+
+   <androidx.appcompat.widget.Toolbar
+    android:id="@+id/geofence_toolbar"
+    android:layout_width="match_parent"
+    android:background="@color/colorPrimary"
+
+    app:popupTheme="@style/AppTheme"
+    android:layout_height="?attr/actionBarSize"
+    app:layout_collapseMode="pin"/>
+    <TextView
+        android:id="@+id/geofence_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No Reward"
+        android:visibility="gone"
+        android:textColor="@color/red"
+        android:textSize="24dp"
+        android:textStyle="bold"/>
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Collected Reward"
+        android:layout_marginTop="4dp"
+
+        android:textSize="16dp"
+        android:textStyle="bold"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:padding="8dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/geofence_recyclerview"/>
+
+
+</LinearLayout>

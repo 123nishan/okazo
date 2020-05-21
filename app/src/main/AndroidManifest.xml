@@ -14,6 +14,7 @@
     <uses-permission android:name="ANDROID.PERMISSION.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
     <!-- <uses-feature android:name="android.hardware.camera" /> -->
     <!-- <uses-feature android:name="android.hardware.camera.autofocus" /> -->
@@ -76,7 +77,9 @@
 
         <activity
             android:name=".GeoFenceActivity"
+            android:parentActivityName=".MainActivity"
             android:label="@string/title_activity_geo_fence" />
+
         <activity android:name=".EventDetailLocationActivity" />
         <activity
             android:name=".eventDetail"
@@ -139,6 +142,17 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+        <receiver
+            android:name=".util.NotificationReceiver"
+            >
+            <intent-filter>
+                <action android:name="YES"/>
+
+
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
