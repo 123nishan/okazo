@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -15,6 +16,7 @@ import com.example.okazo.Api.ApiClient;
 import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.util.AdminEventAdapter;
+import com.example.okazo.util.ConfirmationDialog;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.ArrayList;
@@ -25,13 +27,15 @@ import retrofit2.Response;
 
 import static com.example.okazo.util.constants.KEY_STAFF_ID;
 
-public class AdminEventActivity extends AppCompatActivity {
+public class AdminEventActivity extends AppCompatActivity implements ConfirmationDialog.orderConfirmationListener {
     private RecyclerView recyclerView;
     private ApiInterface apiInterface;
     private AdminEventAdapter adapter;
     private String staffId;
     private  ArrayList<EventDetail> eventDetails;
     private EditText editTextSearch;
+    private String confirmationCondition;
+    String actionId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +59,11 @@ public class AdminEventActivity extends AppCompatActivity {
                 linearLayout.setOrientation(RecyclerView.VERTICAL);
                 recyclerView.setLayoutManager(linearLayout);
                 recyclerView.setAdapter(adapter);
+                // block
+                blockUser();
+
+                //unblock
+                unblockUser();
 
                 editTextSearch.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -81,6 +90,8 @@ public class AdminEventActivity extends AppCompatActivity {
                                         adapter=new AdminEventAdapter(eventDetails);
                                         recyclerView.setAdapter(null);
                                         recyclerView.setAdapter(adapter);
+                                        blockUser();
+                                        unblockUser();
                                     }
 
                                 }
@@ -93,59 +104,7 @@ public class AdminEventActivity extends AppCompatActivity {
 
                     }
                 });
-                // block
-                adapter.setOnBlockClickListener(new AdminEventAdapter.OnBlockClickListener() {
-                    @Override
-                    public void onBlockClick(int position) {
-                        String id=eventDetails.get(position).getId();
-                        apiInterface.eventStatus(id,"block").enqueue(new Callback<APIResponse>() {
-                            @Override
-                            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                APIResponse apiResponse=response.body();
-                                if(!apiResponse.getError()){
-                                    finish();
-                                    overridePendingTransition(0, 0);
-                                    startActivity(getIntent());
-                                    overridePendingTransition(0, 0);
-                                }else {
-                                    DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
-                                }
-                            }
 
-                            @Override
-                            public void onFailure(Call<APIResponse> call, Throwable t) {
-
-                            }
-                        });
-                    }
-                });
-
-                //unblock
-                adapter.setOnUnBlockClickListener(new AdminEventAdapter.OnUnBlockClickListener() {
-                    @Override
-                    public void onUnBlockClick(int position) {
-                        String id=eventDetails.get(position).getId();
-                        apiInterface.eventStatus(id,"unblock").enqueue(new Callback<APIResponse>() {
-                            @Override
-                            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                APIResponse apiResponse=response.body();
-                                if(!apiResponse.getError()){
-                                    finish();
-                                    overridePendingTransition(0, 0);
-                                    startActivity(getIntent());
-                                    overridePendingTransition(0, 0);
-                                }else {
-                                    DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<APIResponse> call, Throwable t) {
-
-                            }
-                        });
-                    }
-                });
 
             }
 
@@ -155,6 +114,87 @@ public class AdminEventActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void unblockUser() {
+        adapter.setOnUnBlockClickListener(new AdminEventAdapter.OnUnBlockClickListener() {
+            @Override
+            public void onUnBlockClick(int position) {
+                 actionId=eventDetails.get(position).getId();
+                confirmationCondition="unblock";
+                ConfirmationDialog confirmationDialog=new ConfirmationDialog("Do you want to unblock this event?");
+                confirmationDialog.show(getSupportFragmentManager(),"Confirmation");
+
+            }
+        });
+    }
+
+    private void blockUser() {
+
+        adapter.setOnBlockClickListener(new AdminEventAdapter.OnBlockClickListener() {
+            @Override
+            public void onBlockClick(int position) {
+                 actionId=eventDetails.get(position).getId();
+                confirmationCondition="block";
+                Log.d("TEST",confirmationCondition);
+                ConfirmationDialog confirmationDialog=new ConfirmationDialog("Do you want to block this event?");
+                confirmationDialog.show(getSupportFragmentManager(),"Confirmation");
+
+            }
+        });
+    }
+
+    @Override
+    public void OnYesClicked() {
+        Log.d("TEST1",confirmationCondition);
+        if(confirmationCondition.equals("block")){
+            apiInterface.eventStatus(actionId,"block").enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    APIResponse apiResponse=response.body();
+                    if(!apiResponse.getError()){
+                        finish();
+                        overridePendingTransition(0, 0);
+                        startActivity(getIntent());
+                        overridePendingTransition(0, 0);
+                       
+                    }else {
+                        DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
+                    DynamicToast.makeError(getApplicationContext(),t.getLocalizedMessage()).show();
+                }
+            });
+        }else {
+            apiInterface.eventStatus(actionId,"unblock").enqueue(new Callback<APIResponse>() {
+                @Override
+                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                    APIResponse apiResponse=response.body();
+                    if(!apiResponse.getError()){
+                        finish();
+                        overridePendingTransition(0, 0);
+                        startActivity(getIntent());
+                        overridePendingTransition(0, 0);
+                    }else {
+                        DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public void OnNoClicked() {
 
     }
 }

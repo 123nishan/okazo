@@ -83,6 +83,14 @@ public class AdminActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        cardViewUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(AdminActivity.this,AdminUserActivity.class);
+
+                startActivity(intent);
+            }
+        });
 
     }
 

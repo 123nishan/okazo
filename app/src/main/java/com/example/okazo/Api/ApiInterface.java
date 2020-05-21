@@ -5,6 +5,7 @@ import android.text.Editable;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Geofence;
 import com.example.okazo.Model.Note;
+import com.example.okazo.Model.User;
 
 import java.io.File;
 import java.sql.Date;
@@ -47,11 +48,18 @@ public interface ApiInterface {
     Call<APIResponse> checkInbox(
             @Field("id") String id
     );
-
+//admin
     @FormUrlEncoded
     @POST("admin/event.php")
     Call<APIResponse> eventStatus(
             @Field("event_id") String eventId,
+            @Field("condition") String condition
+    );
+
+    @FormUrlEncoded
+    @POST("admin/user_status.php")
+    Call<APIResponse> adminUserStatus(
+            @Field("user_id") String userId,
             @Field("condition") String condition
     );
 
@@ -62,6 +70,17 @@ public interface ApiInterface {
 
     );
 
+    @FormUrlEncoded
+    @POST("admin/search_user.php")
+    Call<ArrayList<User>> adminSearchUser(
+            @Field("search") String search
+
+    );
+
+    @GET("admin/user.php")
+    Call<ArrayList<User>> adminUser();
+
+//admin
     @FormUrlEncoded
     @POST("eventDetail/all_moderator.php")
     Call<APIResponse> getAllModerator(
