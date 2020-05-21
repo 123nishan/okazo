@@ -104,6 +104,7 @@ public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo_fence);
+
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
         SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences(constants.KEY_SHARED_PREFERENCE, MODE_PRIVATE);
         if(sharedPreferences1.getString("user_id","")!=null && !sharedPreferences1.getString("user_id","").isEmpty()) {
@@ -120,10 +121,42 @@ public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventL
                         arrayListLatitude=eventDetail.getLatitudeArray();
                         arrayListLongitude=eventDetail.getLongitudeArray();
                         arrayListReward=eventDetail.getRewardArray();
+
+                        geofencingClient=LocationServices.getGeofencingClient(GeoFenceActivity.this);
+                        geofenceslist=new ArrayList<>();
+                        geofencePendingIntent=null;
                         for(int i=0;i<arrayListGeofenceId.size();i++){
                             //create geofence
 
+                            String key=arrayListEventId.get(i);
+                            Log.d("KEY",key);
+                            geofenceslist.add(new Geofence.Builder()
+                                    .setRequestId(key)
+                                    .setCircularRegion(
+                                            Double.valueOf(arrayListLatitude.get(i)),Double.valueOf(arrayListLongitude.get(i)),300
+                                    )
+                                    .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER|Geofence.GEOFENCE_TRANSITION_DWELL)
+                                    //.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
+                                    .setLoiteringDelay(10000)
+                                    .build()
+                            );
+                            geofencingClient.addGeofences(getGeofencingRequest(geofenceslist),getGeofencePendingIntent())
+                                    .addOnSuccessListener(GeoFenceActivity.this, new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("GEOCHECK","geoAdded");
+                                        }
+                                    }).addOnFailureListener(GeoFenceActivity.this, new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(GeoFenceActivity.this, "Failed to add GEO FENCE"+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                            geofenceslist.clear();
                         }
+
                         // Log.d("geofence",eventDetail.getGeoIdArray().get(0));
                     }else {
                         if(apiResponse.getErrorMsg().equals("No Reward")){
@@ -199,6 +232,7 @@ public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventL
 
         Intent intent=new Intent(GeoFenceActivity.this, GeofenceBroadcastReceiver.class);
         geofencePendingIntent= PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        Log.d("RETURN","HERER");
         return geofencePendingIntent;
 
     }
@@ -257,7 +291,7 @@ public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventL
 
     @Override
     public void onKeyEntered(String key, GeoLocation location) {
-        sendNotification("hello",String.format("is entered",key));
+        sendNotification("GG",String.format("is entered",key));
     }
 
     @Override
@@ -271,6 +305,7 @@ public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventL
     }
 
     private void sendNotification(String title, String content) {
+        Log.d("NOTIFIACTION",content);
         String NOTIFICATION_CHANNEL_ID="location";
         NotificationManager notificationManager= (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){

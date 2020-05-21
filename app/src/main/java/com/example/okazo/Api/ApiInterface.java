@@ -175,6 +175,13 @@ public interface ApiInterface {
 
 
     @FormUrlEncoded
+    @POST("geofence/assign_reward_user.php")
+    Call<APIResponse> assignRewardUser(
+            @Field("user_id") String userId,
+            @Field("event_id") String eventId
+    );
+
+    @FormUrlEncoded
     @POST("eventDetail/discover_event.php")
     Call<ArrayList<EventDetail>> discoverEvent(
             @Field("user_id") String userId,
