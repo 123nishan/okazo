@@ -17,6 +17,10 @@ public class constants {
     public static final String KEY_IMAGE_ADDRESS="http://192.168.0.199/";
     //This is your from email password
     public static final String PASSWORD = "baikuntha";
+
+    public static final String  KEY_STAFF_ID="staffId";
+    public static final String  KEY_STAFF_ROLE="staffRole";
+    public static final String  KEY_STAFF_EMAIL="staffEmail";
     //for event detail
     public static final String  KEY_EVENT_TITLE="eventTitle";
     public static final String  KEY_ID_FOR_CHAT="id";

@@ -49,7 +49,7 @@ public class OtpActivity extends AppCompatActivity {
 //        String name=getIntent().getExtras().getString("name");
 //        String phone=getIntent().getExtras().getString("phone");
         progressBar=findViewById(R.id.otp_progress_bar);
-        new  CountDownTimer(60000,1000){
+        new  CountDownTimer(300000,1000){
 
             @Override
             public void onTick(long millisUntilFinished) {

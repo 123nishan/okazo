@@ -31,7 +31,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".FollowingEventActivity"></activity>
+        <activity android:name=".AdminActivity"></activity>
+        <activity android:name=".FollowingEventActivity" />
         <activity android:name=".NotificationActivity" />
         <activity android:name=".ModeratorListActivity" />
         <activity android:name=".TicketQrActivity" />
@@ -77,9 +78,8 @@
 
         <activity
             android:name=".GeoFenceActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/title_activity_geo_fence" />
-
+            android:label="@string/title_activity_geo_fence"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".EventDetailLocationActivity" />
         <activity
             android:name=".eventDetail"
@@ -98,7 +98,7 @@
         </activity>
         <activity
             android:name=".RegisterActivity"
-            android:windowSoftInputMode="adjustResize" />
+             />
         <activity android:name=".EditorActivity" />
         <activity
             android:name=".MainActivity"
@@ -133,6 +133,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -143,16 +144,11 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <receiver
-            android:name=".util.NotificationReceiver"
-            >
+        <receiver android:name=".util.NotificationReceiver">
             <intent-filter>
-                <action android:name="YES"/>
-
-
+                <action android:name="YES" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

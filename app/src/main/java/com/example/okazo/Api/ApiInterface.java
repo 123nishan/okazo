@@ -37,7 +37,8 @@ public interface ApiInterface {
             @Field("password") String password,
             @Field("name") String name,
             @Field("phone") String phone,
-            @Field("token") String token
+            @Field("token") String token,
+            @Field("role") String role
 
     );
 
