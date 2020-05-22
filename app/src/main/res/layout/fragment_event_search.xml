@@ -101,8 +101,8 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
            android:layout_gravity="center"
-            android:visibility="gone"
 
+            android:visibility="gone"
             android:id="@+id/event_search_fragment_search_error"
             android:textStyle="bold"
             android:textSize="24dp"
@@ -116,6 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/event_search_fragment_discover_recyclerview"/>
+
 
     </LinearLayout>
 </FrameLayout>

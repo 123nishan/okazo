@@ -346,7 +346,7 @@ public class HomeFragment extends Fragment {
                         imageViewProgress.setVisibility(View.GONE);
                         recyclerViewFeed.setVisibility(View.GONE);
                         textViewTest.setVisibility(View.VISIBLE);
-                        textViewTest.setText("No feed to show");
+                        textViewTest.setText("No Feed");
                     }else {
                         DynamicToast.makeError(getActivity().getApplicationContext(),apiResponse.getErrorMsg()).show();
                     }

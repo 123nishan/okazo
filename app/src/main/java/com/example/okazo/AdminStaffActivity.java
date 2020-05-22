@@ -48,7 +48,7 @@ public class AdminStaffActivity extends AppCompatActivity implements Confirmatio
         textViewError=findViewById(R.id.admin_staff_error);
 
         try {
-            gifDrawable = new GifDrawable( getResources(), R.drawable.loading_textview );
+            gifDrawable = new GifDrawable( getResources(), R.drawable.not_found );
             textViewError.setBackground(gifDrawable);
         } catch (IOException e) {
             e.printStackTrace();
@@ -88,7 +88,7 @@ public class AdminStaffActivity extends AppCompatActivity implements Confirmatio
 
                         @Override
                         public void afterTextChanged(Editable editable) {
-                            apiInterface.adminSearchUser(editable.toString()).enqueue(new Callback<ArrayList<User>>() {
+                            apiInterface.adminSearchStaff(editable.toString()).enqueue(new Callback<ArrayList<User>>() {
                                 @Override
                                 public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {
                                     userDetails=response.body();

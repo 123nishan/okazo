@@ -77,6 +77,13 @@ public interface ApiInterface {
 
     );
 
+    @FormUrlEncoded
+    @POST("admin/search_staff.php")
+    Call<ArrayList<User>> adminSearchStaff(
+            @Field("search") String search
+
+    );
+
     @GET("admin/user.php")
     Call<ArrayList<User>> adminUser();
 

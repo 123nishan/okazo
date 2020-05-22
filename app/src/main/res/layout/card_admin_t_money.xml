@@ -63,6 +63,7 @@
            android:layout_marginRight="40dp"
            android:layout_weight="0.5"/>
             <Button
+                android:textColor="@color/space_white"
                 android:id="@+id/card_admin_t_money_confirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

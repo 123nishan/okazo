@@ -104,7 +104,8 @@ public class EventSearchFragment extends Fragment {
 
 
 
-
+    private ImageView imageViewLoading;
+    GifDrawable gifDrawable=null;
     private String userId;
     private Double userLatitude,userLongitude;
     private ApiInterface apiInterface;
@@ -146,6 +147,17 @@ public class EventSearchFragment extends Fragment {
         textViewDescending= view.findViewById(R.id.event_search_fragment_filter_dsc);
         editTextSearchText=view.findViewById(R.id.event_search_fragment_search_text);
         textViewSearchError=view.findViewById(R.id.event_search_fragment_search_error);
+
+        recyclerView.setVisibility(View.GONE);
+        textViewSearchError.setVisibility(View.VISIBLE);
+
+        try {
+            gifDrawable = new GifDrawable( getResources(), R.drawable.loading_animation );
+            textViewSearchError.setBackground(gifDrawable);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         try {
             gifChecking = new GifDrawable( getResources(), R.drawable.not_found );
@@ -228,6 +240,7 @@ public class EventSearchFragment extends Fragment {
                                     allEventTypeImage.clear();
                                     ArrayList<EventDetail> eventDetails=response.body();
                                     RecyclerView recyclerView1=dialog.findViewById(R.id.bottom_sheet_event_type_recycleview);
+
                                     for (EventDetail val:eventDetails
                                     ) {
                                         allEventType.add(val.getEventType());
@@ -300,6 +313,7 @@ public class EventSearchFragment extends Fragment {
                                 ArrayList<EventDetail> apiResponse=response.body();
                                 recyclerView.setVisibility(View.VISIBLE);
 
+
                                 textViewSearchError.setVisibility(View.GONE);
                                     arrayListId.clear();
                                     arrayListTitle.clear();
@@ -353,6 +367,8 @@ public class EventSearchFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
                 ArrayList<EventDetail> apiResponse=response.body();
+                recyclerView.setVisibility(View.VISIBLE);
+                textViewSearchError.setVisibility(View.GONE);
                 arrayListEventDetail=apiResponse;
                 for (EventDetail value: apiResponse){
                     String totalEvent=value.getTotalEvent();

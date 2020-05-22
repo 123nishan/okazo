@@ -100,6 +100,13 @@ public class AdminActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        cardViewAllStaff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(AdminActivity.this,AdminStaffActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
