@@ -11,10 +11,10 @@
         android:fillColor="#fff"/>
     <path
         android:pathData="M186,-107C326.833,-107 438.394,-28.655 438.394,95.056S120.97,391.575 -19.863,391.575 -69,240.712 -69,117 45.167,-107 186,-107Z"
-        android:fillColor="#4d4ea1"/>
+        android:fillColor="#4ba4c7"/>
     <path
         android:pathData="M274,684a179,245 0,1 0,358 0a179,245 0,1 0,-358 0z"
-        android:fillColor="#4d4ea1"/>
+        android:fillColor="#4ba4c7"/>
     <path
         android:pathData="M25,350L389,350a0,0 0,0 1,0 0L389,850a20,20 0,0 1,-20 20L45,870A20,20 0,0 1,25 850L25,350A0,0 0,0 1,25 350Z"
         android:fillColor="#fff"/>

@@ -20,6 +20,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="12dp"
 
         android:id="@+id/event_fragment_recycler_view"
 />
@@ -35,7 +36,7 @@
         android:layout_marginBottom="20dp"
 
 
-        mapbox:cardBackgroundColor="#b0a9ff"
+        mapbox:cardBackgroundColor="@color/colorPrimary"
         mapbox:cardCornerRadius="15dp">
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,7 +61,7 @@
             android:layout_marginLeft="8dp"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="2dp"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/space_white"
             android:textStyle="bold"
             android:textSize="22dp" />
             </LinearLayout>
@@ -73,7 +74,7 @@
                 android:ellipsize="end"
                 android:textSize="16dp"
                 android:id="@+id/event_fragment_card_location"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/space_white"
                 android:textStyle="bold"/>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,14 +93,14 @@
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:text="EVENT DATE: "
-                       android:textColor="@color/colorPrimary"
+                       android:textColor="@color/space_white"
                        android:textStyle="bold"/>
                    <TextView
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:text="EVENT DATE:"
                        android:id="@+id/event_fragment_card_date"
-                       android:textColor="@color/colorPrimary"
+                       android:textColor="@color/space_white"
                        android:textStyle="bold"/>
                </LinearLayout>
 
@@ -112,14 +113,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="EVENT TIME: "
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/space_white"
                         android:textStyle="bold"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="EVENT TIME:"
                         android:id="@+id/event_fragment_card_time"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/space_white"
                         android:textStyle="bold"/>
                 </LinearLayout>
 
@@ -130,6 +131,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Host"
+                android:textColor="@color/space_white"
                 android:id="@+id/event_fragment_card_host"
                 android:textSize="15dp"/>
             <TextView

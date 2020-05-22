@@ -12,7 +12,7 @@
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
     android:layout_marginBottom="20dp"
-    app1:cardBackgroundColor="#b0a9ff"
+    app1:cardBackgroundColor="@color/colorPrimary"
 app1:cardCornerRadius="15dp"
    >
         <LinearLayout
@@ -38,7 +38,7 @@ app1:cardCornerRadius="15dp"
                     android:layout_marginLeft="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="2dp"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/space_white"
                     android:textStyle="bold"
                     android:textSize="22dp" />
             </LinearLayout>
@@ -51,7 +51,7 @@ app1:cardCornerRadius="15dp"
                 android:ellipsize="end"
                 android:textSize="16dp"
                 android:id="@+id/card_event_search_location"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/space_white"
                 android:textStyle="bold"/>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -70,14 +70,14 @@ app1:cardCornerRadius="15dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="EVENT DATE: "
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/space_white"
                         android:textStyle="bold"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="EVENT DATE:"
                         android:id="@+id/card_event_search_date"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/space_white"
                         android:textStyle="bold"/>
 
                 </LinearLayout>
@@ -91,14 +91,14 @@ app1:cardCornerRadius="15dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="  EVENT TIME: "
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/space_white"
                         android:textStyle="bold"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="EVENT TIME:"
                         android:id="@+id/card_event_search_time"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/space_white"
                         android:textStyle="bold"/>
                 </LinearLayout>
 
@@ -109,6 +109,7 @@ app1:cardCornerRadius="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Host"
+                android:textColor="@color/space_white"
                 android:id="@+id/card_event_search_host"
                 android:textSize="15dp"/>
             <TextView
@@ -116,7 +117,7 @@ app1:cardCornerRadius="15dp"
                 android:layout_height="wrap_content"
                 android:text="distance:"
                 android:id="@+id/card_event_search_distance"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/space_white"
                 android:textStyle="bold"/>
             <TextView
                 android:layout_width="match_parent"

@@ -62,36 +62,43 @@
 
                     android:layout_marginLeft="20dp"
                     android:layout_height="120dp"
-                    app:civ_border_width="1dp"
+
 
                     android:id="@+id/home_fragment_circular_Image"
                     app:civ_border_color="#FF000000"/>
                <LinearLayout
-                   android:layout_marginLeft="10dp"
+                   android:layout_marginLeft="12dp"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                  android:layout_marginTop="10dp"
+                  android:layout_marginTop="18dp"
                    android:layout_toRightOf="@+id/home_fragment_circular_Image"
                    android:orientation="vertical">
                    <TextView
+                       android:maxLines="1"
+                       android:ellipsize="end"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:id="@+id/home_fragment_first_textview"
                        android:text="Event Name"
-                       android:textSize="24dp"
+                       android:textColor="@color/space_white"
+                       android:textSize="20dp"
                        android:textStyle="bold"/>
                    <TextView
+                       android:maxLines="1"
+                       android:ellipsize="end"
+                       android:textColor="@color/space_white"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:id="@+id/home_fragment_second_textview"
                        android:text="User Name"
-                       android:textSize="20dp"
+                       android:textSize="18dp"
                        android:textStyle="bold"/>
                    <TextView
+                       android:textColor="@color/space_white"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:text="Create Event"
-                       android:textSize="16dp"
+                       android:textSize="18dp"
                        android:textStyle="italic"
                        android:id="@+id/home_fragment_third_textview"/>
                </LinearLayout>

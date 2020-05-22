@@ -114,14 +114,14 @@
                    android:layout_height="50dp"
                    android:layout_alignParentEnd="true"
                    android:layout_centerInParent="true"
-
+                    android:textColor="@color/space_white"
                    android:textSize="18dp"
 
                    android:background="@drawable/round_button"
                    android:paddingLeft="20dp"
                    android:paddingRight="10dp"
 
-                  android:drawableStart="@drawable/ic_add"
+                  android:drawableStart="@drawable/ic_add_white"
                    android:text="Follow"/>
 
                 <Button
@@ -130,7 +130,7 @@
                     android:layout_height="50dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerInParent="true"
-
+                    android:textColor="@color/space_white"
                     android:textSize="18dp"
                     android:background="@drawable/round_button"
                     android:paddingLeft="20dp"
@@ -159,9 +159,9 @@
                   android:id="@+id/event_activity_moderator_action_message"
                   android:layout_width="match_parent"
                   android:layout_height="35dp"
-
+                android:textColor="@color/space_white"
                   android:text="Inbox"
-                  android:drawableLeft="@drawable/ic_message_black"
+                  android:drawableLeft="@drawable/ic_message"
                   android:paddingLeft="8dp"
                   android:paddingRight="8dp"
                   android:background="@drawable/round_button"/>
@@ -184,6 +184,7 @@
                     android:layout_height="35dp"
                     android:minWidth="150dp"
                     android:text="Moderator"
+                    android:textColor="@color/space_white"
                     android:drawableLeft="@drawable/ic_add_moderator"
                     android:paddingLeft="12dp"
                     android:paddingRight="8dp"
@@ -196,7 +197,8 @@
                    android:layout_height="35dp"
                    android:minWidth="150dp"
                    android:text="Geofence"
-                   android:drawableLeft="@drawable/geofence"
+                   android:textColor="@color/space_white"
+                   android:drawableLeft="@drawable/ic_geofence"
                    android:paddingLeft="12dp"
                    android:paddingRight="8dp"
                    android:background="@drawable/round_button"/>
@@ -207,6 +209,7 @@
                        android:layout_width="150dp"
                        android:layout_height="35dp"
                        android:minWidth="150dp"
+                       android:textColor="@color/space_white"
                        android:text="Report"
                        android:drawableLeft="@drawable/ic_report"
                        android:paddingLeft="12dp"
@@ -247,6 +250,7 @@
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content"
                          android:textSize="18dp"
+                         android:textColor="@color/space_white"
                          android:id="@+id/event_activity_first_card_text"
                          android:layout_marginLeft="4dp"
                          android:textStyle="bold"
@@ -285,6 +289,7 @@
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:textSize="18dp"
+                          android:textColor="@color/space_white"
                           android:id="@+id/event_activity_first_card_onclick_text"
                           android:layout_marginLeft="4dp"
                           android:textStyle="bold"
@@ -328,7 +333,7 @@
 
                   android:layout_gravity="center"
 
-                  android:src="@drawable/ic_tickets"/>
+                  android:src="@drawable/ic_ticket_filled"/>
 
               </androidx.cardview.widget.CardView>
 
@@ -346,7 +351,7 @@
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center"
-                      android:src="@drawable/ic_message_black"/>
+                      android:src="@drawable/ic_message"/>
               </androidx.cardview.widget.CardView>
           </LinearLayout>
 

@@ -47,7 +47,7 @@
         </LinearLayout>
         <Button
             android:id="@+id/card_add_moderator_add_button"
-
+            android:textColor="@color/space_white"
             android:layout_width="80dp"
             android:drawableLeft="@drawable/ic_add_moderator"
             android:paddingLeft="10dp"

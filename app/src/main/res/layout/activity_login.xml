@@ -69,6 +69,7 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_button"
             android:layout_marginLeft="50dp"
+            android:textColor="@color/space_white"
             android:layout_marginTop="50dp"
             android:text="Login" />
         <!--        <pl.droidsonroids.gif.GifTextView-->
