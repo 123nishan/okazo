@@ -444,7 +444,7 @@ public class HomeFragment extends Fragment {
                         textViewFirst.setVisibility(View.GONE);
                         textViewThird.setVisibility(View.VISIBLE);
                         Glide.with(getActivity().getApplicationContext())
-                                .load(R.mipmap.ic_okazo_logo_round)
+                                .load(R.mipmap.ic_backimage)
                                 .placeholder(R.drawable.ic_place_holder_background)
                                 //.error(R.drawable.ic_image_not_found_background)
                                 .centerCrop()
