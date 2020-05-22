@@ -89,13 +89,13 @@
             android:hint="Phone"/>
     </com.google.android.material.textfield.TextInputLayout>
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:id="@+id/register_button"
         android:layout_below="@+id/register_number_layout"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="150dp"
-        android:background="@color/cardview_dark_background"
+        android:background="@drawable/round_button"
         android:text="Submit"/>
 
 

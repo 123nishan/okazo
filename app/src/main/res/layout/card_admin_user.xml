@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="8dp"
+    app:cardCornerRadius="10dp"
+    android:layout_margin="10dp"
+    >
+
+    <LinearLayout
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/card_admin_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title: "
+            android:textSize="15dp"/>
+        <TextView
+            android:id="@+id/card_admin_user_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Detail: "
+            android:textSize="15dp"/>
+
+
+
+        <TextView
+            android:id="@+id/card_admin_user_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location: "
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/card_admin_user_created_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Host Name: "
+            android:textSize="15dp"/>
+
+
+        <Button
+            android:id="@+id/card_admin_user_block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Block"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/round_button"/>
+
+        <Button
+            android:id="@+id/card_admin_user_unblock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UnBlock"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/round_button"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

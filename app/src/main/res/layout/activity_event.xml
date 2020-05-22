@@ -114,8 +114,9 @@
                    android:layout_height="50dp"
                    android:layout_alignParentEnd="true"
                    android:layout_centerInParent="true"
-                   android:textStyle="bold"
+
                    android:textSize="18dp"
+
                    android:background="@drawable/round_button"
                    android:paddingLeft="20dp"
                    android:paddingRight="10dp"
@@ -129,7 +130,7 @@
                     android:layout_height="50dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerInParent="true"
-                    android:textStyle="bold"
+
                     android:textSize="18dp"
                     android:background="@drawable/round_button"
                     android:paddingLeft="20dp"
@@ -160,7 +161,7 @@
                   android:layout_height="35dp"
 
                   android:text="Inbox"
-                  android:drawableLeft="@drawable/ic_message"
+                  android:drawableLeft="@drawable/ic_message_black"
                   android:paddingLeft="8dp"
                   android:paddingRight="8dp"
                   android:background="@drawable/round_button"/>
@@ -194,8 +195,8 @@
                    android:layout_width="150dp"
                    android:layout_height="35dp"
                    android:minWidth="150dp"
-                   android:text="Notifications"
-                   android:drawableLeft="@drawable/ic_notification"
+                   android:text="Geofence"
+                   android:drawableLeft="@drawable/geofence"
                    android:paddingLeft="12dp"
                    android:paddingRight="8dp"
                    android:background="@drawable/round_button"/>
@@ -345,7 +346,7 @@
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center"
-                      android:src="@drawable/ic_message"/>
+                      android:src="@drawable/ic_message_black"/>
               </androidx.cardview.widget.CardView>
           </LinearLayout>
 
@@ -370,11 +371,12 @@
                     android:textStyle="bold"
                     />
                 <LinearLayout
+                    android:padding="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="3dp"
+
                     android:id="@+id/event_activity_about_layout"
-                    android:paddingRight="3dp"
+
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
@@ -390,7 +392,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_filled_marker"
+                            android:src="@drawable/ic_marker_outline"
                             android:id="@+id/location"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -433,7 +435,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_clock"
+                            android:src="@drawable/ic_date_outline"
                             android:id="@+id/start_date"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -461,7 +463,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/ic_phone"
+                            android:src="@drawable/ic_phone_outline"
                             android:id="@+id/phone"/>
                         <TextView
                             android:layout_width="wrap_content"
@@ -501,7 +503,7 @@
                         android:text="  Responses"
                         android:textStyle="bold"
                         android:textSize="18dp"
-                        android:drawableLeft="@drawable/ic_people_group"/>
+                        android:drawableLeft="@drawable/ic_group_outline"/>
 
                     <LinearLayout
                         android:layout_marginTop="4dp"

@@ -52,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
     Boolean emailStatus=false,passwordStatus=false,nameStatus=false,mobileStatus=false;
     Pattern pattern;
     private ImageButton imageButtonLogin;
+    private String condition="user";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,16 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister=findViewById(R.id.register_button);
         imageButtonLogin=findViewById(R.id.back_to_login);
         btnRegister.setVisibility(View.GONE);
+        apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
+        Bundle bundle=getIntent().getExtras();
+        if(bundle!=null){
+            condition=bundle.getString("condition");
+            imageButtonLogin.setVisibility(View.GONE);
+        }else {
+
+        }
+
+
         GifDrawable gifChecking = null;
         try {
             gifChecking = new GifDrawable( getResources(), R.drawable.loading_textview );
@@ -277,71 +288,90 @@ public class RegisterActivity extends AppCompatActivity {
                             editTextPassword.setError(null);
                             if(phone!=null && !phone.isEmpty()){
                                 editTextMobile.setError(null);
+                                if(condition.equals("user")) {
+                                    int num = random.nextInt(900000) + 100000;
+                                    String identifier = "first";
 
-                                int num=random.nextInt(900000)+100000;
-                                String identifier="first";
-                                apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-                                String verified="non-verified";
-                                Date date=new Date();
-                                Timestamp timestamp=new Timestamp(date.getTime());
-                                Toast.makeText(RegisterActivity.this, "time"+verified, Toast.LENGTH_SHORT).show();
+                                    String verified = "non-verified";
+                                    Date date = new Date();
+                                    Timestamp timestamp = new Timestamp(date.getTime());
+                                    Toast.makeText(RegisterActivity.this, "time" + verified, Toast.LENGTH_SHORT).show();
 
-                                apiInterface.otp(email,String.valueOf(num),timestamp).enqueue(new Callback<APIResponse>() {
+                                    apiInterface.otp(email, String.valueOf(num), timestamp).enqueue(new Callback<APIResponse>() {
+                                        @Override
+                                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                            APIResponse result = response.body();
+                                            if (result.getError()) {
+                                                DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
+                                            } else {
+
+                                                FirebaseInstanceId.getInstance().getInstanceId()
+                                                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                                                if (!task.isSuccessful()) {
+                                                                    //Log.w(TAG, "getInstanceId failed", task.getException());
+                                                                    return;
+                                                                }
+
+                                                                // Get new Instance ID token
+                                                                String token = task.getResult().getToken();
+                                                                apiInterface.registerUser(email, password, name, phone, token, "1").enqueue(new Callback<APIResponse>() {
+                                                                    @Override
+                                                                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                                                        APIResponse apiResponse = response.body();
+                                                                        if (apiResponse.getError()) {
+                                                                            DynamicToast.makeError(getApplicationContext(), apiResponse.getErrorMsg()).show();
+                                                                        } else {
+
+                                                                            JavaMailAPI javaMailAPI = new JavaMailAPI(RegisterActivity.this, "nishan.nishan.timalsena@gmail.com",
+                                                                                    "Verification Code", "OTP is:", num + "", password, phone, name, email, identifier);
+                                                                            javaMailAPI.execute();
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                                                    }
+                                                                });
+                                                                // Log and toast
+                                                                // String msg = getString(R.string.msg_token_fmt, token);
+
+                                                                //Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+
+
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<APIResponse> call, Throwable t) {
+                                            DynamicToast.makeWarning(getApplicationContext(), "something went wrong").show();
+                                        }
+                                    });
+                                }
+                                //register for staff
+                                Log.d("CEHCKCEHCK",email+"||"+name+"  "+password);
+                                apiInterface.registerUser(email,password,name,phone,"NO","3").enqueue(new Callback<APIResponse>() {
                                     @Override
                                     public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                        APIResponse result = response.body();
-                                        if(result.getError()){
-                                            DynamicToast.makeError(getApplicationContext(), result.getErrorMsg()).show();
+                                        APIResponse apiResponse=response.body();
+                                        if(!apiResponse.getError()){
+                                            DynamicToast.makeSuccess(getApplicationContext(),"staff registered").show();
+                                            finish();
                                         }else {
-
-                                            FirebaseInstanceId.getInstance().getInstanceId()
-                                                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                                            if (!task.isSuccessful()) {
-                                                                //Log.w(TAG, "getInstanceId failed", task.getException());
-                                                                return;
-                                                            }
-
-                                                            // Get new Instance ID token
-                                                            String token = task.getResult().getToken();
-                                                            apiInterface.registerUser(email,password,name,phone,token).enqueue(new Callback<APIResponse>() {
-                                                                @Override
-                                                                public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                                                    APIResponse apiResponse=response.body();
-                                                                    if(apiResponse.getError()){
-                                                                        DynamicToast.makeError(getApplicationContext(), apiResponse.getErrorMsg()).show();
-                                                                    }else {
-
-                                                                        JavaMailAPI javaMailAPI=new JavaMailAPI(RegisterActivity.this,"nishan.nishan.timalsena@gmail.com",
-                                                                                "Verification Code","OTP is:",num+"",password,phone,name,email,identifier);
-                                                                        javaMailAPI.execute();
-                                                                    }
-                                                                }
-
-                                                                @Override
-                                                                public void onFailure(Call<APIResponse> call, Throwable t) {
-
-                                                                }
-                                                            });
-                                                            // Log and toast
-                                                           // String msg = getString(R.string.msg_token_fmt, token);
-
-                                                            //Toast.makeText(RegisterActivity.this, msg, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-
-
+                                            DynamicToast.makeError(getApplicationContext(),"Problem registering staff").show();
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(Call<APIResponse> call, Throwable t) {
-                                        DynamicToast.makeWarning(getApplicationContext(),"something went wrong").show();
+
                                     }
                                 });
-
 
                             }else {
                                 editTextMobile.setError("Enter mobile number");

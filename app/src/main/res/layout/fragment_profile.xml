@@ -97,7 +97,7 @@
                             android:textStyle="bold"
                             android:textSize="20sp"
                             android:paddingTop="10dp"
-                            android:textColor="@color/red"/>
+                            android:textColor="@color/colorPrimaryDark"/>
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/profile_fragment_moderator_list"
@@ -120,7 +120,7 @@
                             android:textStyle="bold"
                             android:textSize="20sp"
                             android:paddingTop="10dp"
-                            android:textColor="@color/red"/>
+                            android:textColor="@color/colorPrimaryDark"/>
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/profile_fragment_following_list"
@@ -143,7 +143,7 @@
                             android:textStyle="bold"
                             android:textSize="20sp"
                             android:paddingTop="10dp"
-                            android:textColor="@color/red"/>
+                            android:textColor="@color/colorPrimaryDark"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -207,7 +207,7 @@
                 <ImageView
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:src="@drawable/ic_reward"/>
+                    android:src="@drawable/ic_reward_black"/>
                 <TextView
                     android:textStyle="bold"
                     android:layout_gravity="center_vertical"
@@ -225,7 +225,7 @@
                 <ImageView
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:src="@drawable/ic_ticket_filled"
+                    android:src="@drawable/ic_ticket_filled_black"
                     />
 
                 <TextView

@@ -38,6 +38,7 @@
            android:textSize="18dp"
            android:textStyle="bold"
            android:layout_weight="1"
+           android:textColor="@color/space_white"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:text="Total:             "/>
@@ -46,6 +47,7 @@
            android:id="@+id/buy_ticket_activity_total_amount"
            android:layout_weight="1"
            android:textSize="18dp"
+           android:textColor="@color/space_white"
            android:textStyle="bold"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"

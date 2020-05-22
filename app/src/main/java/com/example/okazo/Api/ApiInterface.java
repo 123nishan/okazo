@@ -5,6 +5,7 @@ import android.text.Editable;
 import com.example.okazo.Model.EventDetail;
 import com.example.okazo.Model.Geofence;
 import com.example.okazo.Model.Note;
+import com.example.okazo.Model.User;
 
 import java.io.File;
 import java.sql.Date;
@@ -37,7 +38,8 @@ public interface ApiInterface {
             @Field("password") String password,
             @Field("name") String name,
             @Field("phone") String phone,
-            @Field("token") String token
+            @Field("token") String token,
+            @Field("role") String role
 
     );
 
@@ -46,7 +48,53 @@ public interface ApiInterface {
     Call<APIResponse> checkInbox(
             @Field("id") String id
     );
+//admin
+    @FormUrlEncoded
+    @POST("admin/event.php")
+    Call<APIResponse> eventStatus(
+            @Field("event_id") String eventId,
+            @Field("condition") String condition
+    );
 
+    @FormUrlEncoded
+    @POST("admin/user_status.php")
+    Call<APIResponse> adminUserStatus(
+            @Field("user_id") String userId,
+            @Field("condition") String condition
+    );
+
+    @FormUrlEncoded
+    @POST("admin/search_event.php")
+    Call<ArrayList<EventDetail>> adminSearchEvent(
+            @Field("search") String search
+
+    );
+
+    @FormUrlEncoded
+    @POST("admin/search_user.php")
+    Call<ArrayList<User>> adminSearchUser(
+            @Field("search") String search
+
+    );
+
+    @GET("admin/user.php")
+    Call<ArrayList<User>> adminUser();
+
+
+    @GET("admin/user_tmoney.php")
+    Call<ArrayList<User>> adminUserTMoney();
+
+    @GET("admin/staff.php")
+    Call<ArrayList<User>> adminStaff();
+
+    @FormUrlEncoded
+    @POST("admin/add_tmoney.php")
+    Call<APIResponse> adminAddTMoney(
+            @Field("user_id") String userId,
+            @Field("amount") String amount
+    );
+
+//admin
     @FormUrlEncoded
     @POST("eventDetail/all_moderator.php")
     Call<APIResponse> getAllModerator(

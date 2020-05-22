@@ -83,7 +83,13 @@ public class User {
     @Expose
     private int amount;
 
+    @SerializedName("total_user")
+    @Expose
+    private String totalUser;
 
+    public String getTotalUser() {
+        return totalUser;
+    }
 
     @SerializedName("token")
     @Expose

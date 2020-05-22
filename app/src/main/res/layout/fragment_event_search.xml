@@ -96,17 +96,19 @@
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="No Event"
+        <ImageView
+            android:layout_marginTop="20dp"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+           android:layout_gravity="center"
             android:visibility="gone"
+
             android:id="@+id/event_search_fragment_search_error"
             android:textStyle="bold"
             android:textSize="24dp"
             android:textColor="@color/colorPrimaryDark"/>
         <androidx.recyclerview.widget.RecyclerView
+
             android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="8dp"

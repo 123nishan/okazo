@@ -4,12 +4,12 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="8dp"
-   app:cardElevation="8dp"
+   app:cardElevation="10dp"
     android:id="@+id/card_my_ticket_card"
-    android:layout_margin="5dp">
+    android:layout_margin="8dp">
     
     <LinearLayout
-        android:padding="4dp"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
