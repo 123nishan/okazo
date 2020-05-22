@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +29,10 @@ import com.example.okazo.util.MessageAdapter;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import pl.droidsonroids.gif.GifDrawable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,13 +53,14 @@ public class AddModeratorFragment extends Fragment {
 
     private EditText editTextSearch;
     private RecyclerView recyclerView;
-    private TextView textViewClear,textViewError;
+    private TextView textViewClear;
+    private ImageView textViewError;
     private ApiInterface apiInterface;
     private ArrayList<String> arrayListName=new ArrayList<>(),arrayListEmail=new ArrayList<>(),arrayListImage=new ArrayList<>(),arrayListId=new ArrayList<>(),arrayListStatus=new ArrayList<>();
     private AddModeratorAdapter adapter;
     private String role;
     private String eventId,moderatorType;
-
+    private GifDrawable gifChecking;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,6 +75,13 @@ public class AddModeratorFragment extends Fragment {
         Bundle bundle=getActivity().getIntent().getExtras();
         eventId=bundle.getString(KEY_EVENT_ID);
         moderatorType=bundle.getString(KEY_USER_ROLE);
+        try {
+            gifChecking = new GifDrawable( getResources(), R.drawable.not_found );
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        textViewError.setBackground(gifChecking);
         adapter=new AddModeratorAdapter(arrayListName,arrayListEmail,arrayListImage,getActivity().getApplicationContext(),arrayListId,arrayListStatus);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getActivity().getApplicationContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

@@ -36,6 +36,7 @@ public class AdminEventActivity extends AppCompatActivity implements Confirmatio
     private EditText editTextSearch;
     private String confirmationCondition;
     String actionId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +159,7 @@ public class AdminEventActivity extends AppCompatActivity implements Confirmatio
                         overridePendingTransition(0, 0);
                         startActivity(getIntent());
                         overridePendingTransition(0, 0);
-                       
+
                     }else {
                         DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
                     }

@@ -30,7 +30,7 @@ public class AdminActivity extends AppCompatActivity {
         cardViewRegisterStaff=findViewById(R.id.admin_activity_register_staff);
         cardViewAllStaff=findViewById(R.id.admin_activity_all_staff);
         cardViewEvent=findViewById(R.id.admin_activity_all_event);
-        cardViewPost=findViewById(R.id.admin_activity_post);
+
         cardViewTMoney=findViewById(R.id.admin_activity_t_money);
         cardViewUser=findViewById(R.id.admin_activity_all_user);
         Bundle bundle=getIntent().getExtras();
@@ -87,6 +87,15 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(AdminActivity.this,AdminUserActivity.class);
+
+                startActivity(intent);
+            }
+        });
+
+        cardViewTMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(AdminActivity.this,AdminTMoneyActivity.class);
 
                 startActivity(intent);
             }

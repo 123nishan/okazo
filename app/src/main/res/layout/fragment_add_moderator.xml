@@ -50,13 +50,13 @@
         android:layout_marginTop="4dp"
         android:id="@+id/add_moderator_recycler_view"/>
         />
-    <TextView
+    <ImageView
         android:id="@+id/add_moderator_fragment_error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:text="No Data"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
         android:visibility="gone"
+
         android:textColor="@color/colorPrimary"
         android:textStyle="bold"
         android:textSize="20dp"/>

@@ -31,7 +31,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AdminUserActivity"></activity>
+        <activity android:name=".AdminStaffActivity"></activity>
+        <activity android:name=".AdminTMoneyActivity" />
+        <activity android:name=".AdminUserActivity" />
         <activity android:name=".AdminEventActivity" />
         <activity android:name=".AdminActivity" />
         <activity android:name=".FollowingEventActivity" />

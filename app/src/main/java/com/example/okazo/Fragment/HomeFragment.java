@@ -66,9 +66,11 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import pl.droidsonroids.gif.GifDrawable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,6 +100,7 @@ public class HomeFragment extends Fragment {
     private ViewPager viewPager;
     private RelativeLayout relativeLayoutExtented;
 
+    private ImageView imageViewProgress;
     private RecyclerView recyclerViewFeed;
 
     private TextView textViewTest;
@@ -108,7 +111,7 @@ public class HomeFragment extends Fragment {
             arrayListCommentUserName=new ArrayList<>(),arrayListCommentCreatedDate=new ArrayList<>();
     private FeedAdapter adapter;
     private int feedPosition;
-
+    GifDrawable gifChecking = null;
 
 
     @Override
@@ -124,8 +127,19 @@ public class HomeFragment extends Fragment {
         textViewSecond=view.findViewById(R.id.home_fragment_second_textview);
         textViewThird=view.findViewById(R.id.home_fragment_third_textview);
         relativeLayoutExtented=view.findViewById(R.id.home_fragment_extented_relative_layout);
+        relativeLayoutExtented.setVisibility(View.GONE);
+
+        imageViewProgress=view.findViewById(R.id.home_fragment_feed_progress);
+        imageViewProgress.setVisibility(View.VISIBLE);
+        try {
+            gifChecking = new GifDrawable( getResources(), R.drawable.loading_animation );
+            imageViewProgress.setBackground(gifChecking);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         recyclerViewFeed=view.findViewById(R.id.feed_fragment_recyler_view);
+        recyclerViewFeed.setVisibility(View.GONE);
         textViewTest=view.findViewById(R.id.feed_fragment_text_view);
 //        tabLayout=view.findViewById(R.id.home_fragment_tab_layout);
 //        viewPager=view.findViewById(R.id.home_fragment_view_pager);
@@ -147,6 +161,7 @@ public class HomeFragment extends Fragment {
                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                     APIResponse apiResponse=response.body();
                     if(!apiResponse.getError()){
+                        imageViewProgress.setVisibility(View.GONE);
                         recyclerViewFeed.setVisibility(View.VISIBLE);
                         textViewTest.setVisibility(View.GONE);
                         // Log.d("checkHere","null "+apiResponse.getEventArray().get(0).getTitle());
@@ -328,6 +343,7 @@ public class HomeFragment extends Fragment {
                             }
                         });
                     }else if(apiResponse.getErrorMsg().equals("NO FEED")) {
+                        imageViewProgress.setVisibility(View.GONE);
                         recyclerViewFeed.setVisibility(View.GONE);
                         textViewTest.setVisibility(View.VISIBLE);
                         textViewTest.setText("No feed to show");
@@ -384,6 +400,7 @@ public class HomeFragment extends Fragment {
                 public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
                     APIResponse apiResponse=response.body();
                     if(!apiResponse.getError()){
+                        relativeLayoutExtented.setVisibility(View.VISIBLE);
                         EventDetail eventDetail=apiResponse.getEvent();
                         textViewFirst.setVisibility(View.VISIBLE);
                         textViewThird.setVisibility(View.GONE);

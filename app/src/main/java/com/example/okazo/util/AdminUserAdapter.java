@@ -20,8 +20,10 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.MyVi
     ArrayList<User> userDetail;
     OnBlockClickListener onBlockClickListener;
     OnUnBlockClickListener onUnBlockClickListener;
-    public AdminUserAdapter( ArrayList<User> userDetail){
+    String condition;
+    public AdminUserAdapter( ArrayList<User> userDetail,String condition){
         this.userDetail=userDetail;
+        this.condition=condition;
 
     }
     @NonNull
@@ -33,18 +35,21 @@ public class AdminUserAdapter extends RecyclerView.Adapter<AdminUserAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        if(condition.equals("user")){
             User object=userDetail.get(position);
             holder.textViewName.setText(Html.fromHtml("<b>" + "Name: " + "</b> " + object.getName()));
             holder.textViewPhone.setText(Html.fromHtml("<b>" + "Phone: " + "</b> " + object.getPhone()));
             holder.textViewEmail.setText(Html.fromHtml("<b>" + "Email: " + "</b> " + object.getEmail()));
             holder.textViewCreatedAt.setText(Html.fromHtml("<b>" + "Account Created at: " + "</b> " + object.getCreatedAt()));
-        if(object.getStatus().equals("1")){
-            holder.buttonBlock.setVisibility(View.VISIBLE);
-            holder.buttonUnBlock.setVisibility(View.GONE);
-        }else {
-            holder.buttonBlock.setVisibility(View.GONE);
-            holder.buttonUnBlock.setVisibility(View.VISIBLE);
+            if(object.getStatus().equals("1")){
+                holder.buttonBlock.setVisibility(View.VISIBLE);
+                holder.buttonUnBlock.setVisibility(View.GONE);
+            }else {
+                holder.buttonBlock.setVisibility(View.GONE);
+                holder.buttonUnBlock.setVisibility(View.VISIBLE);
+            }
         }
+
 
     }
 

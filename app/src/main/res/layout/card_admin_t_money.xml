@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="8dp"
+    app:cardCornerRadius="10dp"
+    android:layout_margin="10dp"
+    >
+
+    <LinearLayout
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/card_admin_tmoney_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name: "
+            android:textSize="15dp"/>
+        <TextView
+            android:id="@+id/card_admin_tmoney_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email: "
+            android:textSize="15dp"/>
+
+
+
+        <TextView
+            android:id="@+id/card_admin_tmoney_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone: "
+            android:textSize="15dp"/>
+
+        <TextView
+            android:id="@+id/card_admin_tmoney_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="T Money: "
+            android:textSize="15dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add T Money"
+            android:textAlignment="center"
+            android:layout_marginTop="5dp"
+            android:textStyle="bold"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:padding="4dp"
+            android:orientation="horizontal">
+       <EditText
+           android:id="@+id/card_admin_t_money_amount"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:hint="Amount"
+           android:layout_marginRight="40dp"
+           android:layout_weight="0.5"/>
+            <Button
+                android:id="@+id/card_admin_t_money_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:background="@drawable/round_button"
+                android:text="Confirm"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

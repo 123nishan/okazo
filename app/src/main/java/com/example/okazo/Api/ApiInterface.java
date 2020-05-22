@@ -80,6 +80,20 @@ public interface ApiInterface {
     @GET("admin/user.php")
     Call<ArrayList<User>> adminUser();
 
+
+    @GET("admin/user_tmoney.php")
+    Call<ArrayList<User>> adminUserTMoney();
+
+    @GET("admin/staff.php")
+    Call<ArrayList<User>> adminStaff();
+
+    @FormUrlEncoded
+    @POST("admin/add_tmoney.php")
+    Call<APIResponse> adminAddTMoney(
+            @Field("user_id") String userId,
+            @Field("amount") String amount
+    );
+
 //admin
     @FormUrlEncoded
     @POST("eventDetail/all_moderator.php")

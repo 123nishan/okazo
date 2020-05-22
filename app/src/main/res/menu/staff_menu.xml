@@ -5,6 +5,6 @@
         android:id="@+id/staff_logout"
         android:title="Logout"
         app:showAsAction="always"
-        android:icon="@drawable/ic_leave"
+        android:icon="@drawable/ic_leave_white"
         />
 </menu>

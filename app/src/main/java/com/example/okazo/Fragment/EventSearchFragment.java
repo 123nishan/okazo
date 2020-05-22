@@ -72,6 +72,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -80,6 +81,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import pl.droidsonroids.gif.GifDrawable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -117,7 +119,8 @@ public class EventSearchFragment extends Fragment {
     DecimalFormat decimalFormat;
     private ImageView imageViewFilter;
     private CardView cardViewFilter;
-    private TextView textViewFilterCategory,textViewFilterReset,textViewDescending,textViewSearchError;
+    private TextView textViewFilterCategory,textViewFilterReset,textViewDescending;
+    ImageView textViewSearchError;
     ArrayList<String>allEventType=new ArrayList<>(),allEventTypeImage=new ArrayList<>();
     private EventTypeCollectionAdapter collectionAdapter;
     private String totalCount="";
@@ -125,6 +128,7 @@ public class EventSearchFragment extends Fragment {
     private EventDetail eventDetailIntent;
     private ArrayList<EventDetail> arrayListEventDetail=new ArrayList<>();
     private EditText editTextSearchText;
+    GifDrawable gifChecking = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -142,6 +146,13 @@ public class EventSearchFragment extends Fragment {
         textViewDescending= view.findViewById(R.id.event_search_fragment_filter_dsc);
         editTextSearchText=view.findViewById(R.id.event_search_fragment_search_text);
         textViewSearchError=view.findViewById(R.id.event_search_fragment_search_error);
+
+        try {
+            gifChecking = new GifDrawable( getResources(), R.drawable.not_found );
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         SharedPreferences sharedPreferences = getActivity().getApplicationContext().getSharedPreferences(KEY_SHARED_PREFERENCE, MODE_PRIVATE);
         if(sharedPreferences.getString("user_id","")!=null  && !sharedPreferences.getString("user_id","").isEmpty()){
             userId=sharedPreferences.getString("user_id","");
@@ -287,7 +298,9 @@ public class EventSearchFragment extends Fragment {
                             @Override
                             public void onResponse(Call<ArrayList<EventDetail>> call, Response<ArrayList<EventDetail>> response) {
                                 ArrayList<EventDetail> apiResponse=response.body();
+                                recyclerView.setVisibility(View.VISIBLE);
 
+                                textViewSearchError.setVisibility(View.GONE);
                                     arrayListId.clear();
                                     arrayListTitle.clear();
                                     arrayListLocation.clear();
@@ -314,6 +327,7 @@ public class EventSearchFragment extends Fragment {
 
                                         }else {
                                             recyclerView.setVisibility(View.GONE);
+                                            textViewSearchError.setBackground(gifChecking);
                                             textViewSearchError.setVisibility(View.VISIBLE);
                                         }
 

@@ -214,7 +214,7 @@ String userEmail,userId;
         resideMenu.setScaleValue(0.6f);
         resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
         String titles[] = {  "Ticket", "Message", "Reward","Logout" };
-        int icon[] = { R.drawable.ic_ticket_filled, R.drawable.ic_message, R.drawable.ic_reward,R.drawable.ic_leave };
+        int icon[] = { R.drawable.ic_ticket_filled, R.drawable.ic_message, R.drawable.ic_reward,R.drawable.ic_leave_white };
 
         for (int i = 0; i < titles.length; i++){
             ResideMenuItem item = new ResideMenuItem(this, icon[i], titles[i]);
