@@ -40,6 +40,7 @@ public class AdminTMoneyActivity extends AppCompatActivity implements Confirmati
         recyclerView=findViewById(R.id.admin_t_money_recyclerview);
         editTextSearch=findViewById(R.id.admin_t_money_search);
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
+        getSupportActionBar().setTitle("Add T Money");
         apiInterface.adminUserTMoney().enqueue(new Callback<ArrayList<User>>() {
             @Override
             public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {

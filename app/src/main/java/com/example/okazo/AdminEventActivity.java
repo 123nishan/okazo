@@ -48,7 +48,7 @@ public class AdminEventActivity extends AppCompatActivity implements Confirmatio
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
 
 
-
+        getSupportActionBar().setTitle("Events");
 
 
         apiInterface.getEventLocation(staffId,"Admin").enqueue(new Callback<ArrayList<EventDetail>>() {

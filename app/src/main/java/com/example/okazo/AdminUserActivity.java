@@ -48,7 +48,7 @@ public class AdminUserActivity extends AppCompatActivity  implements  Confirmati
         textViewError=findViewById(R.id.admin_user_error);
         editTextSearch=findViewById(R.id.admin_user_search);
         apiInterface= ApiClient.getApiClient().create(ApiInterface.class);
-
+        getSupportActionBar().setTitle("Users");
         apiInterface.adminUser().enqueue(new Callback<ArrayList<User>>() {
             @Override
             public void onResponse(Call<ArrayList<User>> call, Response<ArrayList<User>> response) {

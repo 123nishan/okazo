@@ -46,7 +46,7 @@ public class AdminStaffActivity extends AppCompatActivity implements Confirmatio
         recyclerView=findViewById(R.id.admin_staff_recyclerview);
         editTextSearch=findViewById(R.id.admin_staff_search);
         textViewError=findViewById(R.id.admin_staff_error);
-
+        getSupportActionBar().setTitle("Staff");
         try {
             gifDrawable = new GifDrawable( getResources(), R.drawable.not_found );
             textViewError.setBackground(gifDrawable);
