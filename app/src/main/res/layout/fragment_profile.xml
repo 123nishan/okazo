@@ -209,6 +209,7 @@
                     android:layout_height="36dp"
                     android:src="@drawable/ic_reward_black"/>
                 <TextView
+                    android:id="@+id/profile_fragment_user_reward"
                     android:textStyle="bold"
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"

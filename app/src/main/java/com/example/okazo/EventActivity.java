@@ -477,7 +477,13 @@ private Bitmap bmp,scaledbmp;
                    String status=apiResponse.getModerator().getStatus();
                    String role=apiResponse.getModerator().getRole();
                    moderatorId=apiResponse.getModerator().getId();
-                    Log.d("MODDETAIL",status+"  "+role+"  "+moderatorId);
+                    cardViewSecondTicket.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intentTicket=new Intent(EventActivity.this,MyTicketActivity.class);
+                            startActivity(intentTicket);
+                        }
+                    });
                    if(status.equals("Accepted")){
                        apiInterface.checkInbox(eventId).enqueue(new Callback<APIResponse>() {
                            @Override
@@ -767,13 +773,13 @@ private Bitmap bmp,scaledbmp;
                                             ImageView imageView=((ImageView)recyclerViewFeed.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black));
 
                                             animation(EventActivity.this,imageView,R.drawable.ic_like_red);
-                                            ((TextView)recyclerViewFeed.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_total_like)).setText(apiResponse1.getTotalLike());
+                                            ((TextView)recyclerViewFeed.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_total_like)).setText(apiResponse1.getTotalLike()+" Likes");
 
                                         }else {
 
                                             ImageView imageView=((ImageView)recyclerViewFeed.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black));
                                             animation(EventActivity.this,imageView,R.drawable.ic_like_black);
-                                            ((TextView)recyclerViewFeed.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_total_like)).setText(apiResponse1.getTotalLike());
+                                            ((TextView)recyclerViewFeed.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_total_like)).setText(apiResponse1.getTotalLike()+" Likes");
                                             // ((ImageView)recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.card_feed_post_like_black)).setImageResource(R.drawable.ic_like_black);
                                         }
 

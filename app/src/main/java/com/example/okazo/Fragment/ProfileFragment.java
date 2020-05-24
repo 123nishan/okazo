@@ -32,6 +32,7 @@ import com.example.okazo.Api.ApiInterface;
 import com.example.okazo.EventActivity;
 import com.example.okazo.EventDetailPreviewActivity;
 import com.example.okazo.FollowingEventActivity;
+import com.example.okazo.GeoFenceActivity;
 import com.example.okazo.LoginActivity;
 import com.example.okazo.Model.Note;
 import com.example.okazo.Model.User;
@@ -69,7 +70,7 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private TextView textViewUserName,textViewTMoney,textViewFollowing,textViewModerator,textViewEmail,textViewPhone,textViewTicket,textViewLogout;
+    private TextView textViewUserName,textViewTMoney,textViewFollowing,textViewModerator,textViewEmail,textViewPhone,textViewTicket,textViewLogout,textViewReward;
     private ImageView imageViewProfile;
     private LinearLayout linearLayoutModerator,linearLayoutFollowing;
     private ApiInterface apiInterface;
@@ -98,6 +99,7 @@ public class ProfileFragment extends Fragment {
         textViewLogout=v.findViewById(R.id.profile_fragment_logout);
         circleImageViewNotification=v.findViewById(R.id.profile_fragment_notification);
         circleImageViewDot=v.findViewById(R.id.primary_fragment_dot);
+        textViewReward=v.findViewById(R.id.profile_fragment_user_reward);
 
         textViewLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -284,6 +286,13 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             Intent intent=new Intent(getActivity().getApplicationContext(), MyTicketActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    textViewReward.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent=new Intent(getActivity().getApplicationContext(), GeoFenceActivity.class);
                             startActivity(intent);
                         }
                     });
