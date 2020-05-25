@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
             condition=bundle.getString("condition");
             imageButtonLogin.setVisibility(View.GONE);
         }else {
-
+            condition="user";
         }
 
 
@@ -146,7 +146,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 }
                 else {
-                    if(editTextName.getText().toString().length()>5){
+                    if(editTextName.getText().toString().length()>1){
                     }else {
                         editTextName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_wrong),null);
                     }
@@ -245,7 +245,7 @@ public class RegisterActivity extends AppCompatActivity {
         editTextName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(count>5 ){
+                if(count>1 ){
                     editTextMobile.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
                 }
             }
@@ -253,7 +253,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if(count >5){
+                if(count >1){
                     nameStatus=true;
                     editTextName.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null, getResources().getDrawable(R.drawable.ic_correct),null);
                 }else {
@@ -295,7 +295,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     String verified = "non-verified";
                                     Date date = new Date();
                                     Timestamp timestamp = new Timestamp(date.getTime());
-                                    Toast.makeText(RegisterActivity.this, "time" + verified, Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(RegisterActivity.this, "time" + verified, Toast.LENGTH_SHORT).show();
 
                                     apiInterface.otp(email, String.valueOf(num), timestamp).enqueue(new Callback<APIResponse>() {
                                         @Override
@@ -352,26 +352,28 @@ public class RegisterActivity extends AppCompatActivity {
                                             DynamicToast.makeWarning(getApplicationContext(), "something went wrong").show();
                                         }
                                     });
+                                }else {
+                                    apiInterface.registerUser(email,password,name,phone,"NO","3").enqueue(new Callback<APIResponse>() {
+                                        @Override
+                                        public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                                            APIResponse apiResponse=response.body();
+                                            if(!apiResponse.getError()){
+                                                DynamicToast.makeSuccess(getApplicationContext(),"staff registered").show();
+                                                finish();
+                                            }else {
+                                                DynamicToast.makeError(getApplicationContext(),"Problem registering staff").show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<APIResponse> call, Throwable t) {
+
+                                        }
+                                    });
                                 }
                                 //register for staff
-                                Log.d("CEHCKCEHCK",email+"||"+name+"  "+password);
-                                apiInterface.registerUser(email,password,name,phone,"NO","3").enqueue(new Callback<APIResponse>() {
-                                    @Override
-                                    public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
-                                        APIResponse apiResponse=response.body();
-                                        if(!apiResponse.getError()){
-                                            DynamicToast.makeSuccess(getApplicationContext(),"staff registered").show();
-                                            finish();
-                                        }else {
-                                            DynamicToast.makeError(getApplicationContext(),"Problem registering staff").show();
-                                        }
-                                    }
 
-                                    @Override
-                                    public void onFailure(Call<APIResponse> call, Throwable t) {
 
-                                    }
-                                });
 
                             }else {
                                 editTextMobile.setError("Enter mobile number");

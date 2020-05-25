@@ -137,7 +137,7 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void> {
             is.read(buffer);
             is.close();
             String str = new String(buffer);
-            str=str.replace("$$USERNAME$$", mEmail);
+//            str=str.replace("$$USERNAME$$", mEmail);
             str=str.replace("$$EMAIL$$", mMessage+" "+mOtp);
             messageBodyPart.setContent(str,"text/html; charset=utf-8");
             _multipart.addBodyPart(messageBodyPart);

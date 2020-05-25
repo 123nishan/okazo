@@ -65,9 +65,24 @@ public class AdminActivity extends AppCompatActivity {
                         startActivity(intent);
                 }
             });
+
+            cardViewAllStaff.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent=new Intent(AdminActivity.this,AdminStaffActivity.class);
+                    startActivity(intent);
+                }
+            });
         }else {
             //staff
             cardViewRegisterStaff.setCardBackgroundColor(getColor(R.color.mapbox_plugins_material_grey_200));
+            cardViewAllStaff.setCardBackgroundColor(getColor(R.color.mapbox_plugins_material_grey_200));
+            cardViewAllStaff.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DynamicToast.makeWarning(getApplicationContext(),"You dont permisison to this feature");
+                }
+            });
             cardViewRegisterStaff.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -100,13 +115,7 @@ public class AdminActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        cardViewAllStaff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(AdminActivity.this,AdminStaffActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
     }
 
