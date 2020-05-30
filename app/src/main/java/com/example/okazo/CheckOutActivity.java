@@ -2,9 +2,15 @@ package com.example.okazo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +27,7 @@ import com.example.okazo.util.ConfirmationDialog;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -152,6 +159,11 @@ public class CheckOutActivity extends AppCompatActivity implements ConfirmationD
          public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
              APIResponse apiResponse=response.body();
              if(!apiResponse.getError()){
+                 if(paymentOption.equals("cash")){
+                     sendNotification(paymentOption);
+                 }else {
+                     sendNotification(paymentOption);
+                 }
 
                  DynamicToast.makeSuccess(CheckOutActivity.this,"ticket purchased").show();
                  Intent intent=new Intent(CheckOutActivity.this,MainActivity.class);
@@ -173,5 +185,42 @@ public class CheckOutActivity extends AppCompatActivity implements ConfirmationD
     @Override
     public void OnNoClicked() {
 
+    }
+    private void sendNotification(String paymentOption) {
+        String CHANNEL_ID = "Okazo";
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "My Notification",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.setDescription("chaneel Description");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+
+            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+
+        }
+        NotificationCompat.Builder builder=new NotificationCompat.Builder(this,CHANNEL_ID);
+        if(paymentOption.toLowerCase().equals("cash")){
+            builder.setContentTitle("Tickets Booked")
+                    .setContentText("Tickets has been booked successfully")
+                    .setAutoCancel(false)
+
+                    .setSmallIcon(R.mipmap.ic_okazo_logo);
+
+        }else {
+            builder.setContentTitle("Tickets Confirmed")
+                    .setContentText("Tickets has been purchased")
+                    .setAutoCancel(false)
+
+                    .setSmallIcon(R.mipmap.ic_okazo_logo);
+        }
+
+
+        Notification notification=builder.build();
+        notification.flags= Notification.FLAG_AUTO_CANCEL;
+        notificationManager.notify(new Random().nextInt(),notification);
     }
 }

@@ -6,12 +6,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +24,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -687,7 +692,7 @@ private void createEvent(String modId,String mod_status){
                     Toast.makeText(EventDetailPreviewActivity.this, "uploading information", Toast.LENGTH_SHORT).show();
                 } else {
 
-
+                    sendNotification(eventTitle);
                     File file = new File(path);
 
                     String imageName=(eventDetail.getEvent_id())+"_"+"profile"+".png";
@@ -734,5 +739,33 @@ private void createEvent(String modId,String mod_status){
         }
     });
 }
+
+    private void sendNotification(String eventTitle) {
+        String CHANNEL_ID = "Okazo";
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "My Notification",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.setDescription("chaneel Description");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+
+            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+
+        }
+        NotificationCompat.Builder builder=new NotificationCompat.Builder(this,CHANNEL_ID);
+        builder.setContentTitle(eventTitle)
+                .setContentText(eventTitle+" is created")
+                .setAutoCancel(false)
+
+                .setSmallIcon(R.mipmap.ic_okazo_logo);
+
+        Notification notification=builder.build();
+        notification.flags= Notification.FLAG_AUTO_CANCEL;
+        notificationManager.notify(new Random().nextInt(),notification);
+    }
 
 }
