@@ -101,8 +101,13 @@ import static com.example.okazo.util.constants.FILELOCATION;
 import static com.example.okazo.util.constants.KEY_EVENT_DETAIL;
 
 import static com.example.okazo.util.constants.KEY_EVENT_ID;
+import static com.example.okazo.util.constants.KEY_EVENT_TITLE;
 import static com.example.okazo.util.constants.KEY_ID_FOR_CHAT;
+import static com.example.okazo.util.constants.KEY_IMAGE;
 import static com.example.okazo.util.constants.KEY_IMAGE_ADDRESS;
+import static com.example.okazo.util.constants.KEY_LATITUDE;
+import static com.example.okazo.util.constants.KEY_LONGITUDE;
+import static com.example.okazo.util.constants.KEY_PLACE;
 import static com.example.okazo.util.constants.KEY_RECEIVER_ID;
 import static com.example.okazo.util.constants.KEY_SENDER_ID;
 import static com.example.okazo.util.constants.KEY_SENDER_NAME;
@@ -845,6 +850,18 @@ private Bitmap bmp,scaledbmp;
         textViewCountDown.setText(sequence);
         textViewTitle.setText(eventDetail.getTitle());
         textViewLocation.setText(eventDetail.getPlace());
+        textViewLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getApplicationContext(),LocationActivity.class);
+                intent.putExtra(KEY_LATITUDE,eventDetail.getLatitude());
+                intent.putExtra(KEY_LONGITUDE,eventDetail.getLongitude());
+                intent.putExtra(KEY_EVENT_TITLE,eventDetail.getTitle());
+                intent.putExtra(KEY_PLACE,eventDetail.getPlace());
+                intent.putExtra(KEY_IMAGE,eventDetail.getImage());
+                startActivity(intent);
+            }
+        });
         textViewHost.setText(eventDetail.getHostName());
         if(eventDetail.getEndDate().equals(eventDetail.getStartDate()) || eventDetail.getEndDate()!=null || !eventDetail.getEndDate().isEmpty() ){
             textViewDate.setText(eventDetail.getStartDate());

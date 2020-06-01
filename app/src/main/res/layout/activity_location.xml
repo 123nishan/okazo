@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    tools:context=".LocationActivity">
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/location_mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        mapbox:mapbox_cameraZoom="12" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/location_card"
+        android:visibility="gone"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        app:cardCornerRadius="10dp"
+        android:layout_marginBottom="15dp"
+        android:layout_gravity="bottom|center_horizontal"
+        app:cardBackgroundColor="@color/colorPrimary">
+        <LinearLayout
+            android:padding="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/location_image"/>
+            <LinearLayout
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/space_white"
+                    android:textSize="15dp"
+                    android:id="@+id/location_title"
+                    android:text="TITLE"/>
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:textColor="@color/space_white"
+                    android:textSize="15dp"
+                    android:id="@+id/location_place"
+                    android:text="TITLE"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="start navigation"
+                    android:textSize="14dp"
+                    android:textColor="@color/space_white"
+                    android:textStyle="italic"
+                   android:id="@+id/location_navigation"
+                    android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

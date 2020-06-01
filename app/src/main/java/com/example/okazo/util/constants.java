@@ -32,6 +32,8 @@ public class constants {
     public static final String KEY_EVENT_TICKET_STATUS="ticketStatus";
     public static final String KEY_TAG_ARRAY="eventTags";
     public static final String KEY_EVENT_SELECTED_LOCATION="selectedLocaiton";
+    public static final String KEY_PLACE="place";
+    public static final String KEY_IMAGE="image";
     public static final String KEY_EVENT_DESCRIPTION="description";
     public static final String KEY_LATITUDE="latitude";
     public static final String KEY_LONGITUDE="longitude";

@@ -62,7 +62,7 @@ dependencies {
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places-v9:0.11.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-core:2.0.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.6.0'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
+
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-markerview-v9:0.4.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation:0.42.6'
 
@@ -93,7 +93,7 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'com.specyci:residemenu:1.6+'
 
-
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6'
     implementation 'com.google.android.material:material:1.0.0'
 
 

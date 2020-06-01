@@ -602,7 +602,7 @@ private  List<Symbol> symbolList=new ArrayList<>();
 
                                     lat.add(Double.valueOf(value.getLatitude()));
                                     lng.add(Double.valueOf(value.getLongitude()));
-                                    Log.d("hereNishan", value.getTitle());
+
 
                                 }
 
