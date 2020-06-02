@@ -181,20 +181,17 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                 .getRoute(new Callback<DirectionsResponse>() {
                     @Override
                     public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-// You can get the generic HTTP info about the response
+
 
                         if (response.body() == null) {
-//                            Log.e(TAG, "No routes found, make sure you set the right user and access token.");
+
                             return;
                         } else if (response.body().routes().size() < 1) {
-//                            Log.e(TAG, "No routes found");
+
                             return;
                         }
-
                         currentRoute = response.body().routes().get(0);
 
-
-// Draw the route on the map
                         if (navigationMapRoute != null) {
                             navigationMapRoute.removeRoute();
                         } else {
@@ -202,7 +199,6 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                         }
                         navigationMapRoute.addRoute(currentRoute);
                     }
-
                     @Override
                     public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
 //                        Log.e(TAG, "Error: " + throwable.getMessage());

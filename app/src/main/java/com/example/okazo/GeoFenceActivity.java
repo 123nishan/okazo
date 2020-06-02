@@ -149,7 +149,7 @@ public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventL
                             //create geofence
 
                             String key=arrayListEventId.get(i);
-                            Log.d("KEY",key);
+
                             geofenceslist.add(new Geofence.Builder()
                                     .setRequestId(key)
                                     .setCircularRegion(
@@ -165,7 +165,7 @@ public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventL
                                     .addOnSuccessListener(GeoFenceActivity.this, new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Log.d("GEOCHECK","geoAdded");
+                                            Log.d("GEO","added");
                                         }
                                     }).addOnFailureListener(GeoFenceActivity.this, new OnFailureListener() {
                                 @Override
@@ -245,7 +245,7 @@ public class GeoFenceActivity extends FragmentActivity implements GeoQueryEventL
                 .addOnSuccessListener(this, new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("hello","geoAdded");
+                        Log.d("GEO","INTENT");
                     }
                 }).addOnFailureListener(this, new OnFailureListener() {
             @Override
