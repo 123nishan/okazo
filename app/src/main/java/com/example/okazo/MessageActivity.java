@@ -163,16 +163,19 @@ public class MessageActivity extends AppCompatActivity {
                 APIResponse apiResponse=response.body();
                 if(!apiResponse.getError()){
                     ArrayList<Chat> chats=apiResponse.getChatArray();
-                    for (Chat value:chats
-                         ) {
-                                arrayListMessage.add(value.getMessage());
-                                arrayListCreatedAt.add(value.getCreated_at());
-                                arrayListSenderId.add(value.getSenderId());
-                                arrayListReceiverId.add(value.getReceiverId());
-                                arrayListImage.add(value.getImage());
-                    }
-                    adapter.notifyDataSetChanged();
+                    if(chats.isEmpty()){
 
+                    }else {
+                        for (Chat value : chats
+                        ) {
+                            arrayListMessage.add(value.getMessage());
+                            arrayListCreatedAt.add(value.getCreated_at());
+                            arrayListSenderId.add(value.getSenderId());
+                            arrayListReceiverId.add(value.getReceiverId());
+                            arrayListImage.add(value.getImage());
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
 
                 }else {
                    // DynamicToast.makeError(getApplicationContext(),apiResponse.getErrorMsg()).show();
