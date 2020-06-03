@@ -325,9 +325,9 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("chat/message.php")
     Call<APIResponse> getMessage(
+            @Field("sender_id") String senderId,
+            @Field("receiver_id") String receiverId
 
-            @Field("receiver_id") String receiverId,
-            @Field("sender_id") String senderId
     );
 
     @FormUrlEncoded

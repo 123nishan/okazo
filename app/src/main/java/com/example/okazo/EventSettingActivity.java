@@ -1258,7 +1258,7 @@ public class EventSettingActivity extends AppCompatActivity implements Confirmat
 //                DynamicToast.make(EventSettingActivity.this,"ON").show();
 //            }
             ticketCount=String.valueOf(arrayListId.size());
-            Log.d("VISI",eventDetailSingleTicketQuantity.getVisibility()+"");
+
             if(linearLayout2.getVisibility()==View.VISIBLE){
                 changeTicketPrice = eventDetailSingleTicketPrice.getText().toString();
                     changeTicketQuantity = eventDetailSingleTicketQuantity.getText().toString();

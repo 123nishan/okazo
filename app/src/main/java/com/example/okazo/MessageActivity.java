@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.okazo.Api.APIResponse;
 import com.example.okazo.Api.ApiClient;
@@ -155,6 +156,7 @@ public class MessageActivity extends AppCompatActivity {
 
     }
     private void getMessage(){
+       // Toast.makeText(this, currentUser+"||||"+senderId, Toast.LENGTH_SHORT).show();
         apiInterface.getMessage(currentUser,senderId).enqueue(new Callback<APIResponse>() {
             @Override
             public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
