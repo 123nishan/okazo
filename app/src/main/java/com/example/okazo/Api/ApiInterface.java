@@ -630,7 +630,7 @@ Call<APIResponse> setLike(
     );
 
     @Multipart
-    @POST("eventDetail/event_profile_image.php")
+    @POST("eventDetail/post_image.php")
     Call<APIResponse> uploadPostImage(
             @Part MultipartBody.Part file,@Part ("file") RequestBody name
     );
