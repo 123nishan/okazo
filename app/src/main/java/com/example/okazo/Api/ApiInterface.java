@@ -592,7 +592,6 @@ Call<APIResponse> setLike(
     @POST("eventDetail/event_creation.php")
     Call<APIResponse> eventCreation(
             @Field("title") String title,
-
             @Field("description") String description,
             @Field("start_time") String start_time,
             @Field("end_time") String end_time,
@@ -601,7 +600,6 @@ Call<APIResponse> setLike(
             @Field("place") String place,
             @Field("latitude") String latitude,
             @Field("longitude") String longitude,
-//            @Field("image") String image,
             @Field("ticket_status") String ticket_status,
             @Field("page_status") String page_status,
             @Field("user_id") String user_id,

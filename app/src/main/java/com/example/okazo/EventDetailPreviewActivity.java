@@ -584,7 +584,8 @@ private void confirmedDetail() {
                 if(apiResponse.getErrorMsg()==null || apiResponse.getErrorMsg().isEmpty()){
                     mod_status="1";
                     createEvent(apiResponse.getMod_Id(),mod_status);
-                    Toast.makeText(EventDetailPreviewActivity.this, "mod is present", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(EventDetailPreviewActivity.this, mod_status+"   "+apiResponse.getMod_Id(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(EventDetailPreviewActivity.this, "mod is present", Toast.LENGTH_SHORT).show();
                 }else {
 
                     mod_status="0";
